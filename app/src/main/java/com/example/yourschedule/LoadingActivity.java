@@ -13,6 +13,9 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
+
+
+  
         Handler handler = new Handler(){
 
             @Override
@@ -26,7 +29,7 @@ public class LoadingActivity extends AppCompatActivity {
         handler.sendEmptyMessageDelayed(0,2000);
 
     }
-
+    //333###333###333###333###
     public void onBackPressed(){}
 
 }
