@@ -14,7 +14,6 @@ public class LoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading);
         //장영우브랜치1
         Handler handler = new Handler(){
-
             @Override
             public void handleMessage(Message msg) {
                 finish();
