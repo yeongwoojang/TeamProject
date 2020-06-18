@@ -80,7 +80,7 @@ public class PopupFragment extends DialogFragment {
         final Button previousBt, nextBt, storeBt, additionalBt;
 
 
-         schduleRecyclerView = view.findViewById(R.id.scheduleList);
+        schduleRecyclerView = view.findViewById(R.id.scheduleList);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         schduleRecyclerView.setLayoutManager(linearLayoutManager);
         List<String> idx = new ArrayList<String>();
@@ -156,6 +156,8 @@ public class PopupFragment extends DialogFragment {
 //                    pref.set(getActivity(), date, schedule);
 //                    mDialogResult.finish("true");
 //                }
+                adapter.addSchedule(date);
+                mDialogResult.finish("true");
             }
         });
 

@@ -17,14 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.R;
+import com.example.yourschedule.SharePref;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
-    private List<String> scheduls = new ArrayList<String>();
+    public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
+    private ArrayList<String[]> schedules = new ArrayList<String[]>();
     private List<String> idx;
     private Activity activity;
+    private ArrayList<String> dataset = new ArrayList<String>();
+    int AllscheduleSize;
     public SchduleRecyclerViewAdapter(List<String> idx,Activity activity) {
         this.idx = idx;
         this.activity = activity;
@@ -51,10 +55,14 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d("aaa",idx.get(position));
         holder.scheduleNum.setText(idx.get(position));
         holder.editText.setHint("일정을 입력하세요");
+        Log.d("aaa","positon : "+position+"");
+        AllscheduleSize = idx.size();
+        dataset.add(0,"");
+
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -68,10 +76,12 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
             @Override
             public void afterTextChanged(Editable editable) {
-                scheduls.add(editable.toString());
+                dataset.set(position,editable.toString());
+                Log.d("aaa",position+"");
+                Log.d("aaa", dataset.get(position)+"입니다.");
+                Log.d("aaa", dataset.size()+"size");
             }
         });
-        scheduls.add(holder.editText.getText().toString());
     }
 
     @Override
@@ -79,7 +89,16 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         return idx.size();
     }
 
-    public void addSchedule(List<String> s){
-        scheduls = s;
+    public void addSchedule(String key){
+        SharePref pref = new SharePref();
+        for(int i=0; i<AllscheduleSize; i++){
+            if(!(dataset.get(i).length()==0)){
+                schedules.add(new String[]{dataset.get(i),"false"});
+            }
+        }
+        if(schedules.size()==0){
+            Log.d("aaa","하나 이상의 일정을 입력하세요");
+        }
+        pref.set(activity,key,schedules);
     }
 }
