@@ -13,6 +13,8 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         //장영우브랜치1
+        //ㄴㄴㅇㅀㄹㅇㄶㅇㄴㅀ
+        //ㄴㅀㅇㄹㄶㄹㅇㄶㄴㄹㅇㅎ
         Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
