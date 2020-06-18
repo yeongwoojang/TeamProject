@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FRAGMENT.Calandar"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:background="#F7EBEB"
+            android:id="@+id/calendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mcv_headerTextAppearance="@style/TextAppearance.MaterialCalendarWidget.Header"
+            app:mcv_selectionColor="@color/mcv_selectionColor"
+            android:focusedMonthDateColor="@color/colorPrimaryDark"
+            app:mcv_titleAnimationOrientation="vertical"
+            ></com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+
+    </FrameLayout>
+
+</LinearLayout>
