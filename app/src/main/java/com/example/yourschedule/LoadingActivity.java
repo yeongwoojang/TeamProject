@@ -13,6 +13,7 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 //주석추가
+//ywBranchTest
         Handler handler = new Handler(){
 
             @Override
