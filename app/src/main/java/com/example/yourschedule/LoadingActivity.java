@@ -14,7 +14,6 @@ public class LoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading);
 //주석추가
 //ywBranchTest
-        //123123
         Handler handler = new Handler(){
 
             @Override
