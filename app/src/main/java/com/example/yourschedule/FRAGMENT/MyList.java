@@ -4,6 +4,7 @@ package com.example.yourschedule.FRAGMENT;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,7 @@ public class MyList extends Fragment {
         ArrayList<String> storedList = pref.get(this.getActivity(), selectedDate);
         if (storedList != null) {
             for (int i = 0; i < storedList.size(); i++) {
+                Log.d("aaaGetData",storedList.get(i));
                 schdules.add(new Schdule(storedList.get(i)));
             }
         }

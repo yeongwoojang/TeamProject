@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,44 +26,46 @@ import java.util.List;
 public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
     public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
     private ArrayList<String[]> schedules = new ArrayList<String[]>();
-    private List<String> idx;
+    private ArrayList<Integer> idx = new ArrayList<Integer>();
     private Activity activity;
     private ArrayList<String> dataset = new ArrayList<String>();
     int AllscheduleSize;
-    public SchduleRecyclerViewAdapter(List<String> idx,Activity activity) {
-        this.idx = idx;
+    public SchduleRecyclerViewAdapter(Activity activity) {
+        for(int i=0;i<3;i++){
+            this.idx.add(i,i);
+        }
+
         this.activity = activity;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView scheduleNum;
         EditText editText;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            scheduleNum = (TextView) itemView.findViewById(R.id.schedule);
             editText = (EditText) itemView.findViewById(R.id.scheduleEditText);
+
+
         }
     }
 
-
-
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_item,parent,false);
+
+//         ViewGroup.LayoutParams lp = view.getLayoutParams();
+//        lp.width = parent.getWidth();
+//        lp.height = parent.getHeight();
+//        view.setLayoutParams(lp);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        Log.d("aaa",idx.get(position));
-        holder.scheduleNum.setText(idx.get(position));
+//        dataset.add(0,"");
         holder.editText.setHint("일정을 입력하세요");
-        Log.d("aaa","positon : "+position+"");
         AllscheduleSize = idx.size();
-        dataset.add(0,"");
-
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -73,26 +76,35 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
-
+            //리사이클러뷰에 있는 EditText의 텍스트가 입력이 되면 DataSet에 추가한다.
             @Override
             public void afterTextChanged(Editable editable) {
-                dataset.set(position,editable.toString());
-                Log.d("aaa",position+"");
-                Log.d("aaa", dataset.get(position)+"입니다.");
-                Log.d("aaa", dataset.size()+"size");
+                dataset.add(position,editable.toString());
+                Log.d("aaaDataByEditText",dataset.get(position));
             }
         });
     }
 
+    //리사이클러뷰의 사이즈를 얻어오는 메소드
     @Override
     public int getItemCount() {
         return idx.size();
     }
-
+    //일정 입력 EditText를 추가하는 메소드
+    public void addEditText(){
+        if(idx.size()<5){
+            idx.add(AllscheduleSize,AllscheduleSize);
+            Log.d("aaaSize",AllscheduleSize+"");
+        }else{
+            Toast.makeText(activity,"최대 5개의 일정만 입력가능",Toast.LENGTH_SHORT).show();
+        }
+    }
+    //일정을 저장하는 메소드
     public void addSchedule(String key){
         SharePref pref = new SharePref();
         for(int i=0; i<AllscheduleSize; i++){
             if(!(dataset.get(i).length()==0)){
+                Log.d("aaaInsertData",dataset.get(i));
                 schedules.add(new String[]{dataset.get(i),"false"});
             }
         }
