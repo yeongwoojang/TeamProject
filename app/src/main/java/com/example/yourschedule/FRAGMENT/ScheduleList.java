@@ -46,6 +46,7 @@ public class ScheduleList extends Fragment {
         top_tabs.setTabGravity(TabLayout.GRAVITY_FILL);
         top_tabs.getTabAt(0).setTag(0);
         top_tabs.getTabAt(1).setTag(1);
+        top_tabs.getTabAt(2).setTag(2);
         Fragment fragment;
         fragment = new MyList().newInstance();
         setChildFragment(fragment);
@@ -69,13 +70,14 @@ public class ScheduleList extends Fragment {
                         setChildFragment(fragment);
                         break;
 
-                    case 2://Realm_TEST로 사용.
-                        fragment = new Realm_TEST().newInstance();
+                    case FRAGMENT3://주 일정
+                        fragment = new WeekSchedule().newInstance();
                         setChildFragment(fragment);
                         break;
-//
+
 //                    case 3:
-//                        setChildFragment(FRAGMENT3);
+//                        fragment = new WeekSchedule().newInstance();
+//                        setChildFragment(fragment);
 //                        break;
                 }
             }
