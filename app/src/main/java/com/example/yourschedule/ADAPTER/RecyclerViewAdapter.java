@@ -104,8 +104,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
-
-                                        chk(today,schdules.get(posotion).getItem());
+                                        changeScheduleChkValue(today,schdules.get(posotion).getItem());
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -130,28 +129,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    public void chk(String key, String value){
+    public void changeScheduleChkValue(String key, String value){
         SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        Log.d("key",key);
         String json = pref.getString(key, null);
-        Log.d("json",json+"");
 
         JSONObject jsonObject = null;
         if (json != null) {
             try {
                 JSONArray jsonArray = new JSONArray(json);
-
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = jsonArray.getJSONObject(i);
                 }
-//                Iterator iterator = jsonObject.keys();
-                jsonObject.put(value,"true");
-                Log.d("jsonObject",jsonObject+"");
-                if(jsonArray.length()!=0) {
-                    jsonArray.remove(0);
+                if(jsonObject.getString(value).equals("false")){
+                    jsonObject.put(value,"true");
+                }else{
+                    jsonObject.put(value,"false");
                 }
-                jsonArray.put(jsonObject);
                 Log.d("jsonArray",jsonArray+"");
                 editor.putString(key,jsonArray.toString()).apply();
             } catch (JSONException e) {

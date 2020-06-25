@@ -52,9 +52,6 @@ public class MyList extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
-
-
-
         return rootView;
     }
 
@@ -73,7 +70,7 @@ public class MyList extends Fragment {
         String selectedDate = transFormat.format(calendar.getTime());
 
         ArrayList<String> storedList = pref.get(this.getActivity(), selectedDate);
-        if (storedList != null) {
+        if (storedList.size()!=0) {
             for (int i = 0; i < storedList.size(); i++) {
                 Log.d("aaaGetData",storedList.get(i));
                 schdules.add(new Schdule(storedList.get(i)));

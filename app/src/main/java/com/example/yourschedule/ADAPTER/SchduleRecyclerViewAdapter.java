@@ -28,14 +28,17 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     private ArrayList<String[]> schedules = new ArrayList<String[]>();
     private ArrayList<Integer> idx = new ArrayList<Integer>();
     private Activity activity;
+    private String date;
     private ArrayList<String> dataset = new ArrayList<String>();
     int AllscheduleSize;
-    public SchduleRecyclerViewAdapter(Activity activity) {
+    SharePref pref = new SharePref();
+    public SchduleRecyclerViewAdapter(Activity activity,String date) {
         for(int i=0;i<3;i++){
             this.idx.add(i,i);
         }
 
         this.activity = activity;
+        this.date = date;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -64,13 +67,16 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         }else{
             dataset.add(dataset.size(),"");
         }
-        holder.editText.setHint("일정을 입력하세요");
+        ArrayList<String> storedList = pref.get(activity,date);
+        if (storedList.size()!=0) {
+                holder.editText.setHint(storedList.get(position));
+        }else{
+            holder.editText.setHint("일정을 입력하세요.");
+        }
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 

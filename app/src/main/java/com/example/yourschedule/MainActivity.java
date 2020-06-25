@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        callFragment(FRAGMENT1);
+//        callFragment(FRAGMENT1);
 
     }
 

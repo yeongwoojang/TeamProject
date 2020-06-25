@@ -15,7 +15,6 @@ import java.util.Iterator;
 public class SharePref {
     //getStringArrayPref
     String PREFERENCE = "com.example.yourschedule.FRAGMENT";
-
     public ArrayList<String> get(Activity activity, String key) {
         SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 

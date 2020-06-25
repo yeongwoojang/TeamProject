@@ -1,28 +1,19 @@
 package com.example.yourschedule.FRAGMENT;
 
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,15 +22,9 @@ import com.example.yourschedule.ADAPTER.SchduleRecyclerViewAdapter;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 
 public class PopupFragment extends DialogFragment {
@@ -48,7 +33,7 @@ public class PopupFragment extends DialogFragment {
     public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
     SchduleRecyclerViewAdapter adapter;
     RecyclerView schduleRecyclerView;
-    OnMyDialogResult mDialogResult;
+    OnMyPopupDialogResult mDialogResult;
     LinearLayoutManager linearLayoutManager;
     SharePref pref = new SharePref();
     String date;
@@ -83,7 +68,7 @@ public class PopupFragment extends DialogFragment {
         schduleRecyclerView = view.findViewById(R.id.scheduleList);
         linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         schduleRecyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new SchduleRecyclerViewAdapter(getActivity());
+        adapter = new SchduleRecyclerViewAdapter(getActivity(),date);
         schduleRecyclerView.setAdapter(adapter);
 
 
@@ -92,6 +77,11 @@ public class PopupFragment extends DialogFragment {
         nextBt = view.findViewById(R.id.nextButton);
         storeBt = view.findViewById(R.id.storeBt);
         additionalBt = view.findViewById(R.id.additionalScheduleBt);
+        if(mDialogResult.invisualAddBt()){
+            additionalBt.setVisibility(View.INVISIBLE);
+        }else{
+            additionalBt.setVisibility(View.VISIBLE);
+        }
 
         if(!pref.get(getActivity(),date).isEmpty()){
 //            Toast.makeText(getActivity(),"이미 데이터가 있습니다.",Toast.LENGTH_SHORT).show();
@@ -141,7 +131,7 @@ public class PopupFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 adapter.addSchedule(date);
-                mDialogResult.finish("true");
+                mDialogResult.finish();
             }
         });
 
@@ -165,11 +155,14 @@ public class PopupFragment extends DialogFragment {
 
     }
 
-    public void setDialogResult(OnMyDialogResult dialogResult) {
+
+
+    public interface OnMyPopupDialogResult {
+        void finish();
+        boolean invisualAddBt();
+    }
+    public void setDialogResult(OnMyPopupDialogResult dialogResult) {
         mDialogResult = dialogResult;
     }
 
-    public interface OnMyDialogResult {
-        void finish(String result);
-    }
 }
