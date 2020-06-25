@@ -12,13 +12,15 @@ import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.google.android.material.tabs.TabLayout;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class MainActivity extends AppCompatActivity {
 
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
     private final int FRAGMENT3 = 2;
     private final String[] bottomTab = {"일정관리", "날씨정보", "추가예정"};
-
     private Context mContext = null;
 
     @Override
@@ -26,6 +28,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         startActivity(new Intent(this,LoadingActivity.class));
         setContentView(R.layout.activity_main);
+
+        //Realm init
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm.setDefaultConfiguration(realmConfiguration);
+        Realm realm = Realm.getDefaultInstance();
+
 
         mContext = this;
 
