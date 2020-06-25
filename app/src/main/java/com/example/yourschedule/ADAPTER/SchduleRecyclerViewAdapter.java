@@ -78,7 +78,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             //리사이클러뷰에 있는 EditText의 텍스트가 입력이 되면 DataSet에 추가한다.
             @Override
             public void afterTextChanged(Editable editable) {
-                dataset.add(position,editable.toString());
+                dataset.set(position,editable.toString());
             }
         });
     }
