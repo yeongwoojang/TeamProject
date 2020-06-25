@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,25 +26,34 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 class WeekSchedule extends Fragment {
+    public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
+    RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+    RecyclerViewAdapter recyclerViewAdapter;
     SharePref pref = new SharePref();
 
     public WeekSchedule newInstance() {
         return new WeekSchedule();
     }
-
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
+                             @NonNull Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_weekschedule, container, false);
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_weekschedule, container, false);
 
-        return rootView;
     }
 }

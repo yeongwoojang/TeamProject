@@ -70,7 +70,7 @@ public class ScheduleList extends Fragment {
                         setChildFragment(fragment);
                         break;
 
-                    case FRAGMENT3://주 일정
+                    case 2://주 일정
                         fragment = new WeekSchedule().newInstance();
                         setChildFragment(fragment);
                         break;
