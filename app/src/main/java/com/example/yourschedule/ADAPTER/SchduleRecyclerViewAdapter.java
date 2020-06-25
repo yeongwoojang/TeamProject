@@ -58,13 +58,13 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        AllscheduleSize = idx.size();
         if(dataset.size()==0){
             dataset.add(0,"");
         }else{
             dataset.add(dataset.size(),"");
         }
         holder.editText.setHint("일정을 입력하세요");
-        AllscheduleSize = idx.size();
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -92,7 +92,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     public void addEditText(){
         if(idx.size()<5){
             idx.add(AllscheduleSize,AllscheduleSize);
-            notifyItemInserted(AllscheduleSize);
+            notifyItemChanged(AllscheduleSize);
         }else{
             Toast.makeText(activity,"최대 5개의 일정만 입력가능",Toast.LENGTH_SHORT).show();
         }
