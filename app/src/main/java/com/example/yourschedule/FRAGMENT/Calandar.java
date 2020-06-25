@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -39,6 +38,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     MaterialCalendarView materialCalendarView;
     ScheduleDecorator scheduleDecorator;
     SharePref pref = new SharePref();
+    boolean areYouUpdate = false;
 
     String selectedDate="";
     private Fragment fragment;
@@ -79,25 +79,90 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
         selectedDate = format.format(date.getDate());
-        PopupFragment popupFragment = new PopupFragment().newInstance();
-        Bundle args = new Bundle();
-        args.putString("date", selectedDate);
-        popupFragment.setArguments(args);
-        popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
-        popupFragment.setDialogResult(new PopupFragment.OnMyDialogResult() {
+        if(pref.get(getActivity(),selectedDate).size()!=0){
+            areYouUpdate = true;
+            getUpdateScheduleFragment();
+        }else{
+            areYouUpdate = false;
+            getPopupFragment(false);
+        }
+    }
+    private void getUpdateScheduleFragment() {
+        UpdateScheduleFragment updateScheduleFragment = new UpdateScheduleFragment().newInstance();
+        updateScheduleFragment.show(getActivity().getSupportFragmentManager(),updateScheduleFragment.TAG_EVENT_DIALOG);
+        updateScheduleFragment.setDialogResult(new UpdateScheduleFragment.onMyUpdateDialogResult() {
             @Override
-            public void finish(String result) {
-                fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
-                DialogFragment dialogFragment = (DialogFragment) fragment;
-                dialogFragment.dismissAllowingStateLoss();
-                dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                calendarUpdate();
-                dialogFragment.dismiss();
+            public void finish() {
+                    fragment = getActivity().getSupportFragmentManager().findFragmentByTag(UpdateScheduleFragment.TAG_EVENT_DIALOG);
+                    DialogFragment dialogFragment = (DialogFragment) fragment;
+                    dialogFragment.dismissAllowingStateLoss();
+                    dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    calendarUpdate();
+                    dialogFragment.dismiss();
+            }
+
+            @Override
+            public void showPopupFragment() {
+                getPopupFragment(true);
             }
         });
-
     }
 
+    private void getPopupFragment(boolean isUpdate) {
+        if(isUpdate){
+            PopupFragment popupFragment = new PopupFragment().newInstance();
+            Bundle args = new Bundle();
+            args.putString("date", selectedDate);
+            popupFragment.setArguments(args);
+            popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
+            popupFragment.setDialogResult(new PopupFragment.OnMyPopupDialogResult() {
+                @Override
+                public void finish() {
+                    fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
+                    DialogFragment dialogFragment = (DialogFragment) fragment;
+                    dialogFragment.dismissAllowingStateLoss();
+                    dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    calendarUpdate();
+                    dialogFragment.dismiss();
+                }
+                @Override
+                public boolean update() {
+                    if(areYouUpdate){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            });
+        }else{
+            PopupFragment popupFragment = new PopupFragment().newInstance();
+            Bundle args = new Bundle();
+            args.putString("date", selectedDate);
+            popupFragment.setArguments(args);
+            popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
+            popupFragment.setDialogResult(new PopupFragment.OnMyPopupDialogResult() {
+                @Override
+                public void finish() {
+                    fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
+                    DialogFragment dialogFragment = (DialogFragment) fragment;
+                    dialogFragment.dismissAllowingStateLoss();
+                    dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    calendarUpdate();
+                    dialogFragment.dismiss();
+                }
+
+                @Override
+                public boolean update() {
+                    if(areYouUpdate){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            });
+        }
+
+    }
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
         calendarUpdate();

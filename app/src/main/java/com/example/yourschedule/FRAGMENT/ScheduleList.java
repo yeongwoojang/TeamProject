@@ -45,6 +45,7 @@ public class ScheduleList extends Fragment {
         top_tabs.setTabGravity(TabLayout.GRAVITY_FILL);
         top_tabs.getTabAt(0).setTag(0);
         top_tabs.getTabAt(1).setTag(1);
+        top_tabs.getTabAt(2).setTag(2);
         Fragment fragment;
         fragment = new MyList().newInstance();
         setChildFragment(fragment);
@@ -68,11 +69,11 @@ public class ScheduleList extends Fragment {
                         setChildFragment(fragment);
                         break;
 
-//                    case 2:
-//                        fragment = new b_p().newInstance();
-//                        setChildFragment(fragment);
-//                        break;
-//
+                    case 2:
+                        fragment = new MyList().newInstance();
+                        setChildFragment(fragment);
+                        break;
+
 //                    case 3:
 //                        setChildFragment(FRAGMENT3);
 //                        break;

@@ -15,7 +15,6 @@ import java.util.Iterator;
 public class SharePref {
     //getStringArrayPref
     String PREFERENCE = "com.example.yourschedule.FRAGMENT";
-
     public ArrayList<String> get(Activity activity, String key) {
         SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 
@@ -23,25 +22,24 @@ public class SharePref {
 
 //        Log.d("json ", json+"");
 
-        ArrayList<String> urls = new ArrayList<String>();
+        ArrayList<String> schedules = new ArrayList<String>();
         JSONObject jsonObject = null;
         if (json != null) {
             try {
                 JSONArray jsonArray = new JSONArray(json);
-
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = jsonArray.getJSONObject(i);
                 }
                 Iterator iterator = jsonObject.keys();
                 while(iterator.hasNext()){
                     String url = (String)iterator.next();
-                    urls.add(url);
+                    schedules.add(url);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return urls;
+        return schedules;
     }
 
     public void set(Activity activity, String key, ArrayList<String[]> values){
