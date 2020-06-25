@@ -52,18 +52,17 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_item,parent,false);
-
-//         ViewGroup.LayoutParams lp = view.getLayoutParams();
-//        lp.width = parent.getWidth();
-//        lp.height = parent.getHeight();
-//        view.setLayoutParams(lp);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-//        dataset.add(0,"");
+        if(dataset.size()==0){
+            dataset.add(0,"");
+        }else{
+            dataset.add(dataset.size(),"");
+        }
         holder.editText.setHint("일정을 입력하세요");
         AllscheduleSize = idx.size();
         holder.editText.addTextChangedListener(new TextWatcher() {
@@ -80,7 +79,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             @Override
             public void afterTextChanged(Editable editable) {
                 dataset.add(position,editable.toString());
-                Log.d("aaaDataByEditText",dataset.get(position));
             }
         });
     }
@@ -94,7 +92,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     public void addEditText(){
         if(idx.size()<5){
             idx.add(AllscheduleSize,AllscheduleSize);
-            Log.d("aaaSize",AllscheduleSize+"");
+            notifyItemInserted(AllscheduleSize);
         }else{
             Toast.makeText(activity,"최대 5개의 일정만 입력가능",Toast.LENGTH_SHORT).show();
         }
@@ -104,7 +102,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         SharePref pref = new SharePref();
         for(int i=0; i<AllscheduleSize; i++){
             if(!(dataset.get(i).length()==0)){
-                Log.d("aaaInsertData",dataset.get(i));
                 schedules.add(new String[]{dataset.get(i),"false"});
             }
         }

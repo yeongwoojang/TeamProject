@@ -149,7 +149,6 @@ public class PopupFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 adapter.addEditText();
-                adapter.notifyItemInserted(adapter.getItemCount()+1);
             }
         });
 
