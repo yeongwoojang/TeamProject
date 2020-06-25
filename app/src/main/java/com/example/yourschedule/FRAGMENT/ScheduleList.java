@@ -18,9 +18,10 @@ public class ScheduleList extends Fragment {
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
     private final int FRAGMENT3 = 2;
+    private final int FRAGMENT4 = 3;
 
 
-    private final String[] topTab = {"오늘 일정", "일정 입력", "이달의 일정관리"};
+    private final String[] topTab = {"오늘 일정", "일정 입력", "이주의 일정관리"};
 
     public ScheduleList newInstance() {
         return new ScheduleList();
@@ -68,10 +69,10 @@ public class ScheduleList extends Fragment {
                         setChildFragment(fragment);
                         break;
 
-//                    case 2:
-//                        fragment = new b_p().newInstance();
-//                        setChildFragment(fragment);
-//                        break;
+                    case 2://Realm_TEST로 사용.
+                        fragment = new Realm_TEST().newInstance();
+                        setChildFragment(fragment);
+                        break;
 //
 //                    case 3:
 //                        setChildFragment(FRAGMENT3);
