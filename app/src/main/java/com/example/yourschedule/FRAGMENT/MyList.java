@@ -50,7 +50,6 @@ public class MyList extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-
         recyclerView = rootView.findViewById(R.id.recyclerView);
         return rootView;
     }

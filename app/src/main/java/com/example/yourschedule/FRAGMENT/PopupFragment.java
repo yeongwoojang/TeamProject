@@ -68,28 +68,20 @@ public class PopupFragment extends DialogFragment {
         schduleRecyclerView = view.findViewById(R.id.scheduleList);
         linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         schduleRecyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new SchduleRecyclerViewAdapter(getActivity(),date);
-        schduleRecyclerView.setAdapter(adapter);
-
-
 
         previousBt = view.findViewById(R.id.previousButton);
         nextBt = view.findViewById(R.id.nextButton);
         storeBt = view.findViewById(R.id.storeBt);
         additionalBt = view.findViewById(R.id.additionalScheduleBt);
-        if(mDialogResult.invisualAddBt()){
-            additionalBt.setVisibility(View.INVISIBLE);
+
+//        adapter = new SchduleRecyclerViewAdapter(getActivity(),date);
+//        schduleRecyclerView.setAdapter(adapter);
+        if(mDialogResult.update()){
+            adapter = new SchduleRecyclerViewAdapter(getActivity(),date,true);
         }else{
-            additionalBt.setVisibility(View.VISIBLE);
+            adapter = new SchduleRecyclerViewAdapter(getActivity(),date,false);
         }
-
-        if(!pref.get(getActivity(),date).isEmpty()){
-//            Toast.makeText(getActivity(),"이미 데이터가 있습니다.",Toast.LENGTH_SHORT).show();
-
-        }
-
-
-
+        schduleRecyclerView.setAdapter(adapter);
 
         previousBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +151,7 @@ public class PopupFragment extends DialogFragment {
 
     public interface OnMyPopupDialogResult {
         void finish();
-        boolean invisualAddBt();
+        boolean update();
     }
     public void setDialogResult(OnMyPopupDialogResult dialogResult) {
         mDialogResult = dialogResult;

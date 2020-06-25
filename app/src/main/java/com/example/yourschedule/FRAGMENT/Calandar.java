@@ -38,7 +38,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     MaterialCalendarView materialCalendarView;
     ScheduleDecorator scheduleDecorator;
     SharePref pref = new SharePref();
-    boolean isAddbtDelete = false;
+    boolean areYouUpdate = false;
 
     String selectedDate="";
     private Fragment fragment;
@@ -80,10 +80,10 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
         selectedDate = format.format(date.getDate());
         if(pref.get(getActivity(),selectedDate).size()!=0){
-            isAddbtDelete = true;
+            areYouUpdate = true;
             getUpdateScheduleFragment();
         }else{
-            isAddbtDelete = false;
+            areYouUpdate = false;
             getPopupFragment(false);
         }
     }
@@ -126,8 +126,8 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     dialogFragment.dismiss();
                 }
                 @Override
-                public boolean invisualAddBt() {
-                    if(isAddbtDelete){
+                public boolean update() {
+                    if(areYouUpdate){
                         return true;
                     }else{
                         return false;
@@ -152,8 +152,8 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 }
 
                 @Override
-                public boolean invisualAddBt() {
-                    if(isAddbtDelete){
+                public boolean update() {
+                    if(areYouUpdate){
                         return true;
                     }else{
                         return false;
