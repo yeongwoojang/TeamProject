@@ -53,8 +53,6 @@ public class MyList extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
-
-
         return rootView;
     }
 
