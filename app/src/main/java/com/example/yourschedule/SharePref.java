@@ -21,7 +21,7 @@ public class SharePref {
 
         String json = pref.getString(key, null);
 
-        Log.d("json ", json+"");
+//        Log.d("json ", json+"");
 
         ArrayList<String> urls = new ArrayList<String>();
         JSONObject jsonObject = null;

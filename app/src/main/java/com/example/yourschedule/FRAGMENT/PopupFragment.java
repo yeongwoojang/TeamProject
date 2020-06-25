@@ -81,13 +81,9 @@ public class PopupFragment extends DialogFragment {
 
 
         schduleRecyclerView = view.findViewById(R.id.scheduleList);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         schduleRecyclerView.setLayoutManager(linearLayoutManager);
-        List<String> idx = new ArrayList<String>();
-        idx.add("일정1");
-        idx.add("일정2");
-        idx.add("일정3");
-        adapter = new SchduleRecyclerViewAdapter(idx,getActivity());
+        adapter = new SchduleRecyclerViewAdapter(getActivity());
         schduleRecyclerView.setAdapter(adapter);
 
 
@@ -97,9 +93,13 @@ public class PopupFragment extends DialogFragment {
         storeBt = view.findViewById(R.id.storeBt);
         additionalBt = view.findViewById(R.id.additionalScheduleBt);
 
+        if(!pref.get(getActivity(),date).isEmpty()){
+//            Toast.makeText(getActivity(),"이미 데이터가 있습니다.",Toast.LENGTH_SHORT).show();
 
-        final EditText[] scheduleText =
-                {(EditText) view.findViewById(R.id.schedule1), (EditText) view.findViewById(R.id.schedule2), (EditText) view.findViewById(R.id.schedule3)};
+        }
+
+
+
 
         previousBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,22 +140,6 @@ public class PopupFragment extends DialogFragment {
         storeBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ArrayList<String[]> schedule = new ArrayList<String[]>();
-//                String sText;
-//                for (int i = 0; i < scheduleText.length; i++) {
-//                    sText = scheduleText[i].getText().toString().trim();
-//                    Log.d("Text", sText);
-//                    if (sText.length() > 0) {
-//                        schedule.add(new String[]{sText, "false"});
-//                    }
-//                }
-//                if (schedule.size() == 0) {
-//                    Toast.makeText(getActivity(), "최소 하나의 일정은 입력하세요.", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Log.d("Text", "Success");
-//                    pref.set(getActivity(), date, schedule);
-//                    mDialogResult.finish("true");
-//                }
                 adapter.addSchedule(date);
                 mDialogResult.finish("true");
             }
@@ -164,7 +148,8 @@ public class PopupFragment extends DialogFragment {
         additionalBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                adapter.addEditText();
+                adapter.notifyItemInserted(adapter.getItemCount()+1);
             }
         });
 
@@ -180,85 +165,6 @@ public class PopupFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
-
-//    @NonNull
-//    @Override
-//    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-////        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-////        LayoutInflater inflater = getActivity().getLayoutInflater();
-////        View view = inflater.inflate(R.layout.fragment_popup, null);
-////        final TextView dateView = view.findViewById(R.id.dateView);
-////        final Button previousBt, nextBt, storeBt;
-////
-////        previousBt = view.findViewById(R.id.previousButton);
-////        nextBt = view.findViewById(R.id.nextButton);
-////        storeBt = view.findViewById(R.id.storeBt);
-////
-////
-////
-////        final EditText[] scheduleText =
-////                {(EditText) view.findViewById(R.id.schedule1), (EditText) view.findViewById(R.id.schedule2), (EditText) view.findViewById(R.id.schedule3)};
-////
-////        previousBt.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-////                try {
-////                    Calendar calendar = Calendar.getInstance();
-////                    SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-////                    Date transDate = transFormat.parse(date);
-////                    calendar.setTime(transDate);
-////                    calendar.add(Calendar.DATE, -1);
-////                    String format = transFormat.format(calendar.getTime());
-////                    date = format;
-////                    dateView.setText(format + "");
-////                    //asd
-////                } catch (Exception e) {
-////                }
-////            }
-////        });
-////        dateView.setText(date);
-////        nextBt.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-////                try {
-////                    Calendar calendar = Calendar.getInstance();
-////                    SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-////                    Date transDate = transFormat.parse(date);
-////                    calendar.setTime(transDate);
-////                    calendar.add(Calendar.DATE, 1);
-////                    String format = transFormat.format(calendar.getTime());
-////                    date = format;
-////                    dateView.setText(format + "");
-////                } catch (Exception e) {
-////                }
-////            }
-////        });
-////
-////
-////        storeBt.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-////                ArrayList<String[]> schedule = new ArrayList<String[]>();
-////                String sText;
-////                for (int i = 0; i < scheduleText.length; i++) {
-////                    sText = scheduleText[i].getText().toString().trim();
-////                    Log.d("Text",sText);
-////                    if (sText.length()>0) {
-////                        schedule.add(new String[]{sText, "false"});
-////                    }
-////                }
-////                if (schedule.size() == 0) {
-////                    Toast.makeText(getActivity(), "최소 하나의 일정은 입력하세요.", Toast.LENGTH_SHORT).show();
-////                } else {
-////                    Log.d("Text","Success");
-////                    pref.set(getActivity(), date, schedule);
-////                    mDialogResult.finish("true");
-////                }
-////            }
-////        });
-////        builder.setView(view);
-////        return builder.create();
-//    }
 
     public void setDialogResult(OnMyDialogResult dialogResult) {
         mDialogResult = dialogResult;

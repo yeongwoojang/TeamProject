@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="일정을 수정하시겠습니까?"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        ></TextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/yesBt"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="예"
+            ></Button>
+        <Button
+            android:id="@+id/noBt"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="아니오"
+            ></Button>
+    </LinearLayout>
+</LinearLayout>
