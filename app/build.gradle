@@ -32,5 +32,12 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:1.4.3'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    // 카카오 로그인
+    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: '1.29.0'
+
+    // 카카오톡
+    implementation group: 'com.kakao.sdk', name: 'kakaotalk', version: '1.29.0'
+    // 카카오링크
+    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: '1.29.0'
 
 }

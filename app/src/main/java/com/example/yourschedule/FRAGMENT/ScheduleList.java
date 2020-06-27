@@ -20,7 +20,7 @@ public class ScheduleList extends Fragment {
     private final int FRAGMENT3 = 2;
 
 
-    private final String[] topTab = {"오늘 일정", "일정 입력", "이달의 일정관리"};
+    private final String[] topTab = {"일정목록", "일정 입력", "이달의 일정관리"};
 
     public ScheduleList newInstance() {
         return new ScheduleList();

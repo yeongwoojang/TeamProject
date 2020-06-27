@@ -6,11 +6,28 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.google.android.material.tabs.TabLayout;
+import com.kakao.auth.ISessionCallback;
+import com.kakao.auth.Session;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.SocialObject;
+import com.kakao.message.template.TemplateParams;
+import com.kakao.message.template.TextTemplate;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.KakaoParameterException;
+import com.kakao.util.exception.KakaoException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
+        Session.getCurrentSession().addCallback(sessionCallback);
 
         final TabLayout bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
 
@@ -45,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         bottom_tabs.getTabAt(FRAGMENT2).setTag(FRAGMENT2);
         bottom_tabs.getTabAt(FRAGMENT3).setTag(FRAGMENT3);
 
-
+        bottom_tabs.setVisibility(View.INVISIBLE);
 
 
         bottom_tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -77,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-//        callFragment(FRAGMENT1);
-
     }
 
     private void callFragment(int frament_no) {
@@ -104,4 +120,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    private ISessionCallback sessionCallback = new ISessionCallback() {
+        @Override
+        public void onSessionOpened() {
+            Log.i("KAKAO_SESSION", "로그인 성공");
+        }
+
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            Log.e("KAKAO_SESSION", "로그인 실패", exception);
+        }
+    };
 }
