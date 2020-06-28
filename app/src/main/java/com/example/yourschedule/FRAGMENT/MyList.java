@@ -1,10 +1,6 @@
 package com.example.yourschedule.FRAGMENT;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,19 +22,14 @@ import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 import com.example.yourschedule.SharePref;
-import com.kakao.auth.Session;
-
 import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -48,8 +40,10 @@ public class MyList extends Fragment {
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
     List<Schdule> schdules = new ArrayList<>();
-    ImageButton shareBt;
-    TextView dayOfWeek,dateText;
+    ImageButton settingBt,closeSettingBt;
+    TextView dayOfWeek,dateText,logoutBt,appUnLinkBt;
+    DrawerLayout settingViewLayout;
+    View settingView;
     String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
     SharePref pref = new SharePref();
 
@@ -64,9 +58,14 @@ public class MyList extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerView);
-        shareBt = rootView.findViewById(R.id.shareBt);
         dayOfWeek = rootView.findViewById(R.id.dayOfWeek);
         dateText = rootView.findViewById(R.id.date);
+        settingBt = rootView.findViewById(R.id.settingBt);
+        settingViewLayout = rootView.findViewById(R.id.settingLayout);
+        settingView = rootView.findViewById(R.id.settingDetail);
+        closeSettingBt = rootView.findViewById(R.id.closeSettingBt);
+        logoutBt = rootView.findViewById(R.id.logoutBt);
+        appUnLinkBt = rootView.findViewById(R.id.appUnlinkBt);
         return rootView;
     }
 
@@ -86,42 +85,54 @@ public class MyList extends Fragment {
         dayOfWeek.setText(day);
         dateText.setText(selectedDate);
 
-        shareBt.setOnClickListener(new View.OnClickListener() {
+        settingBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                TemplateParams params = FeedTemplate
-//                        .newBuilder(ContentObject.newBuilder(
-//                                "디저트 사진",
-//                                "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
-//                                LinkObject.newBuilder()
-//                                        .setWebUrl("https://developers.kakao.com")
-//                                        .setMobileWebUrl("https://developers.kakao.com")
-//                                        .build())
-//                                .setDescrption("일정 공유가 도착했습니다.")
-//                                .build())
-//                        .addButton(new ButtonObject(
-//                                "앱에서 보기",
-//                                LinkObject.newBuilder()
-//                                        .setMobileWebUrl("'https://www.naver.com'")
-//                                        .setAndroidExecutionParams("value=key")
-//                                        .build()))
-//                        .build();
-//                KakaoLinkService.getInstance()
-//                        .sendDefault(getActivity(), params, new ResponseCallback<KakaoLinkResponse>() {
-//                            @Override
-//                            public void onFailure(ErrorResult errorResult) {
-//                                Log.e("KAKAO_API", "카카오링크 공유 실패: " + errorResult);
-//                            }
-//
-//                            @Override
-//                            public void onSuccess(KakaoLinkResponse result) {
-//                                Log.i("KAKAO_API", "카카오링크 공유 성공");
-//
-//                                // 카카오링크 보내기에 성공했지만 아래 경고 메시지가 존재할 경우 일부 컨텐츠가 정상 동작하지 않을 수 있습니다.
-//                                Log.w("KAKAO_API", "warning messages: " + result.getWarningMsg());
-//                                Log.w("KAKAO_API", "argument messages: " + result.getArgumentMsg());
-//                            }
-//                        });
+                settingViewLayout.openDrawer(settingView);
+            }
+        });
+        closeSettingBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingViewLayout.closeDrawer(settingView);
+            }
+        });
+
+        logoutBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserManagement.getInstance()
+                        .requestLogout(new LogoutResponseCallback() {
+                            @Override
+                            public void onCompleteLogout() {
+                                Log.i("KAKAO_API", "로그아웃 완료");
+                                settingViewLayout.closeDrawer(settingView);
+                            }
+                        });
+            }
+        });
+
+        appUnLinkBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserManagement.getInstance()
+                        .requestUnlink(new UnLinkResponseCallback() {
+                            @Override
+                            public void onSessionClosed(ErrorResult errorResult) {
+                                Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
+                            }
+
+                            @Override
+                            public void onFailure(ErrorResult errorResult) {
+                                Log.e("KAKAO_API", "연결 끊기 실패: " + errorResult);
+
+                            }
+                            @Override
+                            public void onSuccess(Long result) {
+                                Log.i("KAKAO_API", "연결 끊기 성공. id: " + result);
+                                settingViewLayout.closeDrawer(settingView);
+                            }
+                        });
             }
         });
         ArrayList<String> storedList = pref.get(this.getActivity(), selectedDate);
