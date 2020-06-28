@@ -16,9 +16,12 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.google.android.material.tabs.TabLayout;
+import com.kakao.auth.ApiResponseCallback;
+import com.kakao.auth.AuthService;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
+import com.kakao.auth.network.response.AccessTokenInfoResponse;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -212,6 +215,25 @@ public class MainActivity extends AppCompatActivity {
 
         // 사용자 정보 요청
         public void requestMe() {
+            AuthService.getInstance()
+                    .requestAccessTokenInfo(new ApiResponseCallback<AccessTokenInfoResponse>() {
+                        @Override
+                        public void onSessionClosed(ErrorResult errorResult) {
+                            Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
+                        }
+
+                        @Override
+                        public void onFailure(ErrorResult errorResult) {
+                            Log.e("KAKAO_API", "토큰 정보 요청 실패: " + errorResult);
+                        }
+
+                        @Override
+                        public void onSuccess(AccessTokenInfoResponse result) {
+                            Log.i("KAKAO_API", "사용자 아이디: " + result.getUserId());
+                            Log.i("KAKAO_API", "남은 시간(s): " + result.getExpiresInMillis());;
+                            Log.i("KAKAO_API", "result" + result);
+                        }
+                    });
 
             UserManagement.getInstance()
                     .me(new MeV2ResponseCallback() {
@@ -277,6 +299,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+
 
         }
 
