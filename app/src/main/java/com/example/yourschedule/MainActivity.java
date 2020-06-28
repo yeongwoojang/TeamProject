@@ -266,6 +266,12 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     // 프로필 획득 불가
                                 }
+                                //추가
+
+
+
+
+
                             } else {
                                 Log.d("KAKAO_API", kakaoAccount + "");
                             }
