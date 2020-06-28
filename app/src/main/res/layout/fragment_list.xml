@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settingLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EC224160"
     tools:context=".FRAGMENT.MyList"
    >
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    >
     <FrameLayout
         android:id="@+id/head"
         android:layout_width="match_parent"
@@ -45,11 +50,12 @@
             android:textColor="#ffffff"
             />
         </LinearLayout>
+
         <ImageButton
-            android:id="@+id/shareBt"
+            android:id="@+id/settingBt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/baseline_share_white_18dp"
+            android:src="@drawable/baseline_settings_white_18dp"
             android:background="@color/transparent"
             android:layout_gravity="right"
             ></ImageButton>
@@ -71,7 +77,59 @@
 
 
     </LinearLayout>
-
-
-
 </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settingDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EC224160"
+        android:layout_gravity="end"
+        android:gravity="start"
+    >
+        <ImageButton
+            android:id="@+id/closeSettingBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_ios_white_18dp"
+            android:background="@color/transparent"
+
+           />
+        <LinearLayout
+            android:id="@+id/settingContents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/closeSettingBt"
+            >
+        <TextView
+            android:id="@+id/logoutBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그아웃"
+            android:fontFamily="@font/baemin"
+            android:textColor="#ffffff"
+            android:textSize="24dp"
+            android:padding="10dp"
+            />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ffffff"
+                ></LinearLayout>
+            <TextView
+                android:id="@+id/appUnlinkBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="앱 연결 해제"
+                android:fontFamily="@font/baemin"
+                android:textColor="#ffffff"
+                android:textSize="24dp"
+                android:padding="10dp"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

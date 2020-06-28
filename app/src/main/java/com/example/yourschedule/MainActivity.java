@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private final int FRAGMENT3 = 2;
     private final String[] bottomTab = {"일정관리", "날씨정보", "추가예정"};
     private TabLayout bottom_tabs;
-    private Button logoutBt,appUnlink;
+
     private ImageButton loginBt;
     private Context mContext = null;
 
@@ -59,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
-        logoutBt = (Button) findViewById(R.id.logoutBt);
-        appUnlink = (Button)findViewById(R.id.appUnLinkBt);
+
         loginBt = (ImageButton) findViewById(R.id.login_button);
 
         for (int i = 0; i < bottomTab.length; i++) {
@@ -88,40 +87,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        logoutBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserManagement.getInstance()
-                        .requestLogout(new LogoutResponseCallback() {
-                            @Override
-                            public void onCompleteLogout() {
-                                Log.i("KAKAO_API", "로그아웃 완료");
-                            }
-                        });
-            }
-        });
-        appUnlink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserManagement.getInstance()
-                        .requestUnlink(new UnLinkResponseCallback() {
-                            @Override
-                            public void onSessionClosed(ErrorResult errorResult) {
-                                Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
-                            }
-
-                            @Override
-                            public void onFailure(ErrorResult errorResult) {
-                                Log.e("KAKAO_API", "연결 끊기 실패: " + errorResult);
-
-                            }
-                            @Override
-                            public void onSuccess(Long result) {
-                                Log.i("KAKAO_API", "연결 끊기 성공. id: " + result);
-                            }
-                        });
-            }
-        });
 
         bottom_tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -234,10 +199,9 @@ public class MainActivity extends AppCompatActivity {
                             UserAccount kakaoAccount = result.getKakaoAccount();
                             bottom_tabs.setVisibility(View.VISIBLE);
                             loginBt.setVisibility(View.INVISIBLE);
-                            logoutBt.setVisibility(View.INVISIBLE);
-                            appUnlink.setVisibility(View.INVISIBLE);
+                            callFragment(FRAGMENT1);
                             if (kakaoAccount != null) {
-//                                redirectSignupActivity();
+
                                 // 이메일
                                 String email = kakaoAccount.getEmail();
                                 Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount.getPhoneNumber());
@@ -255,11 +219,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 // 프로필
                                 Profile profile = kakaoAccount.getProfile();
-                                Log.d("KAKAO_API", profile + "");
                                 if (profile != null) {
                                     Log.d("KAKAO_API", "nickname: " + profile.getNickname());
-                                    Log.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
-                                    Log.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
 
                                 } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
                                     // 동의 요청 후 프로필 정보 획득 가능
