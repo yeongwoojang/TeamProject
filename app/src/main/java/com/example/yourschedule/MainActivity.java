@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.kakao.auth.ApiResponseCallback;
 import com.kakao.auth.AuthService;
 import com.kakao.auth.AuthType;
@@ -33,8 +35,11 @@ import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
     private SessionCallback sessionCallback = new SessionCallback();
+    private FirebaseAuth mAuth;
     //유저 프로필
     String token;
     String name = "";
@@ -55,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         startActivity(new Intent(this, LoadingActivity.class));
         setContentView(R.layout.activity_main);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
 
         mContext = this;
 
@@ -156,6 +165,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
+    }
+
+    private void updateUI(FirebaseUser currentUser) {
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -204,7 +224,11 @@ public class MainActivity extends AppCompatActivity {
         // 로그인에 성공한 상태
         @Override
         public void onSessionOpened() {
-            requestMe();
+            try {
+                requestMe();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // 로그인에 실패한 상태
@@ -214,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 사용자 정보 요청
-        public void requestMe() {
+        public void requestMe() throws IOException {
             AuthService.getInstance()
                     .requestAccessTokenInfo(new ApiResponseCallback<AccessTokenInfoResponse>() {
                         @Override
@@ -299,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
+
 
 
 
