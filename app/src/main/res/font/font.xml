@@ -20,4 +20,10 @@
         android:fontWeight = "400"
         android:font = '@font/nanumsquare_r'
         ></font>
+
+    <font
+        android:fontStyle ="normal"
+        android:fontWeight = "400"
+        android:font = '@font/baemin'
+        ></font>
 </font-family>
