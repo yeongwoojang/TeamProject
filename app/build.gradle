@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -42,5 +43,9 @@ dependencies {
     // 카카오링크
     implementation "com.kakao.sdk:v2-link-rx:2.0.0-beta02"
     implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+
+    //파이어베이스
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
 
 }

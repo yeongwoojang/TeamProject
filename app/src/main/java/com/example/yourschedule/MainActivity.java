@@ -17,26 +17,25 @@ import android.widget.TextView;
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.google.android.material.tabs.TabLayout;
+
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
-import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.usermgmt.response.model.Profile;
 import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 
+
 public class MainActivity extends AppCompatActivity {
     private SessionCallback sessionCallback = new SessionCallback();
     //유저 프로필
     String token;
     String name = "";
-
     Session session;
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
-
 
 
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
@@ -200,9 +198,10 @@ public class MainActivity extends AppCompatActivity {
                             bottom_tabs.setVisibility(View.VISIBLE);
                             loginBt.setVisibility(View.INVISIBLE);
                             callFragment(FRAGMENT1);
-                            if (kakaoAccount != null) {
 
+                            if (kakaoAccount != null) {
                                 // 이메일
+
                                 String email = kakaoAccount.getEmail();
                                 Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount.getPhoneNumber());
                                 Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount);
@@ -221,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
                                 Profile profile = kakaoAccount.getProfile();
                                 if (profile != null) {
                                     Log.d("KAKAO_API", "nickname: " + profile.getNickname());
-
                                 } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
                                     // 동의 요청 후 프로필 정보 획득 가능
 
