@@ -21,11 +21,24 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
         >
+        <Button
+            android:id="@+id/appUnLinkBt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="앱연결해제" />
+        <Button
+            android:id="@+id/logoutBt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="로그아웃" />
         <ImageButton
-            android:id="@+id/kakaoLoginBt"
+            android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
             android:src="@drawable/kakao_login_medium_wide"
             android:layout_gravity="center_horizontal"
             ></ImageButton>
