@@ -2,55 +2,55 @@ package com.example.yourschedule.ADAPTER;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.yourschedule.FRAGMENT.MyList;
-import com.example.yourschedule.OBJECT.Schdule;
+import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     private Activity activity;
-    private List<Schdule> schdules;
-    private MyList gp;
+    private List<ScheduleDTO> scheduleDTOS;
+    private String today;
+    private int itemIndex;
+    private int listCount;
+    FirebaseAuth auth;
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
 
-    public RecyclerViewAdapter(Activity activity, List<Schdule> schdules){
+    public RecyclerViewAdapter(Activity activity, List<ScheduleDTO> scheduleDTOS,String today){
         this.activity = activity;
-        this.schdules = schdules;
+        this.scheduleDTOS = scheduleDTOS;
+        this.today = today;
 
     }
 
     @Override
     public int getItemCount(){
-        return schdules.size();
+        for(int i=0;i<scheduleDTOS.size();i++){
+            if(scheduleDTOS.get(i).getDate().equals(today)){
+                itemIndex = i;
+                listCount = scheduleDTOS.get(i).getSchedule().size();
+                Log.d("Firebase",listCount+"");
+                return listCount;
+            }
+        }
+        return 0;
     }
 
 
@@ -78,30 +78,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int posotion){
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-            final String today = transFormat.format(calendar.getTime());
+//            Calendar calendar = Calendar.getInstance();
+//            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+//            final String today = transFormat.format(calendar.getTime());
 
 
-                holder.item.setText(schdules.get(posotion).getItem());
-                holder.scheduleChk.setChecked(schdules.get(posotion).isChk());
-                holder.scheduleChk.setTag(schdules.get(posotion));
+                //ItemInex로 오늘 날짜인지를 구분.
+                holder.item.setText(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
+                holder.scheduleChk.setChecked(scheduleDTOS.get(itemIndex).getIsComplete().get(posotion));
+                holder.scheduleChk.setTag(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
 
 
 
-                if(chkValue(today,schdules.get(posotion).getItem())){
-                    schdules.get(posotion).setChk(true);
-        holder.scheduleChk.setChecked(schdules.get(posotion).isChk());
+                if(chkValue(scheduleDTOS.get(itemIndex).getSchedule().get(posotion))){
+                    scheduleDTOS.get(itemIndex).getIsComplete().set(posotion,true);
+                     holder.scheduleChk.setChecked(scheduleDTOS.get(itemIndex).getIsComplete().get(posotion));
     }
 
                 holder.scheduleChk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         CheckBox checkBox = (CheckBox)v;
-                        Schdule contact  = (Schdule)checkBox.getTag();
 
-                        contact.setChk(checkBox.isChecked());
-                        schdules.get(posotion).setChk(checkBox.isChecked());
+//                        Schdule contact  = (Schdule)checkBox.getTag();
+
+//                        holder.scheduleChk.
+//                        contact.setChk(checkBox.isChecked());
+//                        schdules.get(posotion).setChk(checkBox.isChecked());
 
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -110,25 +113,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
-                                        changeScheduleChkValue(today,schdules.get(posotion).getItem());
+                                        changeScheduleChkValue(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
+                                        Log.d("safdsdf",checkBox.getTag().toString());
+                                        checkBox.setChecked(chkValue(checkBox.getTag().toString()));
                                     }
                                 })
                                 .create()
                                 .show();
-
-                        Toast.makeText(
-                                v.getContext(),
-                                "Clicked on Checkbox: " + schdules.get(posotion).getItem() + " is "
-                                        + checkBox.isChecked(), Toast.LENGTH_LONG).show();
                     }
-
                 });
 
 
@@ -136,66 +133,89 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    public void changeScheduleChkValue(String key, String value){
-        SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        String json = pref.getString(key, null);
-
-        JSONObject jsonObject = null;
-        if (json != null) {
-            try {
-                JSONArray jsonArray = new JSONArray(json);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    jsonObject = jsonArray.getJSONObject(i);
-                }
-                if(jsonObject.getString(value).equals("false")){
-                    jsonObject.put(value,"true");
+    public void changeScheduleChkValue(String value){
+        for(int i=0;i<listCount;i++){
+            if(scheduleDTOS.get(itemIndex).getSchedule().get(i).equals(value)){
+                if( scheduleDTOS.get(itemIndex).getIsComplete().get(i).equals(false)){
+                    scheduleDTOS.get(itemIndex).getIsComplete().set(i,true);
                 }else{
-                    jsonObject.put(value,"false");
+                    scheduleDTOS.get(itemIndex).getIsComplete().set(i,false);
                 }
-                Log.d("jsonArray",jsonArray+"");
-                editor.putString(key,jsonArray.toString()).apply();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public Boolean chkValue(String key, String value) {
-        SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-        String json = pref.getString(key, null);
-        ArrayList<String> keyList = new ArrayList<>();
-        JSONObject jsonObject = null;
-        if (json != null) {
-            try {
-                JSONArray jsonArray = new JSONArray(json);
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    jsonObject = jsonArray.getJSONObject(i);
-                }
-                Iterator iterator = jsonObject.keys();
-                while (iterator.hasNext()) {
-                    String kTemp = iterator.next().toString();
-                        keyList.add(kTemp);
-                }
-                for (int i = 0; i < jsonObject.length(); i++) {
-                    if (jsonObject.getString(value).equals("true")) {
-                        return true;
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
 
         }
-        return false;
+        auth = FirebaseAuth.getInstance();
+        ScheduleDTO scheduleDTO = scheduleDTOS.get(itemIndex);
+        mDatabase.child(auth.getCurrentUser().getDisplayName())
+                .child(today.replace(".","-"))
+                .setValue(scheduleDTO);
+//        SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = pref.edit();
+//        String json = pref.getString(key, null);
+//
+//        JSONObject jsonObject = null;
+//        if (json != null) {
+//            try {
+//                JSONArray jsonArray = new JSONArray(json);
+//                for (int i = 0; i < jsonArray.length(); i++) {
+//                    jsonObject = jsonArray.getJSONObject(i);
+//                }
+//                if(jsonObject.getString(value).equals("false")){
+//                    jsonObject.put(value,"true");
+//                }else{
+//                    jsonObject.put(value,"false");
+//                }
+//                Log.d("jsonArray",jsonArray+"");
+//                editor.putString(key,jsonArray.toString()).apply();
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
-    private void removeItemView(int position){
-        schdules.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position,schdules.size());
+    public Boolean chkValue(String value) {
+        for(int i=0; i<listCount;i++){
+            if(scheduleDTOS.get(itemIndex).getSchedule().get(i).equals(value)){
+                if(scheduleDTOS.get(itemIndex).getIsComplete().get(i)==false){
+                    return false;
+                }
+            }
+        }
+//        SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+//        String json = pref.getString(key, null);
+//        ArrayList<String> keyList = new ArrayList<>();
+//        JSONObject jsonObject = null;
+//        if (json != null) {
+//            try {
+//                JSONArray jsonArray = new JSONArray(json);
+//
+//                for (int i = 0; i < jsonArray.length(); i++) {
+//                    jsonObject = jsonArray.getJSONObject(i);
+//                }
+//                Iterator iterator = jsonObject.keys();
+//                while (iterator.hasNext()) {
+//                    String kTemp = iterator.next().toString();
+//                        keyList.add(kTemp);
+//                }
+//                for (int i = 0; i < jsonObject.length(); i++) {
+//                    if (jsonObject.getString(value).equals("true")) {
+//                        return true;
+//                    }
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//        return false;
+        return true;
     }
+
+//    private void removeItemView(int position){
+//        schdules.remove(position);
+//        notifyItemRemoved(position);
+//        notifyItemRangeChanged(position,schdules.size());
+//    }
 
 
 }
