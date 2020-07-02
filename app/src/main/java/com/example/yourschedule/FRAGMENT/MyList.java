@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.yourschedule.OBJECT.Schdule;
+import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 import com.example.yourschedule.SharePref;
@@ -45,6 +46,7 @@ public class MyList extends Fragment {
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
     List<Schdule> schdules = new ArrayList<>();
+    List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     ImageButton settingBt,closeSettingBt;
     TextView dayOfWeek,dateText,logoutBt,appUnLinkBt;
     DrawerLayout settingViewLayout;
@@ -97,12 +99,15 @@ public class MyList extends Fragment {
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
-                .child(today.replace(".","-"))
+//                .child(today.replace(".","-"))
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            Log.d("Firebase", snapshot.getValue().toString());
+                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+                            Log.d("Firebase",snapshot.getValue()+"");
+                            scheduleDTOS.add(scheduleDTO);
+                            Log.d("Firebase", scheduleDTOS.size()+"");
                         }
                     }
 
@@ -168,7 +173,7 @@ public class MyList extends Fragment {
                 schdules.add(new Schdule(storedList.get(i)));
             }
         }
-        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), schdules);
+        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 

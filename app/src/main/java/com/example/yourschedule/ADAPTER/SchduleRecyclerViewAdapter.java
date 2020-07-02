@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.yourschedule.OBJECT.UserDTO;
+import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
 import com.google.firebase.auth.FirebaseAuth;
@@ -129,19 +129,27 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     //일정을 저장하는 메소드
     public void addSchedule(String key){
         auth = FirebaseAuth.getInstance();
-        UserDTO userDTO = new UserDTO();
-        SharePref pref = new SharePref();
-        userDTO.setDate(date);
-        userDTO.setEmail(auth.getCurrentUser().getEmail());
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+//        SharePref pref = new SharePref();
+        scheduleDTO.setDate(date);
+//        userDTO.setName(auth.getCurrentUser().getDisplayName());
         Arrays.asList(dataSet);
-        for(int i = 0; i< scheduleListSize; i++){
-                if(!(dataSet.get(i).length()==0)){
-                    schedules.add(new String[]{dataSet.get(i),"false"});
-                }
-            }
+        List<Boolean> isComplete = new ArrayList<>();
+        for(int i=0;i<dataSet.size();i++){
+            isComplete.add(false);
+        }
+        Arrays.asList(isComplete);
+        scheduleDTO.setSchedule(dataSet);
+        scheduleDTO.setIsComplete(isComplete);
+//        for(int i = 0; i< scheduleListSize; i++){
+//                if(!(dataSet.get(i).length()==0)){
+//                    schedules.add(new String[]{dataSet.get(i),"false"});
+//                }
+//            }
+//        Arrays.asList(schedules);
         mDatabase.child(auth.getCurrentUser().getDisplayName())
                 .child(date.replace(".","-"))
-                .setValue(dataSet);
+                .setValue(scheduleDTO);
         if(schedules.size()==0){
             Log.d("aaa","하나 이상의 일정을 입력하세요");
         }
