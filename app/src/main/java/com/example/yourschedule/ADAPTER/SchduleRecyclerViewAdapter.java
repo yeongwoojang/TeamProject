@@ -34,7 +34,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     int scheduleListSize;
     FirebaseAuth auth;
 
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
 // ...
 
 
@@ -138,9 +138,10 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                 if(!(dataSet.get(i).length()==0)){
                     schedules.add(new String[]{dataSet.get(i),"false"});
                 }
-            mDatabase.child("usersSchedule").push().child(auth.getCurrentUser().getDisplayName()).child(date.replace(".","-")).setValue(dataSet);
             }
-
+        mDatabase.child(auth.getCurrentUser().getDisplayName())
+                .child(date.replace(".","-"))
+                .setValue(dataSet);
         if(schedules.size()==0){
             Log.d("aaa","하나 이상의 일정을 입력하세요");
         }

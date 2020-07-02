@@ -22,6 +22,11 @@ import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 import com.example.yourschedule.SharePref;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -45,6 +50,8 @@ public class MyList extends Fragment {
     DrawerLayout settingViewLayout;
     View settingView;
     String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
+    FirebaseAuth auth;
+    FirebaseDatabase mDatabase;
     SharePref pref = new SharePref();
 
     public MyList newInstance() {
@@ -78,12 +85,32 @@ public class MyList extends Fragment {
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
 
+
+
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-        String selectedDate = transFormat.format(calendar.getTime());
+        String today = transFormat.format(calendar.getTime());
         String day = days[calendar.get(Calendar.DAY_OF_WEEK)-1];
         dayOfWeek.setText(day);
-        dateText.setText(selectedDate);
+        dateText.setText(today);
+
+        mDatabase = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
+        mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
+                .child(today.replace(".","-"))
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            Log.d("Firebase", snapshot.getValue().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
         settingBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +162,7 @@ public class MyList extends Fragment {
                         });
             }
         });
-        ArrayList<String> storedList = pref.get(this.getActivity(), selectedDate);
+        ArrayList<String> storedList = pref.get(this.getActivity(), today);
         if (storedList.size()!=0) {
             for (int i = 0; i < storedList.size(); i++) {
                 schdules.add(new Schdule(storedList.get(i)));

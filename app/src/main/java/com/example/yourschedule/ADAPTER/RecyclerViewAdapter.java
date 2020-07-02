@@ -13,11 +13,17 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,12 +41,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Activity activity;
     private List<Schdule> schdules;
     private MyList gp;
-    private List<Schdule> scList;
 
     public RecyclerViewAdapter(Activity activity, List<Schdule> schdules){
         this.activity = activity;
         this.schdules = schdules;
-        this.scList = schdules;
+
     }
 
     @Override
@@ -73,19 +78,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int posotion){
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+            final String today = transFormat.format(calendar.getTime());
+
 
                 holder.item.setText(schdules.get(posotion).getItem());
                 holder.scheduleChk.setChecked(schdules.get(posotion).isChk());
                 holder.scheduleChk.setTag(schdules.get(posotion));
 
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-                final String today = transFormat.format(calendar.getTime());
+
 
                 if(chkValue(today,schdules.get(posotion).getItem())){
                     schdules.get(posotion).setChk(true);
-                    holder.scheduleChk.setChecked(schdules.get(posotion).isChk());
-                }
+        holder.scheduleChk.setChecked(schdules.get(posotion).isChk());
+    }
 
                 holder.scheduleChk.setOnClickListener(new View.OnClickListener() {
                     @Override
