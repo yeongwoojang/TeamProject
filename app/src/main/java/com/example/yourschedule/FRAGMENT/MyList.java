@@ -109,6 +109,7 @@ public class MyList extends Fragment {
                             scheduleDTOS.add(scheduleDTO);
                             Log.d("Firebase", scheduleDTOS.size()+"");
                         }
+                        recyclerViewAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -175,6 +176,7 @@ public class MyList extends Fragment {
         }
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
         recyclerView.setAdapter(recyclerViewAdapter);
+
     }
 
 }
