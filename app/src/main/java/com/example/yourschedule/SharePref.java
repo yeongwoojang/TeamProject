@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class SharePref {
     //getStringArrayPref
@@ -42,7 +43,7 @@ public class SharePref {
         return schedules;
     }
 
-    public void set(Activity activity, String key, ArrayList<String[]> values){
+    public void set(Activity activity, String key, List<String[]> values){
         SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         JSONObject jsonObject = new JSONObject();

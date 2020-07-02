@@ -13,19 +13,31 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.OBJECT.UserDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
     public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
-    private ArrayList<String[]> schedules = new ArrayList<String[]>();
+    private List<String[]> schedules = new ArrayList<String[]>();
     private Activity activity;
     private String date;
     private ArrayList<String> dataSet = new ArrayList<String>();
     boolean isUpdate;
     int scheduleListSize;
+    FirebaseAuth auth;
+
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+// ...
+
+
     SharePref pref = new SharePref();
     public SchduleRecyclerViewAdapter(Activity activity,String date,boolean isUpdate) {
         this.isUpdate = isUpdate;
@@ -116,16 +128,23 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     }
     //일정을 저장하는 메소드
     public void addSchedule(String key){
+        auth = FirebaseAuth.getInstance();
+        UserDTO userDTO = new UserDTO();
         SharePref pref = new SharePref();
-            for(int i = 0; i< scheduleListSize; i++){
+        userDTO.setDate(date);
+        userDTO.setEmail(auth.getCurrentUser().getEmail());
+        Arrays.asList(dataSet);
+        for(int i = 0; i< scheduleListSize; i++){
                 if(!(dataSet.get(i).length()==0)){
                     schedules.add(new String[]{dataSet.get(i),"false"});
                 }
+            mDatabase.child("usersSchedule").push().child(auth.getCurrentUser().getDisplayName()).child(date.replace(".","-")).setValue(dataSet);
             }
 
         if(schedules.size()==0){
             Log.d("aaa","하나 이상의 일정을 입력하세요");
         }
         pref.set(activity,key,schedules);
+
     }
 }

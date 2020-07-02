@@ -1,5 +1,6 @@
 package com.example.yourschedule;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +17,21 @@ import android.widget.TextView;
 
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -30,9 +44,13 @@ import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
-    private SessionCallback sessionCallback = new SessionCallback();
+    public static final int RC_SIGN_IN =10;
+//    private SessionCallback sessionCallback = new SessionCallback();
     //유저 프로필
     String token;
     String name = "";
@@ -43,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
     private final String[] bottomTab = {"일정관리", "날씨정보", "추가예정"};
     private TabLayout bottom_tabs;
 
-    private ImageButton loginBt;
+    private SignInButton loginBt;
     private Context mContext = null;
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -54,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
-
+        mAuth = FirebaseAuth.getInstance();
 
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
 
-        loginBt = (ImageButton) findViewById(R.id.login_button);
+        loginBt = (SignInButton) findViewById(R.id.login_button);
 
         for (int i = 0; i < bottomTab.length; i++) {
             bottom_tabs.addTab(bottom_tabs.newTab());
@@ -76,12 +96,22 @@ public class MainActivity extends AppCompatActivity {
 
         bottom_tabs.setVisibility(View.INVISIBLE);
 
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         loginBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                session = Session.getCurrentSession();
-                session.addCallback(sessionCallback);
-                session.open(AuthType.KAKAO_TALK, MainActivity.this);
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+
+//                session = Session.getCurrentSession();
+//                session.addCallback(sessionCallback);
+//                session.open(AuthType.KAKAO_TALK, MainActivity.this);
             }
         });
 
@@ -116,26 +146,61 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        callFragment(FRAGMENT1);
     }
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // 세션 콜백 삭제
-        Session.getCurrentSession().removeCallback(sessionCallback);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        // 카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK로 전달
-        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
-
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (ApiException e) {
+
+            }
+        }
     }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        // [START_EXCLUDE silent]
+        // [END_EXCLUDE]
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                        }
+                    }
+                });
+    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        // 세션 콜백 삭제
+//        Session.getCurrentSession().removeCallback(sessionCallback);
+//    }
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        // 카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK로 전달
+//        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+//            return;
+//        }
+//
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     private void callFragment(int frament_no) {
 
@@ -161,80 +226,80 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class SessionCallback implements ISessionCallback {
-        // 로그인에 성공한 상태
-        @Override
-        public void onSessionOpened() {
-            requestMe();
-        }
-
-        // 로그인에 실패한 상태
-        @Override
-        public void onSessionOpenFailed(KakaoException exception) {
-            Log.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
-        }
-
-        // 사용자 정보 요청
-        public void requestMe() {
-
-            UserManagement.getInstance()
-                    .me(new MeV2ResponseCallback() {
-                        @Override
-                        public void onSessionClosed(ErrorResult errorResult) {
-                            Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
-                        }
-
-                        @Override
-                        public void onFailure(ErrorResult errorResult) {
-                            Log.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
-
-
-                        }
-
-                        @Override
-                        public void onSuccess(MeV2Response result) {
-                            Log.i("KAKAO_API", "사용자 아이디: " + result.getId());
-                            UserAccount kakaoAccount = result.getKakaoAccount();
-                            bottom_tabs.setVisibility(View.VISIBLE);
-                            loginBt.setVisibility(View.INVISIBLE);
-                            callFragment(FRAGMENT1);
-
-                            if (kakaoAccount != null) {
-                                // 이메일
-
-                                String email = kakaoAccount.getEmail();
-                                Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount.getPhoneNumber());
-                                Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount);
-                                if (email != null) {
-                                    Log.i("KAKAO_API", "email: " + email);
-
-                                } else if (kakaoAccount.emailNeedsAgreement() == OptionalBoolean.TRUE) {
-                                    // 동의 요청 후 이메일 획득 가능
-                                    // 단, 선택 동의로 설정되어 있다면 서비스 이용 시나리오 상에서 반드시 필요한 경우에만 요청해야 합니다.
-
-                                } else {
-                                    // 이메일 획득 불가
-                                }
-
-                                // 프로필
-                                Profile profile = kakaoAccount.getProfile();
-                                if (profile != null) {
-                                    Log.d("KAKAO_API", "nickname: " + profile.getNickname());
-                                } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
-                                    // 동의 요청 후 프로필 정보 획득 가능
-
-                                } else {
-                                    // 프로필 획득 불가
-                                }
-                            } else {
-                                Log.d("KAKAO_API", kakaoAccount + "");
-
-                            }
-                        }
-                    });
-
-        }
-
-
-    }
+//    public class SessionCallback implements ISessionCallback {
+//        // 로그인에 성공한 상태
+//        @Override
+//        public void onSessionOpened() {
+//            requestMe();
+//        }
+//
+//        // 로그인에 실패한 상태
+//        @Override
+//        public void onSessionOpenFailed(KakaoException exception) {
+//            Log.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
+//        }
+//
+//        // 사용자 정보 요청
+//        public void requestMe() {
+//
+//            UserManagement.getInstance()
+//                    .me(new MeV2ResponseCallback() {
+//                        @Override
+//                        public void onSessionClosed(ErrorResult errorResult) {
+//                            Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
+//                        }
+//
+//                        @Override
+//                        public void onFailure(ErrorResult errorResult) {
+//                            Log.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
+//
+//
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(MeV2Response result) {
+//                            Log.i("KAKAO_API", "사용자 아이디: " + result.getId());
+//                            UserAccount kakaoAccount = result.getKakaoAccount();
+//                            bottom_tabs.setVisibility(View.VISIBLE);
+//                            loginBt.setVisibility(View.INVISIBLE);
+//                            callFragment(FRAGMENT1);
+//
+//                            if (kakaoAccount != null) {
+//                                // 이메일
+//
+//                                String email = kakaoAccount.getEmail();
+//                                Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount.getPhoneNumber());
+//                                Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount);
+//                                if (email != null) {
+//                                    Log.i("KAKAO_API", "email: " + email);
+//
+//                                } else if (kakaoAccount.emailNeedsAgreement() == OptionalBoolean.TRUE) {
+//                                    // 동의 요청 후 이메일 획득 가능
+//                                    // 단, 선택 동의로 설정되어 있다면 서비스 이용 시나리오 상에서 반드시 필요한 경우에만 요청해야 합니다.
+//
+//                                } else {
+//                                    // 이메일 획득 불가
+//                                }
+//
+//                                // 프로필
+//                                Profile profile = kakaoAccount.getProfile();
+//                                if (profile != null) {
+//                                    Log.d("KAKAO_API", "nickname: " + profile.getNickname());
+//                                } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
+//                                    // 동의 요청 후 프로필 정보 획득 가능
+//
+//                                } else {
+//                                    // 프로필 획득 불가
+//                                }
+//                            } else {
+//                                Log.d("KAKAO_API", kakaoAccount + "");
+//
+//                            }
+//                        }
+//                    });
+//
+//        }
+//
+//
+//    }
 }
