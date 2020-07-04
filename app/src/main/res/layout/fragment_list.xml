@@ -102,6 +102,21 @@
             android:orientation="vertical"
             android:layout_below="@+id/closeSettingBt"
             >
+            <TextView
+                android:id="@+id/shareBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="공유하기"
+                android:fontFamily="@font/baemin"
+                android:textColor="#ffffff"
+                android:textSize="24dp"
+                android:padding="10dp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ffffff"
+                ></LinearLayout>
         <TextView
             android:id="@+id/logoutBt"
             android:layout_width="wrap_content"
@@ -127,7 +142,11 @@
                 android:textSize="24dp"
                 android:padding="10dp"
                 />
-
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ffffff"
+                ></LinearLayout>
         </LinearLayout>
 
 

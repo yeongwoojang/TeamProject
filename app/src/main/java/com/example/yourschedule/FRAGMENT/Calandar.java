@@ -4,6 +4,7 @@ package com.example.yourschedule.FRAGMENT;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
 import com.example.yourschedule.DECORATOR.SaturDayDecorator;
 import com.example.yourschedule.DECORATOR.ScheduleDecorator;
 import com.example.yourschedule.DECORATOR.SunDayDecorator;
 import com.example.yourschedule.DECORATOR.TodayDecorator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,14 +43,15 @@ import java.util.Calendar;
 public class Calandar extends Fragment implements OnDateSelectedListener, OnMonthChangedListener {
 
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
-    ArrayList<String> DecoratorList = new ArrayList<String>();
     MaterialCalendarView materialCalendarView;
     ScheduleDecorator scheduleDecorator;
     SharePref pref = new SharePref();
     boolean areYouUpdate = false;
-
     String selectedDate="";
+    FirebaseAuth auth;
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
     private Fragment fragment;
+
 
     public Calandar newInstance() {
         return new Calandar();
@@ -170,31 +180,28 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
     public void calendarUpdate(){
 
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
 
-        String selectedDate;
+        mDatabase.child(auth.getCurrentUser().getDisplayName())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+                            if(scheduleDTO.getDate()!=null){
+                                try {
+                                    scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTO.getDate()));
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                materialCalendarView.addDecorators(scheduleDecorator, new SaturDayDecorator(), new SunDayDecorator());
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        Calendar calendar = Calendar.getInstance();
-
-        String year = yearFormat.format(calendar.getTime());
-        String month = monthFormat.format(calendar.getTime());
-
-
-        ArrayList<String> storedList;
-
-        for (int i = 1; i <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-            calendar.set(Integer.parseInt(year), Integer.parseInt(month) - 1, i);
-            selectedDate = transFormat.format((calendar.getTime()));
-//            storedList = getStringArrayPref(selectedDate); //key값에 따른 데이터 유무 확인해서 있으면 value 가져오는거
-            storedList = pref.get(this.getActivity(), selectedDate);
-
-            if (storedList.size()!=0) {
-                scheduleDecorator = new ScheduleDecorator((calendar.getTime()));
-                materialCalendarView.addDecorators(scheduleDecorator, new SaturDayDecorator(), new SunDayDecorator());
-            }
-        }
-
+                    }
+                });
     }
 }
