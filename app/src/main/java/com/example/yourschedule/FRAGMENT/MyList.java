@@ -28,15 +28,26 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.SocialObject;
 import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+import com.kakao.util.helper.log.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MyList extends Fragment {
@@ -98,25 +109,30 @@ public class MyList extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
-        mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
+        try{
+            mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
 //                .child(today.replace(".","-"))
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-                            Log.d("Firebase",snapshot.getValue()+"");
-                            scheduleDTOS.add(scheduleDTO);
-                            Log.d("Firebase", scheduleDTOS.size()+"");
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+                                Log.d("Firebase",snapshot.getValue()+"");
+                                scheduleDTOS.add(scheduleDTO);
+                                Log.d("Firebase", scheduleDTOS.size()+"");
+                            }
+                            recyclerViewAdapter.notifyDataSetChanged();
                         }
-                        recyclerViewAdapter.notifyDataSetChanged();
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+        }catch (Exception e){
+
+        }
+
 
         settingBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,18 +146,42 @@ public class MyList extends Fragment {
                 settingViewLayout.closeDrawer(settingView);
             }
         });
-        shareBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
         //여기서 일단 오늘 일정 공유테스트 ㄱㄱ
         shareBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FeedTemplate params = FeedTemplate
+                        .newBuilder(ContentObject.newBuilder("일정이 도착했습니다.",
+                                "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
+                                LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                                        .setMobileWebUrl("https://developers.kakao.com").build())
+                                .setDescrption("일정이 도착했습니다.")
+                                .build())
+                        .setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20)
+                                .setSharedCount(30).setViewCount(40).build())
+                        .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
+                                .setWebUrl("market://details?id=com.example.yourschedule")
+                                .setMobileWebUrl("market://details?id=com.example.yourschedule")
+//                                .setAndroidExecutionParams("user=${auth.getCurrentUser()}")
+//                                .setIosExecutionParams("key1=value1")
+                                .build()))
+                        .build();
 
+                Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+                serverCallbackArgs.put("user_id", auth+"");
+
+                KakaoLinkService.getInstance().sendDefault(getActivity(), params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+                    @Override
+                    public void onFailure(ErrorResult errorResult) {
+                        Logger.e(errorResult.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(KakaoLinkResponse result) {
+                        // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+                    }
+                });
             }
         });
         logoutBt.setOnClickListener(new View.OnClickListener() {
