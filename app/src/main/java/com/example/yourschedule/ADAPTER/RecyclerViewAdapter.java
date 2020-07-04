@@ -146,6 +146,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         auth = FirebaseAuth.getInstance();
         ScheduleDTO scheduleDTO = scheduleDTOS.get(itemIndex);
+
         mDatabase.child(auth.getCurrentUser().getDisplayName())
                 .child(today.replace(".","-"))
                 .setValue(scheduleDTO);

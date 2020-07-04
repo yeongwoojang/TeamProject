@@ -181,27 +181,31 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public void calendarUpdate(){
 
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-
-        mDatabase.child(auth.getCurrentUser().getDisplayName())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-                            if(scheduleDTO.getDate()!=null){
-                                try {
-                                    scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTO.getDate()));
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
+        try{
+            mDatabase.child(auth.getCurrentUser().getDisplayName())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+                                if(scheduleDTO.getDate()!=null){
+                                    try {
+                                        scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTO.getDate()));
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    materialCalendarView.addDecorators(scheduleDecorator, new SaturDayDecorator(), new SunDayDecorator());
                                 }
-                                materialCalendarView.addDecorators(scheduleDecorator, new SaturDayDecorator(), new SunDayDecorator());
                             }
                         }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+        }catch (Exception e){
+
+        }
+
     }
 }
