@@ -70,7 +70,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
         TodayDecorator todayDecorator = new TodayDecorator();
 
-
+        auth = FirebaseAuth.getInstance();
         materialCalendarView.state().edit()
                 .isCacheCalendarPositionEnabled(false)
                 .setMinimumDate(CalendarDay.from(1900, 1, 1))
@@ -181,7 +181,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public void calendarUpdate(){
 
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-        try{
             mDatabase.child(auth.getCurrentUser().getDisplayName())
                     .addValueEventListener(new ValueEventListener() {
                         @Override
@@ -203,9 +202,5 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
                         }
                     });
-        }catch (Exception e){
-
-        }
-
     }
 }

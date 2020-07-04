@@ -14,10 +14,12 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Test"></activity>
 
-
-
         <activity android:name=".LoadingActivity" />
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
@@ -25,12 +27,6 @@
                 <data
                     android:host="@string/kakaolink_host"
                     android:scheme="@string/kakao_scheme" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
         <meta-data
