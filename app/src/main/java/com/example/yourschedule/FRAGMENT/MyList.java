@@ -48,7 +48,7 @@ public class MyList extends Fragment {
     List<Schdule> schdules = new ArrayList<>();
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     ImageButton settingBt,closeSettingBt;
-    TextView dayOfWeek,dateText,logoutBt,appUnLinkBt;
+    TextView dayOfWeek,dateText,logoutBt,shareBt;
     DrawerLayout settingViewLayout;
     View settingView;
     String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
@@ -74,7 +74,7 @@ public class MyList extends Fragment {
         settingView = rootView.findViewById(R.id.settingDetail);
         closeSettingBt = rootView.findViewById(R.id.closeSettingBt);
         logoutBt = rootView.findViewById(R.id.logoutBt);
-        appUnLinkBt = rootView.findViewById(R.id.appUnlinkBt);
+        shareBt = rootView.findViewById(R.id.shareBt);
         return rootView;
     }
 
@@ -130,7 +130,20 @@ public class MyList extends Fragment {
                 settingViewLayout.closeDrawer(settingView);
             }
         });
+        shareBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
+
+        //여기서 일단 오늘 일정 공유테스트 ㄱㄱ
+        shareBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         logoutBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,29 +158,6 @@ public class MyList extends Fragment {
             }
         });
 
-        appUnLinkBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserManagement.getInstance()
-                        .requestUnlink(new UnLinkResponseCallback() {
-                            @Override
-                            public void onSessionClosed(ErrorResult errorResult) {
-                                Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
-                            }
-
-                            @Override
-                            public void onFailure(ErrorResult errorResult) {
-                                Log.e("KAKAO_API", "연결 끊기 실패: " + errorResult);
-
-                            }
-                            @Override
-                            public void onSuccess(Long result) {
-                                Log.i("KAKAO_API", "연결 끊기 성공. id: " + result);
-                                settingViewLayout.closeDrawer(settingView);
-                            }
-                        });
-            }
-        });
         ArrayList<String> storedList = pref.get(this.getActivity(), today);
         if (storedList.size()!=0) {
             for (int i = 0; i < storedList.size(); i++) {
