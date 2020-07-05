@@ -150,28 +150,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         mDatabase.child(auth.getCurrentUser().getDisplayName())
                 .child(today.replace(".","-"))
                 .setValue(scheduleDTO);
-//        SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = pref.edit();
-//        String json = pref.getString(key, null);
-//
-//        JSONObject jsonObject = null;
-//        if (json != null) {
-//            try {
-//                JSONArray jsonArray = new JSONArray(json);
-//                for (int i = 0; i < jsonArray.length(); i++) {
-//                    jsonObject = jsonArray.getJSONObject(i);
-//                }
-//                if(jsonObject.getString(value).equals("false")){
-//                    jsonObject.put(value,"true");
-//                }else{
-//                    jsonObject.put(value,"false");
-//                }
-//                Log.d("jsonArray",jsonArray+"");
-//                editor.putString(key,jsonArray.toString()).apply();
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     public Boolean chkValue(String value) {

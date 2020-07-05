@@ -157,17 +157,15 @@ public class MyList extends Fragment {
                                 LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
                                         .setMobileWebUrl("https://developers.kakao.com").build())
                                 .build())
-                        .setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20)
-                                .setSharedCount(30).setViewCount(40).build())
                         .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
                                 .setWebUrl("https://developers.kakao.com")
                                 .setMobileWebUrl("https://developers.kakao.com")
-                                .setAndroidExecutionParams("key1=value1")
+                                .setAndroidExecutionParams("user="+auth.getCurrentUser().getDisplayName())
                                 .setIosExecutionParams("key1=value1")
                                 .build()))
                         .build();
                 Map<String, String> serverCallbackArgs = new HashMap<String, String>();
-                serverCallbackArgs.put("user_id", auth+"");
+                serverCallbackArgs.put("user_id", auth.getCurrentUser().getDisplayName());
 
                 KakaoLinkService.getInstance().sendDefault(getActivity(), params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
                     @Override

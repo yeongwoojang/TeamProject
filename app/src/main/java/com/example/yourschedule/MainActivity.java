@@ -52,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int RC_SIGN_IN =10;
 //    private SessionCallback sessionCallback = new SessionCallback();
     //유저 프로필
-    String token;
-    String name = "";
-    Session session;
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
     private final int FRAGMENT3 = 2;
@@ -75,7 +72,17 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = this;
         mAuth = FirebaseAuth.getInstance();
-
+        Log.d("login",mAuth.getCurrentUser().getDisplayName()+"");
+        Intent intent = getIntent();
+        if(intent!=null){
+            String testData = new String();
+            testData = (String)intent.getDataString();
+            if(testData!=null){
+                Log.d("test",testData);
+            }else{
+                Log.d("test","null값입니다");
+            }
+        }
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
 
         loginBt = (SignInButton) findViewById(R.id.login_button);
@@ -85,9 +92,7 @@ public class MainActivity extends AppCompatActivity {
             TextView view = new TextView(this);
             view.setGravity(bottom_tabs.GRAVITY_CENTER);
             view.setText(bottomTab[i]);
-//            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/myfont.ttf"));
             bottom_tabs.getTabAt(i).setCustomView(view);
-
         }
         bottom_tabs.setTabGravity(TabLayout.GRAVITY_FILL);
         bottom_tabs.getTabAt(FRAGMENT1).setTag(FRAGMENT1);
@@ -109,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
 
-//                session = Session.getCurrentSession();
-//                session.addCallback(sessionCallback);
-//                session.open(AuthType.KAKAO_TALK, MainActivity.this);
             }
         });
 
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d("Login",user.getDisplayName()+"Login, Success!");
                         } else {
                             // If sign in fails, display a message to the user.
                         }
