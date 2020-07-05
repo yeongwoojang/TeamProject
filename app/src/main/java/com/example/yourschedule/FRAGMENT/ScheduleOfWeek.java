@@ -38,9 +38,11 @@ import com.kakao.network.callback.ResponseCallback;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class ScheduleOfWeek extends Fragment {
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
@@ -74,7 +76,6 @@ public class ScheduleOfWeek extends Fragment {
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         try {
@@ -85,6 +86,7 @@ public class ScheduleOfWeek extends Fragment {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
                                 scheduleDTOS.add(scheduleDTO);
+                                scheduleOfWeekAdapter.notifyDataSetChanged();
                             }
                         }
                         @Override
@@ -98,5 +100,10 @@ public class ScheduleOfWeek extends Fragment {
         scheduleOfWeekAdapter = new ScheduleOfWeekAdapter(getActivity(),scheduleDTOS);
         recyclerView.setAdapter(scheduleOfWeekAdapter);
     }
+
+
+
+
+
 
 }
