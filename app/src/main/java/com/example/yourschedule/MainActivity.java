@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
@@ -45,6 +46,7 @@ import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -71,22 +73,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
-        mAuth = FirebaseAuth.getInstance();
-        Log.d("login",mAuth.getCurrentUser().getDisplayName()+"");
-        Intent intent = getIntent();
-        if(intent!=null){
-            String testData = new String();
-            testData = (String)intent.getDataString();
-            if(testData!=null){
-                Log.d("test",testData);
-            }else{
-                Log.d("test","null값입니다");
-            }
-        }
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
-
         loginBt = (SignInButton) findViewById(R.id.login_button);
-
         for (int i = 0; i < bottomTab.length; i++) {
             bottom_tabs.addTab(bottom_tabs.newTab());
             TextView view = new TextView(this);
@@ -99,15 +87,32 @@ public class MainActivity extends AppCompatActivity {
         bottom_tabs.getTabAt(FRAGMENT2).setTag(FRAGMENT2);
         bottom_tabs.getTabAt(FRAGMENT3).setTag(FRAGMENT3);
 
-        bottom_tabs.setVisibility(View.INVISIBLE);
-
+        mAuth = FirebaseAuth.getInstance();
+        Intent intent = getIntent();
+        Log.d("test",mAuth.getCurrentUser()+"");
+            if(mAuth.getCurrentUser()!=null){
+                loginBt.setVisibility(View.INVISIBLE);
+                bottom_tabs.setVisibility(View.VISIBLE);
+                callFragment(FRAGMENT1);
+                Log.d("test",mAuth.getCurrentUser().getDisplayName());
+                String testData = new String();
+                testData = (String)intent.getDataString();
+                if(testData!=null){
+                Log.d("test",testData);
+                }else{
+                    Log.d("test","공유받은 데이터가 없습니다.");
+                }
+            }else{
+                loginBt.setVisibility(View.VISIBLE);
+                bottom_tabs.setVisibility(View.INVISIBLE);
+                Toast.makeText(this,"로그인해서 일정을 확인하세요!",Toast.LENGTH_SHORT).show();
+            }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
         loginBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        callFragment(FRAGMENT1);
+//        callFragment(FRAGMENT1);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -179,31 +184,16 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d("Login",user.getDisplayName()+"Login, Success!");
+                            loginBt.setVisibility(View.INVISIBLE);
+                            bottom_tabs.setVisibility(View.VISIBLE);
+                            callFragment(FRAGMENT1);
+
                         } else {
                             // If sign in fails, display a message to the user.
                         }
                     }
                 });
     }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//
-//        // 세션 콜백 삭제
-//        Session.getCurrentSession().removeCallback(sessionCallback);
-//    }
-
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        // 카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK로 전달
-//        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
-//            return;
-//        }
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 
     private void callFragment(int frament_no) {
 
@@ -215,8 +205,8 @@ public class MainActivity extends AppCompatActivity {
 
             case FRAGMENT1:
                 // '프래그먼트1' 호출
-                ScheduleList accountBook = new ScheduleList();
-                transaction.replace(R.id.fragment_container, accountBook);
+                ScheduleList scheduleList = new ScheduleList();
+                transaction.replace(R.id.fragment_container, scheduleList);
                 transaction.commit();
                 break;
 
@@ -229,80 +219,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public class SessionCallback implements ISessionCallback {
-//        // 로그인에 성공한 상태
-//        @Override
-//        public void onSessionOpened() {
-//            requestMe();
-//        }
-//
-//        // 로그인에 실패한 상태
-//        @Override
-//        public void onSessionOpenFailed(KakaoException exception) {
-//            Log.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
-//        }
-//
-//        // 사용자 정보 요청
-//        public void requestMe() {
-//
-//            UserManagement.getInstance()
-//                    .me(new MeV2ResponseCallback() {
-//                        @Override
-//                        public void onSessionClosed(ErrorResult errorResult) {
-//                            Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
-//                        }
-//
-//                        @Override
-//                        public void onFailure(ErrorResult errorResult) {
-//                            Log.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
-//
-//
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(MeV2Response result) {
-//                            Log.i("KAKAO_API", "사용자 아이디: " + result.getId());
-//                            UserAccount kakaoAccount = result.getKakaoAccount();
-//                            bottom_tabs.setVisibility(View.VISIBLE);
-//                            loginBt.setVisibility(View.INVISIBLE);
-//                            callFragment(FRAGMENT1);
-//
-//                            if (kakaoAccount != null) {
-//                                // 이메일
-//
-//                                String email = kakaoAccount.getEmail();
-//                                Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount.getPhoneNumber());
-//                                Log.i("KAKAO_API", "kakaoacount: " + kakaoAccount);
-//                                if (email != null) {
-//                                    Log.i("KAKAO_API", "email: " + email);
-//
-//                                } else if (kakaoAccount.emailNeedsAgreement() == OptionalBoolean.TRUE) {
-//                                    // 동의 요청 후 이메일 획득 가능
-//                                    // 단, 선택 동의로 설정되어 있다면 서비스 이용 시나리오 상에서 반드시 필요한 경우에만 요청해야 합니다.
-//
-//                                } else {
-//                                    // 이메일 획득 불가
-//                                }
-//
-//                                // 프로필
-//                                Profile profile = kakaoAccount.getProfile();
-//                                if (profile != null) {
-//                                    Log.d("KAKAO_API", "nickname: " + profile.getNickname());
-//                                } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
-//                                    // 동의 요청 후 프로필 정보 획득 가능
-//
-//                                } else {
-//                                    // 프로필 획득 불가
-//                                }
-//                            } else {
-//                                Log.d("KAKAO_API", kakaoAccount + "");
-//
-//                            }
-//                        }
-//                    });
-//
-//        }
-//
-//
-//    }
+
+
+
 }

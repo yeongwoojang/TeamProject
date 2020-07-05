@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +24,6 @@ import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
-import com.example.yourschedule.SharePref;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,13 +35,8 @@ import com.kakao.message.template.ButtonObject;
 import com.kakao.message.template.ContentObject;
 import com.kakao.message.template.FeedTemplate;
 import com.kakao.message.template.LinkObject;
-import com.kakao.message.template.SocialObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
-import com.kakao.usermgmt.callback.UnLinkResponseCallback;
-import com.kakao.util.helper.log.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +52,6 @@ public class MyList extends Fragment {
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
-    List<Schdule> schdules = new ArrayList<>();
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     ImageButton settingBt,closeSettingBt;
     TextView dayOfWeek,dateText,logoutBt,shareBt;
@@ -65,7 +60,8 @@ public class MyList extends Fragment {
     String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
-    SharePref pref = new SharePref();
+    logoutListener logoutListener;
+    MyList child;
 
     public MyList newInstance() {
         return new MyList();
@@ -98,8 +94,6 @@ public class MyList extends Fragment {
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
-
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = transFormat.format(calendar.getTime());
@@ -121,7 +115,9 @@ public class MyList extends Fragment {
                                 scheduleDTOS.add(scheduleDTO);
                                 Log.d("Firebase", scheduleDTOS.size()+"");
                             }
+                            Log.d("test1",scheduleDTOS.size()+"");
                             recyclerViewAdapter.notifyDataSetChanged();
+                            Log.d("test2",scheduleDTOS.size()+"");
                         }
 
                         @Override
@@ -129,10 +125,11 @@ public class MyList extends Fragment {
 
                         }
                     });
+            Log.d("test3",scheduleDTOS.size()+"");
         }catch (Exception e){
 
         }
-
+        Log.d("test4",scheduleDTOS.size()+"");
 
         settingBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,29 +178,22 @@ public class MyList extends Fragment {
                 });
             }
         });
-        logoutBt.setOnClickListener(new View.OnClickListener() {
+           logoutBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserManagement.getInstance()
-                        .requestLogout(new LogoutResponseCallback() {
-                            @Override
-                            public void onCompleteLogout() {
-                                Log.i("KAKAO_API", "로그아웃 완료");
-                                settingViewLayout.closeDrawer(settingView);
-                            }
-                        });
+                FirebaseAuth.getInstance().signOut();
+
+                Toast.makeText(getActivity(),"로그아웃되었습니다.",Toast.LENGTH_SHORT).show();
+                logoutListener.finish(child);
+
             }
         });
-
-        ArrayList<String> storedList = pref.get(this.getActivity(), today);
-        if (storedList.size()!=0) {
-            for (int i = 0; i < storedList.size(); i++) {
-                schdules.add(new Schdule(storedList.get(i)));
-            }
-        }
+        Log.d("test5",scheduleDTOS.size()+"");
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
         recyclerView.setAdapter(recyclerViewAdapter);
 
     }
-
+    public interface logoutListener {
+        void finish(Fragment child);
+    }
 }

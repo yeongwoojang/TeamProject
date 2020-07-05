@@ -37,7 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.today = today;
-
+        Log.d("test6",scheduleDTOS.size()+"");
     }
 
     @Override
@@ -89,7 +89,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 holder.scheduleChk.setTag(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
 
 
-
                 if(chkValue(scheduleDTOS.get(itemIndex).getSchedule().get(posotion))){
                     scheduleDTOS.get(itemIndex).getIsComplete().set(posotion,true);
                      holder.scheduleChk.setChecked(scheduleDTOS.get(itemIndex).getIsComplete().get(posotion));
@@ -105,7 +104,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                        holder.scheduleChk.
 //                        contact.setChk(checkBox.isChecked());
 //                        schdules.get(posotion).setChk(checkBox.isChecked());
-
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                         builder.setTitle("일정완료?")
@@ -160,41 +158,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             }
         }
-//        SharedPreferences pref = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-//        String json = pref.getString(key, null);
-//        ArrayList<String> keyList = new ArrayList<>();
-//        JSONObject jsonObject = null;
-//        if (json != null) {
-//            try {
-//                JSONArray jsonArray = new JSONArray(json);
-//
-//                for (int i = 0; i < jsonArray.length(); i++) {
-//                    jsonObject = jsonArray.getJSONObject(i);
-//                }
-//                Iterator iterator = jsonObject.keys();
-//                while (iterator.hasNext()) {
-//                    String kTemp = iterator.next().toString();
-//                        keyList.add(kTemp);
-//                }
-//                for (int i = 0; i < jsonObject.length(); i++) {
-//                    if (jsonObject.getString(value).equals("true")) {
-//                        return true;
-//                    }
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//        return false;
         return true;
     }
 
-//    private void removeItemView(int position){
-//        schdules.remove(position);
-//        notifyItemRemoved(position);
-//        notifyItemRangeChanged(position,schdules.size());
-//    }
+
 
 
 }

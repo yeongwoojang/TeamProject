@@ -13,7 +13,7 @@ import com.example.yourschedule.R;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class ScheduleList extends Fragment {
+public class ScheduleList extends Fragment implements MyList.logoutListener{
 
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
@@ -96,12 +96,18 @@ public class ScheduleList extends Fragment {
 
 
     private void setChildFragment(Fragment child) {
-        FragmentTransaction childFt = getChildFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
         if (!child.isAdded()) {
-            childFt.replace(R.id.fragment_container, child);
-            childFt.addToBackStack(null);
-            childFt.commit();
+            fragmentTransaction.replace(R.id.fragment_container, child);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
+    }
+
+    @Override
+    public void finish(Fragment child) {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.remove(child).commit();
     }
 }
