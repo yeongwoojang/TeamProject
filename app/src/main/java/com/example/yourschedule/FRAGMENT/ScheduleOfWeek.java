@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
+import com.example.yourschedule.ADAPTER.ScheduleOfWeekAdapter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +46,7 @@ public class ScheduleOfWeek extends Fragment {
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
+    ScheduleOfWeekAdapter scheduleOfWeekAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
@@ -58,9 +60,8 @@ public class ScheduleOfWeek extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_schedule_of_week, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerView);
-
         return rootView;
     }
 
@@ -86,7 +87,6 @@ public class ScheduleOfWeek extends Fragment {
                                 scheduleDTOS.add(scheduleDTO);
                             }
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -95,6 +95,8 @@ public class ScheduleOfWeek extends Fragment {
         } catch (Exception e) {
 
         }
-
+        scheduleOfWeekAdapter = new ScheduleOfWeekAdapter(getActivity(),scheduleDTOS);
+        recyclerView.setAdapter(scheduleOfWeekAdapter);
     }
+
 }

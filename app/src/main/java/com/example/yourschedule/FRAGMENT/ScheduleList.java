@@ -70,7 +70,7 @@ public class ScheduleList extends Fragment implements MyList.logoutListener{
                         break;
 
                     case 2:
-                        fragment = new MyList().newInstance();
+                        fragment = new ScheduleOfWeek().newInstance();
                         setChildFragment(fragment);
                         break;
 
