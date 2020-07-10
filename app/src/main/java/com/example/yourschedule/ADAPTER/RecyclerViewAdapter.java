@@ -37,7 +37,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.today = today;
-        Log.d("test6",scheduleDTOS.size()+"");
     }
 
     @Override
@@ -46,7 +45,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if(scheduleDTOS.get(i).getDate().equals(today)){
                 itemIndex = i;
                 listCount = scheduleDTOS.get(i).getSchedule().size();
-                Log.d("Firebase",listCount+"");
                 return listCount;
             }
         }
@@ -117,7 +115,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Log.d("safdsdf",checkBox.getTag().toString());
                                         checkBox.setChecked(chkValue(checkBox.getTag().toString()));
                                     }
                                 })

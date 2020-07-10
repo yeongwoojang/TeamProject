@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
     private final int FRAGMENT3 = 2;
-    private final String[] bottomTab = {"일정관리", "날씨정보", "추가예정"};
+    private final String[] bottomTab = {"일정관리", "추가예정", "추가예정"};
     private TabLayout bottom_tabs;
 
     private SignInButton loginBt;

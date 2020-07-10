@@ -29,28 +29,34 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     private List<String[]> schedules = new ArrayList<String[]>();
     private Activity activity;
     private String date;
+    private List<ScheduleDTO> scheduleDTOS;
     private ArrayList<String> dataSet = new ArrayList<String>();
     boolean isUpdate;
     int scheduleListSize;
     FirebaseAuth auth;
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
-// ...
+
 
 
     SharePref pref = new SharePref();
-    public SchduleRecyclerViewAdapter(Activity activity,String date,boolean isUpdate) {
+    public SchduleRecyclerViewAdapter(Activity activity, List<ScheduleDTO> scheduleDTOS,String date,boolean isUpdate) {
         this.isUpdate = isUpdate;
         this.activity = activity;
+        this.scheduleDTOS = scheduleDTOS;
         this.date = date;
         if(isUpdate){
-            dataSet = pref.get(activity,date);
-            Log.d("aaaSize",dataSet.size()+"");
+            for(int i=0; i<scheduleDTOS.size();i++){
+                if(scheduleDTOS.get(i).getDate().equals(date)){
+                    dataSet = (ArrayList<String>)scheduleDTOS.get(i).getSchedule();
+                }
+            }
+            Log.d("aaaSize1",dataSet.size()+"");
         }else{
             for(int i=0;i<3;i++){
                 dataSet.add(i,"");
             }
-            Log.d("aaaSize",dataSet.size()+"");
+            Log.d("aaaSize2",dataSet.size()+"");
         }
     }
 
@@ -141,19 +147,13 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         Arrays.asList(isComplete);
         scheduleDTO.setSchedule(dataSet);
         scheduleDTO.setIsComplete(isComplete);
-//        for(int i = 0; i< scheduleListSize; i++){
-//                if(!(dataSet.get(i).length()==0)){
-//                    schedules.add(new String[]{dataSet.get(i),"false"});
-//                }
-//            }
-//        Arrays.asList(schedules);
+
         mDatabase.child(auth.getCurrentUser().getDisplayName())
                 .child(date.replace(".","-"))
                 .setValue(scheduleDTO);
         if(schedules.size()==0){
             Log.d("aaa","하나 이상의 일정을 입력하세요");
         }
-        pref.set(activity,key,schedules);
-
+        Log.d("TEST","추가완료");
     }
 }

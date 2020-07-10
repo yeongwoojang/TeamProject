@@ -111,13 +111,9 @@ public class MyList extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                                 ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-                                Log.d("Firebase",snapshot.getValue()+"");
                                 scheduleDTOS.add(scheduleDTO);
-                                Log.d("Firebase", scheduleDTOS.size()+"");
                             }
-                            Log.d("test1",scheduleDTOS.size()+"");
                             recyclerViewAdapter.notifyDataSetChanged();
-                            Log.d("test2",scheduleDTOS.size()+"");
                         }
 
                         @Override
@@ -125,11 +121,9 @@ public class MyList extends Fragment {
 
                         }
                     });
-            Log.d("test3",scheduleDTOS.size()+"");
         }catch (Exception e){
 
         }
-        Log.d("test4",scheduleDTOS.size()+"");
 
         settingBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +182,6 @@ public class MyList extends Fragment {
 
             }
         });
-        Log.d("test5",scheduleDTOS.size()+"");
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
         recyclerView.setAdapter(recyclerViewAdapter);
 

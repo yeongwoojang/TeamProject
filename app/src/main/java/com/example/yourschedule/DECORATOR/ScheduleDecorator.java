@@ -32,7 +32,7 @@ public class ScheduleDecorator  implements DayViewDecorator {
     public void decorate(DayViewFacade view) {
         view.addSpan(new StyleSpan(Typeface.NORMAL));
 //        view.addSpan(new RelativeSizeSpan(1.4f));
-        view.addSpan(new ForegroundColorSpan(Color.BLACK));
+//        view.addSpan(new ForegroundColorSpan(Color.parseColor("#6495ED")));
         view.addSpan(new DotSpan(3, Color.parseColor("#C71585")));
     }
 }
