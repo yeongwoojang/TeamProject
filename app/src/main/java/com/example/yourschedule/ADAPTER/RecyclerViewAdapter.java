@@ -76,9 +76,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int posotion){
-//            Calendar calendar = Calendar.getInstance();
-//            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-//            final String today = transFormat.format(calendar.getTime());
+
 
 
                 //ItemInex로 오늘 날짜인지를 구분.

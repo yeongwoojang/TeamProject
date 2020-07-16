@@ -15,22 +15,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
-import com.example.yourschedule.SharePref;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
     public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
-    private List<String[]> schedules = new ArrayList<String[]>();
     private Activity activity;
     private String date;
     private List<ScheduleDTO> scheduleDTOS;
-    private ArrayList<String> dataSet = new ArrayList<String>();
+    private ArrayList<String> scheduleListSet = new ArrayList<String>();
+    private ArrayList<Boolean> completeSet = new ArrayList<Boolean>();
+    private ArrayList<String> scheduleSet = new ArrayList<String>();
     boolean isUpdate;
     int scheduleListSize;
     FirebaseAuth auth;
@@ -38,25 +39,24 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
 
 
-
-    SharePref pref = new SharePref();
-    public SchduleRecyclerViewAdapter(Activity activity, List<ScheduleDTO> scheduleDTOS,String date,boolean isUpdate) {
+    public SchduleRecyclerViewAdapter(Activity activity, List<ScheduleDTO> scheduleDTOS, String date, boolean isUpdate) {
         this.isUpdate = isUpdate;
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.date = date;
-        if(isUpdate){
-            for(int i=0; i<scheduleDTOS.size();i++){
-                if(scheduleDTOS.get(i).getDate().equals(date)){
-                    dataSet = (ArrayList<String>)scheduleDTOS.get(i).getSchedule();
+        if (isUpdate) {
+            for (int i = 0; i < scheduleDTOS.size(); i++) {
+                if (scheduleDTOS.get(i).getDate().equals(date)) {
+                    scheduleListSet = (ArrayList<String>) scheduleDTOS.get(i).getSchedule();
+                    completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
                 }
             }
-            Log.d("aaaSize1",dataSet.size()+"");
-        }else{
-            for(int i=0;i<3;i++){
-                dataSet.add(i,"");
+            scheduleSet.addAll(scheduleListSet);
+
+        } else {
+            for (int i = 0; i < 3; i++) {
+                scheduleListSet.add(i, "");
             }
-            Log.d("aaaSize2",dataSet.size()+"");
         }
     }
 
@@ -67,52 +67,56 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         public ViewHolder(View itemView) {
             super(itemView);
             editText = (EditText) itemView.findViewById(R.id.scheduleEditText);
+
         }
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        scheduleListSize = dataSet.size();
-        if(!isUpdate){
+        scheduleListSize = scheduleListSet.size();
+        if (!isUpdate) {
             holder.editText.setHint("일정을 입력하세요.");
             holder.editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 }
+
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                 }
+
                 //리사이클러뷰에 있는 EditText의 텍스트가 입력이 되면 DataSet에 추가한다.
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    dataSet.set(position,editable.toString());
-                    Log.d("aaaPosition",position+"");
+                    scheduleListSet.set(position, editable.toString());
                 }
             });
-        }else{
-            holder.editText.setText(dataSet.get(position));
+        } else {
+            holder.editText.setText(scheduleListSet.get(position));
             holder.editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 }
+
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                 }
+
                 //리사이클러뷰에 있는 EditText의 텍스트가 입력이 되면 DataSet에 추가한다.
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    dataSet.set(position,editable.toString());
-                    Log.d("aaaPosition",position+"");
+                    scheduleListSet.set(position, editable.toString());
                 }
             });
+
 
         }
 
@@ -121,39 +125,53 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     //리사이클러뷰의 사이즈를 얻어오는 메소드
     @Override
     public int getItemCount() {
-        return dataSet.size();
+        return scheduleListSet.size();
     }
+
     //일정 입력 EditText를 추가하는 메소드
-    public void addEditText(){
-        if(scheduleListSize<5){
-            dataSet.add(scheduleListSize,"");
+    public void addEditText() {
+        if (scheduleListSize < 5) {
+            scheduleListSet.add(scheduleListSize, "");
             notifyItemChanged(scheduleListSize);
-        }else{
-            Toast.makeText(activity,"최대 5개의 일정만 입력가능",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(activity, "최대 5개의 일정만 입력가능", Toast.LENGTH_SHORT).show();
         }
     }
+
     //일정을 저장하는 메소드
-    public void addSchedule(String key){
+    public void addSchedule() {
         auth = FirebaseAuth.getInstance();
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-//        SharePref pref = new SharePref();
-        scheduleDTO.setDate(date);
-//        userDTO.setName(auth.getCurrentUser().getDisplayName());
-        Arrays.asList(dataSet);
         List<Boolean> isComplete = new ArrayList<>();
-        for(int i=0;i<dataSet.size();i++){
-            isComplete.add(false);
-        }
-        Arrays.asList(isComplete);
-        scheduleDTO.setSchedule(dataSet);
-        scheduleDTO.setIsComplete(isComplete);
+            scheduleListSet.removeAll(Collections.singleton(""));
+            for(int i = 0; i < scheduleListSet.size(); i++){
+                isComplete.add(false);
+            }
 
-        mDatabase.child(auth.getCurrentUser().getDisplayName())
-                .child(date.replace(".","-"))
-                .setValue(scheduleDTO);
-        if(schedules.size()==0){
-            Log.d("aaa","하나 이상의 일정을 입력하세요");
+
+            for (int i = 0; i < scheduleListSet.size(); i++) {
+                for (int k = 0; k < scheduleSet.size(); k++) {
+                    if (scheduleListSet.get(i).equals(scheduleSet.get(k))) {
+                        Log.d("DB_Data", "DB에 " + scheduleSet.get(k) + "가 저장되어 있습니다.");
+                        if (completeSet.get(k) == true) {
+                            isComplete.set(i, true);
+                            break;
+                        }
+                    }
+                }
+            }
+        if (scheduleListSet.size() >= 1) {
+            Arrays.asList(scheduleListSet);
+            Arrays.asList(isComplete);
+            scheduleDTO.setDate(date);
+            scheduleDTO.setSchedule(scheduleListSet);
+            scheduleDTO.setIsComplete(isComplete);
+        } else {
+            Toast.makeText(activity, "하나 이상의 일정을 입력하세요", Toast.LENGTH_SHORT).show();
         }
-        Log.d("TEST","추가완료");
+        mDatabase.child(auth.getCurrentUser().
+                getDisplayName())
+                .child(date.replace(".", "-"))
+                .setValue(scheduleDTO);
     }
 }

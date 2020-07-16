@@ -86,10 +86,6 @@ public class PopupFragment extends DialogFragment {
 
         schduleRecyclerView = view.findViewById(R.id.scheduleList);
 
-
-
-
-
         return view;
     }
 
@@ -158,7 +154,7 @@ public class PopupFragment extends DialogFragment {
         storeBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.addSchedule(date);
+                adapter.addSchedule();
                 mDialogResult.finish();
             }
         });
@@ -176,7 +172,6 @@ public class PopupFragment extends DialogFragment {
         }
 
 
-        Log.d("scheduleDTOSSIZE",scheduleDTOS.size()+"");
 
 
     }
@@ -196,6 +191,7 @@ public class PopupFragment extends DialogFragment {
         void onCallback(List<ScheduleDTO> value);
     }
     public void ReadDBData(ReadDataCallback readDataCallback){
+        Log.d("Seqeunce",1+"");
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
 
         mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
@@ -206,6 +202,7 @@ public class PopupFragment extends DialogFragment {
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
                             scheduleDTOSTemp.add(scheduleDTO);
+                            Log.d("scheduleDTOSize",scheduleDTOSTemp+"");
                         }
                         readDataCallback.onCallback(scheduleDTOSTemp);
                     }

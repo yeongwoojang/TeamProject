@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +54,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
     private Fragment fragment;
     private Fragment fffff;
+    CountDownLatch latch = new CountDownLatch(2);
 
 
     public Calandar newInstance() {
@@ -62,32 +64,25 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ReadDBData(new CalendarCallback() {
-            @Override
-            public void onCallback(List<ScheduleDTO> value) {
-                Log.d("CallbackAccess","AccessCallback");
-                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-                scheduleDTOS.clear();
-                scheduleDTOS = value;
+//        ReadDBData(new CalendarCallback() {
+//            @Override
+//            public void onCallback(List<ScheduleDTO> value) {
+//                Log.d("CallbackAccess","AccessCallback");
+//                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+//                scheduleDTOS.clear();
+//                scheduleDTOS = value;
+//                for(int i=0;i<value.size();i++){
+//                    if(value.get(i).getDate()!=null){
+//                        try{
+//                            scheduleDecorator = new ScheduleDecorator(transFormat.parse(value.get(i).getDate()));
+//                            materialCalendarView.addDecorators(scheduleDecorator, new SaturDayDecorator(), new SunDayDecorator());
+//                        }catch (ParseException e){}
+//                    }
+//                }
+//
+//            }
+//        });
 
-                for(int i=0;i<value.size();i++){
-                    if(value.get(i).getDate()!=null){
-                        try{
-                            scheduleDecorator = new ScheduleDecorator(transFormat.parse(value.get(i).getDate()));
-                            materialCalendarView.addDecorators(scheduleDecorator, new SaturDayDecorator(), new SunDayDecorator());
-                        }catch (ParseException e){}
-                    }
-                }
-
-            }
-
-        });
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -115,17 +110,32 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
         materialCalendarView.addDecorators(
                 new SaturDayDecorator(), new SunDayDecorator(), todayDecorator);
-
-
+        ReadDBData(new CalendarCallback() {
+            @Override
+            public void onCallback(List<ScheduleDTO> value) {
+                Log.d("CallbackAccess","AccessCallback");
+                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+                scheduleDTOS.clear();
+                scheduleDTOS = value;
+                for(int i=0;i<scheduleDTOS.size();i++){
+                    if(scheduleDTOS.get(i).getDate()!=null){
+                        try{
+                            Log.d("CallbackAccess","working....");
+                            scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()));
+                            materialCalendarView.addDecorators(scheduleDecorator);
+                        }catch (ParseException e){}
+                    }
+                }
+            }
+        });
         return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        auth = FirebaseAuth.getInstance();
-        Log.d("TEST","ONCREATEVIEW");
-        Log.d("aasdafsdf",scheduleDTOS.size()+"");
+
+
 
 
     }
@@ -194,16 +204,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 DialogFragment dialogFragment = (DialogFragment) fragment;
                 dialogFragment.dismissAllowingStateLoss();
                 dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                calendarUpdate();
-
-
-
-
-
-
-
-
-
             }
 
             @Override
@@ -227,7 +227,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     DialogFragment dialogFragment = (DialogFragment) fragment;
                     dialogFragment.dismissAllowingStateLoss();
                     dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                    calendarUpdate();
                     FragmentTransaction ft =getFragmentManager().beginTransaction();
                     ft.detach(fffff).attach(fffff).commit();
                     dialogFragment.dismiss();
@@ -256,7 +255,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     DialogFragment dialogFragment = (DialogFragment) fragment;
                     dialogFragment.dismissAllowingStateLoss();
                     dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                    calendarUpdate();
                     FragmentTransaction ft =getFragmentManager().beginTransaction();
                     ft.detach(fffff).attach(fffff).commit();
                     dialogFragment.dismiss();
@@ -286,7 +284,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
         mDatabase.child(auth.getCurrentUser().getDisplayName())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         scheduleDTOSTemp.clear();
@@ -298,7 +296,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 //                            }
                         }
                         calendarCallback.onCallback(scheduleDTOSTemp);
-
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

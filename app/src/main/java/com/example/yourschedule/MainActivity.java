@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
+
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
         loginBt = (SignInButton) findViewById(R.id.login_button);
         for (int i = 0; i < bottomTab.length; i++) {

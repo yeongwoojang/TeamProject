@@ -1,9 +1,14 @@
 package com.example.yourschedule.OBJECT;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ScheduleDTO {
     private String date;
+    private List<String> schedule;
+    private List<Boolean> isComplete;
+
 
     public String getDate() {
         return date;
@@ -13,8 +18,7 @@ public class ScheduleDTO {
         this.date = date;
     }
 
-    private List<String> schedule;
-    private List<Boolean> isComplete;
+
 
     public List<String> getSchedule() {
         return schedule;

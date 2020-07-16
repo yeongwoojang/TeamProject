@@ -2,6 +2,8 @@ package com.example.yourschedule.DECORATOR;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Parcelable;
+import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
@@ -12,9 +14,11 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 public class ScheduleDecorator  implements DayViewDecorator {
 
+    Map<CalendarDay,String> Calandar;
     private CalendarDay date;
     private final Calendar calendar = Calendar.getInstance();
     public ScheduleDecorator(Date value) {
@@ -35,4 +39,5 @@ public class ScheduleDecorator  implements DayViewDecorator {
 //        view.addSpan(new ForegroundColorSpan(Color.parseColor("#6495ED")));
         view.addSpan(new DotSpan(3, Color.parseColor("#C71585")));
     }
+
 }
