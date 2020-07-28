@@ -24,11 +24,16 @@ import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
+//import com.example.yourschedule.RetrofitClient;
+import com.example.yourschedule.RetrofitClient;
+import com.example.yourschedule.RetrofitService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
 import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.ButtonObject;
@@ -38,12 +43,22 @@ import com.kakao.message.template.LinkObject;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MyList extends Fragment {
@@ -62,6 +77,7 @@ public class MyList extends Fragment {
     FirebaseDatabase mDatabase;
     logoutListener logoutListener;
     MyList child;
+    TextView t1;
 
     public MyList newInstance() {
         return new MyList();
@@ -73,6 +89,7 @@ public class MyList extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+        t1 = rootView.findViewById(R.id.test);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         dayOfWeek = rootView.findViewById(R.id.dayOfWeek);
         dateText = rootView.findViewById(R.id.date);
@@ -93,14 +110,33 @@ public class MyList extends Fragment {
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
-
+        getCurrentWeather("37.57","126.98","7d25a27ec2361e69dcbb04d90feb6b23");
+//        RetrofitClient retrofitClient = new RetrofitClient();
+//        retrofitClient.buildRetrofit();
+//        Call<JsonObject> response = retrofitClient.getInstance()
+//                .buildRetrofit()
+//                .getCurrentWeather("37.57","126.98","7d25a27ec2361e69dcbb04d90feb6b23");
+//        response.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                try {
+//                    t1.setText(new JSONObject(response.body().toString()).getString("weather"));
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//
+//            }
+//        });
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = transFormat.format(calendar.getTime());
         String day = days[calendar.get(Calendar.DAY_OF_WEEK)-1];
         dayOfWeek.setText(day);
         dateText.setText(today);
-
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         try{
@@ -186,7 +222,37 @@ public class MyList extends Fragment {
         recyclerView.setAdapter(recyclerViewAdapter);
 
     }
+    public void getCurrentWeather(String latitude, String longitude, String OPEN_WEATHER_MAP_KEY){
+        RetrofitClient retrofitClient = new RetrofitClient();
+        retrofitClient.buildRetrofit();
+        Call<JsonObject> response = retrofitClient.getInstance()
+                .buildRetrofit()
+                .getCurrentWeather(latitude,longitude,OPEN_WEATHER_MAP_KEY);
+        response.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                try {
+                    JSONArray jsonArray;
+                    JSONObject jsonObject = new JSONObject(response.body().toString());
+                    Log.d("JSON",jsonObject+"");
+                    jsonArray = jsonObject.getJSONArray("weather");
+                    Log.d("JSONARRAY",jsonArray+"");
+                    jsonObject = jsonArray.getJSONObject(0);
+                    t1.setText(jsonObject.getString("main"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
+
     public interface logoutListener {
         void finish(Fragment child);
     }
+
 }

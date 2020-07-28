@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private final int FRAGMENT3 = 2;
     private final String[] bottomTab = {"일정관리", "추가예정", "추가예정"};
     private TabLayout bottom_tabs;
-
+    private TextView t1;
     private SignInButton loginBt;
     private Context mContext = null;
     private GoogleSignInClient mGoogleSignInClient;
@@ -73,13 +75,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
-
+        t1 = (TextView)findViewById(R.id.test);
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
         loginBt = (SignInButton) findViewById(R.id.login_button);
+//        Typeface typeface = Typeface.createFromAsset(getAssets(),"@font/baemin.ttf");
         for (int i = 0; i < bottomTab.length; i++) {
             bottom_tabs.addTab(bottom_tabs.newTab());
             TextView view = new TextView(this);
             view.setGravity(bottom_tabs.GRAVITY_CENTER);
+//            view.setTypeface(typeface);
+            view.setTextColor(Color.parseColor("#ffffff"));
             view.setText(bottomTab[i]);
             bottom_tabs.getTabAt(i).setCustomView(view);
         }
