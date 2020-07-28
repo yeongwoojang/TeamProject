@@ -7,10 +7,10 @@
         android:radius="10dp"
         ></corners>
     <solid
-        android:color="#F4EFEE"
+        android:color="#FFFFF0"
         ></solid>
     <stroke
-        android:color="#000000"
+        android:color="#FFFFF0"
         android:width="1dp"
         ></stroke>
 

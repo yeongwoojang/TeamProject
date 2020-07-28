@@ -2,12 +2,18 @@ package com.example.yourschedule.FRAGMENT;
 
 
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +38,7 @@ import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +54,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     MaterialCalendarView materialCalendarView;
     ScheduleDecorator scheduleDecorator;
+    SlidingUpPanelLayout slidingUpPanelLayout;
     boolean areYouUpdate = false;
     String selectedDate = "";
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
@@ -54,7 +62,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
     private Fragment fragment;
     private Fragment fffff;
-    CountDownLatch latch = new CountDownLatch(2);
+    private TextView test;
 
 
     public Calandar newInstance() {
@@ -64,24 +72,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ReadDBData(new CalendarCallback() {
-//            @Override
-//            public void onCallback(List<ScheduleDTO> value) {
-//                Log.d("CallbackAccess","AccessCallback");
-//                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-//                scheduleDTOS.clear();
-//                scheduleDTOS = value;
-//                for(int i=0;i<value.size();i++){
-//                    if(value.get(i).getDate()!=null){
-//                        try{
-//                            scheduleDecorator = new ScheduleDecorator(transFormat.parse(value.get(i).getDate()));
-//                            materialCalendarView.addDecorators(scheduleDecorator, new SaturDayDecorator(), new SunDayDecorator());
-//                        }catch (ParseException e){}
-//                    }
-//                }
-//
-//            }
-//        });
 
     }
 
@@ -90,14 +80,50 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_calandar, container, false);
+        slidingUpPanelLayout = rootView.findViewById(R.id.slidingView);
         materialCalendarView = rootView.findViewById(R.id.calendar);
+        test = rootView.findViewById(R.id.test);
         fffff = this;
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         materialCalendarView.setOnDateChangedListener(this);
         materialCalendarView.setOnMonthChangedListener(this);
         materialCalendarView.setTopbarVisible(true);
 
+
+
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
         TodayDecorator todayDecorator = new TodayDecorator();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+        slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.d("state","슬라이드");
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                Log.d("state",newState+"");
+                if((slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED
+                        || slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED)
+                && selectedDate.equals("2020.07.17")){
+                    Log.d("state","???");
+                    test.setText("OK");
+
+                   materialCalendarView.setVisibility(View.INVISIBLE);
+                }else{
+                    Log.d("state","!!!");
+                    materialCalendarView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
 
         materialCalendarView.state().edit()
                 .isCacheCalendarPositionEnabled(false)
@@ -107,7 +133,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 .commit();
         materialCalendarView.setDynamicHeightEnabled(true);
         materialCalendarView.setDateTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_Date);
-
         materialCalendarView.addDecorators(
                 new SaturDayDecorator(), new SunDayDecorator(), todayDecorator);
         ReadDBData(new CalendarCallback() {
@@ -128,12 +153,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 }
             }
         });
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
 
 
@@ -145,53 +164,39 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
         selectedDate = format.format(date.getDate());
-        boolean isGetUpdateFragment = false;
-        for (int i = 0; i < scheduleDTOS.size(); i++) {
-            if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
-                areYouUpdate = true;
-                getUpdateScheduleFragment();
-                isGetUpdateFragment = true;
-                break;
-            } else {
-                continue;
-            }
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int slideablePanelHeight = size.y/3;
+        int animationDuration = 300;
+
+//        SlidingUpPanelResizeAnimation animation = new SlidingUpPanelResizeAnimation(slidingUpPanelLayout, slideablePanelHeight, animationDuration);
+//        slidingUpPanelLayout.startAnimation(animation);
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+        if(slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED || slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED){
+            Log.d("state","???");
+            test.setText("OK");
+        }else{
+            Log.d("state","!!!");
         }
-        if (!isGetUpdateFragment) {
-            areYouUpdate = false;
-            getPopupFragment(false);
-        }
-//        mDatabase.child(auth.getCurrentUser().getDisplayName())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    boolean isGetUpdateFragment = false;
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        Log.d("TEST","FIREBASE");
-//                        scheduleDTOS.clear();
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-//                            scheduleDTOS.add(scheduleDTO);
-//                        }
-//                        for (int i = 0; i < scheduleDTOS.size(); i++) {
-//                            if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
-//                                areYouUpdate = true;
-//                                getUpdateScheduleFragment();
-//                                isGetUpdateFragment = true;
-//                                break;
-//                            } else {
-//                                continue;
-//                            }
-//                        }
-//                        if (!isGetUpdateFragment) {
-//                            areYouUpdate = false;
-//                            getPopupFragment(false);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
+
+
+//        boolean isGetUpdateFragment = false;
+//        for (int i = 0; i < scheduleDTOS.size(); i++) {
+//            if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
+//                areYouUpdate = true;
+//                getUpdateScheduleFragment();
+//                isGetUpdateFragment = true;
+//                break;
+//            } else {
+//                continue;
+//            }
+//        }
+//        if (!isGetUpdateFragment) {
+//            areYouUpdate = false;
+//            getPopupFragment(false);
+//        }
+
     }
 
     private void getUpdateScheduleFragment() {
@@ -315,4 +320,28 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public void returnData(List<ScheduleDTO> values,OnReturn onReturn){
         onReturn.onReturnData(values);
     }
+}
+
+ class SlidingUpPanelResizeAnimation extends Animation {
+
+    private SlidingUpPanelLayout mLayout;
+
+    private float mTo;
+    private float mFrom = 0;
+
+    public SlidingUpPanelResizeAnimation(SlidingUpPanelLayout layout, float to, int duration) {
+        mLayout = layout;
+        mTo = to;
+        setDuration(duration);
+    }
+
+    @Override
+    protected void applyTransformation(float interpolatedTime, Transformation t) {
+        float dimension = (mTo - mFrom) * interpolatedTime + mFrom;
+        mLayout.setPanelHeight((int) dimension);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+
+//        mLayout.requestLayout();
+    }
+
 }
