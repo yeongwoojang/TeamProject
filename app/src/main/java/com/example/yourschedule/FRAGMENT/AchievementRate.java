@@ -10,18 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.yourschedule.ADAPTER.ScheduleOfWeekAdapter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
+import com.github.mikephil.charting.charts.LineChart;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -30,14 +24,15 @@ import java.util.List;
 
 public class AchievementRate extends Fragment {
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
-    RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
-    ScheduleOfWeekAdapter scheduleOfWeekAdapter;
+//    RecyclerView recyclerView;
+//    LinearLayoutManager linearLayoutManager;
+//    ScheduleOfWeekAdapter scheduleOfWeekAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
     TextView TopText;
     ImageButton rightBt,leftBt;
+    LineChart chart;
     String month;
     public AchievementRate newInstance() {
         return new AchievementRate();
@@ -48,11 +43,12 @@ public class AchievementRate extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_schedule_of_week, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_achievement_rate, container, false);
         TopText = rootView.findViewById(R.id.topMonthText);
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt  = rootView.findViewById(R.id.leftBt);
-        recyclerView = rootView.findViewById(R.id.recyclerView);
+        chart = rootView.findViewById(R.id.chart);
+//        recyclerView = rootView.findViewById(R.id.recyclerView);
         return rootView;
     }
 
@@ -60,10 +56,10 @@ public class AchievementRate extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.addItemDecoration(
-                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
-        recyclerView.setLayoutManager(linearLayoutManager);
+//        linearLayoutManager = new LinearLayoutManager(getActivity());
+//        recyclerView.addItemDecoration(
+//                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
+//        recyclerView.setLayoutManager(linearLayoutManager);
         DecimalFormat df = new DecimalFormat("0");
         Calendar currentCalendar = Calendar.getInstance();
         //이번달
@@ -97,27 +93,27 @@ public class AchievementRate extends Fragment {
         });
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
-        try {
-            mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-                                scheduleDTOS.add(scheduleDTO);
-                                scheduleOfWeekAdapter.notifyDataSetChanged();
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-        } catch (Exception e) {
-
-        }
-        scheduleOfWeekAdapter = new ScheduleOfWeekAdapter(getActivity(),scheduleDTOS);
-        recyclerView.setAdapter(scheduleOfWeekAdapter);
+//        try {
+//            mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
+//                    .addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+//                                scheduleDTOS.add(scheduleDTO);
+//                                scheduleOfWeekAdapter.notifyDataSetChanged();
+//                            }
+//                        }
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//        } catch (Exception e) {
+//
+//        }
+//        scheduleOfWeekAdapter = new ScheduleOfWeekAdapter(getActivity(),scheduleDTOS);
+//        recyclerView.setAdapter(scheduleOfWeekAdapter);
     }
 
 

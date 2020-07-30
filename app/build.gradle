@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // 카카오 로그인
     implementation "com.kakao.sdk:v2-user-rx:2.0.0-beta02"

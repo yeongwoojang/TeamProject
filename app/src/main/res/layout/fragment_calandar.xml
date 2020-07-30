@@ -48,9 +48,30 @@
                 android:layout_height="wrap_content"
                 android:text="공유하기"
                 android:fontFamily="@font/baemin"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="24dp"
                 android:padding="10dp"
                 />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/test">
+            <TextView
+                android:id="@+id/test1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/baemin"
+                android:padding="2dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#000000"
+                android:textSize="24dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/drawerListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                ></androidx.recyclerview.widget.RecyclerView>
+        </FrameLayout>
+
     </RelativeLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

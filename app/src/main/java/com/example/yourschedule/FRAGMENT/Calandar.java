@@ -20,7 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.ADAPTER.DrawerListAdapter;
+import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.DECORATOR.SaturDayDecorator;
@@ -53,6 +58,9 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     MaterialCalendarView materialCalendarView;
+    RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+    DrawerListAdapter drawerListAdapter;
     ScheduleDecorator scheduleDecorator;
     SlidingUpPanelLayout slidingUpPanelLayout;
     boolean areYouUpdate = false;
@@ -63,8 +71,9 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     private Fragment fragment;
     private Fragment fffff;
     private TextView test;
+    private TextView test1;
 
-
+    List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
     public Calandar newInstance() {
         return new Calandar();
     }
@@ -82,7 +91,9 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         View rootView = inflater.inflate(R.layout.fragment_calandar, container, false);
         slidingUpPanelLayout = rootView.findViewById(R.id.slidingView);
         materialCalendarView = rootView.findViewById(R.id.calendar);
+        recyclerView = rootView.findViewById(R.id.drawerListView);
         test = rootView.findViewById(R.id.test);
+        test1 = rootView.findViewById(R.id.test1);
         fffff = this;
 
         return rootView;
@@ -91,13 +102,16 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         materialCalendarView.setOnDateChangedListener(this);
         materialCalendarView.setOnMonthChangedListener(this);
         materialCalendarView.setTopbarVisible(true);
 
-
-        Log.d("DefaultState",slidingUpPanelLayout.getPanelState()+"");
-//        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         slidingUpPanelLayout.setPanelHeight(0);
         TodayDecorator todayDecorator = new TodayDecorator();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -113,6 +127,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                         || slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED))
                 {
                    materialCalendarView.setVisibility(View.INVISIBLE);
+
                 }else{
                     materialCalendarView.setVisibility(View.VISIBLE);
                 }
@@ -149,9 +164,10 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
             }
         });
 
+//        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
+//        recyclerView.setAdapter(recyclerViewAdapter);
 
-
-
+        test1.setText("일정이 없습니다.");
     }
 
 
@@ -171,7 +187,29 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 //        slidingUpPanelLayout.setPanelHeight(200);
         slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         test.setText(selectedDate);
-        Log.d("FirstState",slidingUpPanelLayout.getPanelState()+"");
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        test.setText(selectedDate);
+
+        //동적으로 바꾸기
+        //1.전체불러와서 해당날짜만 보여주기-o 2.선택할때마다 불러오기-x
+        //일단 대충 표시만되게 만듬
+        //날씨아이콘안나옴
+        recyclerView.setVisibility(View.INVISIBLE);
+        test1.setVisibility(View.VISIBLE);
+
+        for(int i=0;i<scheduleDTOSTemp.size();i++) {
+            if(scheduleDTOSTemp.get(i).getDate().equals(selectedDate)) {
+                Log.d("ScheduleData",scheduleDTOSTemp.get(i).getSchedule()+"");
+                drawerListAdapter = new DrawerListAdapter(getActivity(), scheduleDTOSTemp.get(i).getSchedule());
+                recyclerView.setAdapter(drawerListAdapter);
+                test1.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+                break;
+//                test1.setText(test1.getText()+scheduleDTOSTemp.get(i).getSchedule().toString());
+            }
+        }
+//        scheduleDTOSTemp.get(i).getSchedule()
+
 //        if(slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED ||
 //                slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED ||
 //                slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.DRAGGING){
@@ -282,11 +320,10 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-//        calendarUpdate();
     }
 
     public void ReadDBData(CalendarCallback calendarCallback) {
-        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
+//        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
         mDatabase.child(auth.getCurrentUser().getDisplayName())
                 .addListenerForSingleValueEvent(new ValueEventListener() {

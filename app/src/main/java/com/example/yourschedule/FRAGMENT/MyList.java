@@ -131,7 +131,6 @@ public class MyList extends Fragment {
         auth = FirebaseAuth.getInstance();
         try{
             mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
-//                .child(today.replace(".","-"))
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
