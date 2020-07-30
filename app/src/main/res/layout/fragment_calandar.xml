@@ -51,6 +51,12 @@
                 android:textSize="24dp"
                 android:padding="10dp"
                 />
+        <ImageButton
+            android:id="@+id/modifyBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수정"
+            ></ImageButton>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
