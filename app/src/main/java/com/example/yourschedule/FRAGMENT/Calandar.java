@@ -112,6 +112,9 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView.setOnMonthChangedListener(this);
         materialCalendarView.setTopbarVisible(true);
 
+
+        Log.d("DefaultState",slidingUpPanelLayout.getPanelState()+"");
+//        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         slidingUpPanelLayout.setPanelHeight(0);
         TodayDecorator todayDecorator = new TodayDecorator();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -320,6 +323,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+//        calendarUpdate();
     }
 
     public void ReadDBData(CalendarCallback calendarCallback) {
