@@ -96,29 +96,24 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView.setTopbarVisible(true);
 
 
-
-        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
+        Log.d("DefaultState",slidingUpPanelLayout.getPanelState()+"");
+//        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        slidingUpPanelLayout.setPanelHeight(0);
         TodayDecorator todayDecorator = new TodayDecorator();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                Log.d("state","슬라이드");
+            public void onPanelSlide(View panel, float slideOffset){
+                Log.d("slide",slidingUpPanelLayout.getPanelState()+"");
             }
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                Log.d("state",newState+"");
                 if((slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED
-                        || slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED)
-                && selectedDate.equals("2020.07.17")){
-                    Log.d("state","???");
-                    test.setText("OK");
-
+                        || slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED))
+                {
                    materialCalendarView.setVisibility(View.INVISIBLE);
                 }else{
-                    Log.d("state","!!!");
                     materialCalendarView.setVisibility(View.VISIBLE);
                 }
             }
@@ -172,13 +167,18 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
 //        SlidingUpPanelResizeAnimation animation = new SlidingUpPanelResizeAnimation(slidingUpPanelLayout, slideablePanelHeight, animationDuration);
 //        slidingUpPanelLayout.startAnimation(animation);
-        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
-        if(slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED || slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED){
-            Log.d("state","???");
-            test.setText("OK");
-        }else{
-            Log.d("state","!!!");
-        }
+//        slidingUpPanelLayout.setPanelState();
+//        slidingUpPanelLayout.setPanelHeight(200);
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        test.setText(selectedDate);
+        Log.d("FirstState",slidingUpPanelLayout.getPanelState()+"");
+//        if(slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED ||
+//                slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED ||
+//                slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.DRAGGING){
+//            Log.d("state","???");
+//        }else{
+//            Log.d("state","!!!");
+//        }
 
 
 //        boolean isGetUpdateFragment = false;

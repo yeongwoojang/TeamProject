@@ -37,7 +37,7 @@
         android:id="@+id/dragView"
         android:layout_width="match_parent"
         android:layout_height="426px"
-        android:background="#EC224160"
+        android:background="#eee6ff"
         android:layout_gravity="end"
         android:gravity="start"
         >

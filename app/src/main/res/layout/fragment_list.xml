@@ -50,27 +50,34 @@
             android:textColor="#ffffff"
             />
 
-            <TextView
-                android:id="@+id/test"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
-                android:padding="10dp"
-                android:fontFamily="@font/baemin"
-                android:gravity="bottom"
-                android:text="날씨"
-                android:textColor="#ffffff"></TextView>
+<!--            <TextView-->
+<!--                android:id="@+id/test"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="2dp"-->
+<!--                android:layout_marginBottom="2dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:fontFamily="@font/baemin"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:gravity="bottom"-->
+<!--                android:text="날씨"-->
+<!--                android:textColor="#ffffff"></TextView>-->
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/settingBt"
+        <ImageView
+            android:id="@+id/weatherIcon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/baseline_settings_white_18dp"
             android:background="@color/transparent"
             android:layout_gravity="right"
-            ></ImageButton>
+            ></ImageView>
+<!--        <ImageButton-->
+<!--            android:id="@+id/settingBt"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:src="@drawable/baseline_settings_white_18dp"-->
+<!--            android:background="@color/transparent"-->
+<!--            android:layout_gravity="right"-->
+<!--            ></ImageButton>-->
     </FrameLayout>
 
     <LinearLayout
@@ -78,6 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginTop="10dp"
         >
 
         <androidx.recyclerview.widget.RecyclerView

@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             bottom_tabs.addTab(bottom_tabs.newTab());
             TextView view = new TextView(this);
             view.setGravity(bottom_tabs.GRAVITY_CENTER);
-//            view.setTypeface(typeface);
+//            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/myfont.ttf"));
             view.setTextColor(Color.parseColor("#ffffff"));
             view.setText(bottomTab[i]);
             bottom_tabs.getTabAt(i).setCustomView(view);

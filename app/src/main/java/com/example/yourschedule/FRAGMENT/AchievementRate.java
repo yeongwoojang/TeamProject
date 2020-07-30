@@ -1,23 +1,19 @@
 package com.example.yourschedule.FRAGMENT;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 import com.example.yourschedule.ADAPTER.ScheduleOfWeekAdapter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
@@ -26,25 +22,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.kakao.kakaolink.v2.KakaoLinkResponse;
-import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.ButtonObject;
-import com.kakao.message.template.ContentObject;
-import com.kakao.message.template.FeedTemplate;
-import com.kakao.message.template.LinkObject;
-import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
 
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-public class ScheduleOfWeek extends Fragment {
+public class AchievementRate extends Fragment {
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -52,9 +36,11 @@ public class ScheduleOfWeek extends Fragment {
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
-
-    public ScheduleOfWeek newInstance() {
-        return new ScheduleOfWeek();
+    TextView TopText;
+    ImageButton rightBt,leftBt;
+    String month;
+    public AchievementRate newInstance() {
+        return new AchievementRate();
     }
 
 
@@ -63,6 +49,9 @@ public class ScheduleOfWeek extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_schedule_of_week, container, false);
+        TopText = rootView.findViewById(R.id.topMonthText);
+        rightBt = rootView.findViewById(R.id.rightBt);
+        leftBt  = rootView.findViewById(R.id.leftBt);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         return rootView;
     }
@@ -75,7 +64,37 @@ public class ScheduleOfWeek extends Fragment {
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
+        DecimalFormat df = new DecimalFormat("0");
+        Calendar currentCalendar = Calendar.getInstance();
+        //이번달
+        month  = df.format(currentCalendar.get(Calendar.MONTH) + 1);
+        TopText.setText(month+"월");
+        leftBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Integer.parseInt(month)==1){
+                    month = 12+"";
+                    TopText.setText(month+"월");
+                }else{
+                    month = ((Integer.parseInt(month))-1)+"";
+                    TopText.setText(month+"월");
+                }
 
+            }
+        });
+        rightBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Integer.parseInt(month)==12){
+                    month = 1+"";
+                    TopText.setText(month+"월");
+                }else{
+                    month = ((Integer.parseInt(month))+1)+"";
+                    TopText.setText(month+"월");
+                }
+
+            }
+        });
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         try {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#EC224160"
+    android:background="#d2c2fd"
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -33,7 +33,9 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/bottom_tabs"
             android:layout_width="match_parent"
-            android:layout_height="70dp">
+            android:layout_height="70dp"
+            app:tabIndicatorColor="#ffffff"
+            >
         </com.google.android.material.tabs.TabLayout>
 
     </FrameLayout>

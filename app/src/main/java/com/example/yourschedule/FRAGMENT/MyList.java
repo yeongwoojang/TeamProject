@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
@@ -50,10 +52,15 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
+import kotlin.jvm.internal.Intrinsics;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,6 +85,7 @@ public class MyList extends Fragment {
     logoutListener logoutListener;
     MyList child;
     TextView t1;
+    ImageView weatherIcon;
 
     public MyList newInstance() {
         return new MyList();
@@ -90,10 +98,11 @@ public class MyList extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         t1 = rootView.findViewById(R.id.test);
+        weatherIcon = rootView.findViewById(R.id.weatherIcon);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         dayOfWeek = rootView.findViewById(R.id.dayOfWeek);
         dateText = rootView.findViewById(R.id.date);
-        settingBt = rootView.findViewById(R.id.settingBt);
+//        settingBt = rootView.findViewById(R.id.settingBt);
         settingViewLayout = rootView.findViewById(R.id.settingLayout);
         settingView = rootView.findViewById(R.id.settingDetail);
         closeSettingBt = rootView.findViewById(R.id.closeSettingBt);
@@ -111,26 +120,7 @@ public class MyList extends Fragment {
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
         getCurrentWeather("37.57","126.98","7d25a27ec2361e69dcbb04d90feb6b23");
-//        RetrofitClient retrofitClient = new RetrofitClient();
-//        retrofitClient.buildRetrofit();
-//        Call<JsonObject> response = retrofitClient.getInstance()
-//                .buildRetrofit()
-//                .getCurrentWeather("37.57","126.98","7d25a27ec2361e69dcbb04d90feb6b23");
-//        response.enqueue(new Callback<JsonObject>() {
-//            @Override
-//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                try {
-//                    t1.setText(new JSONObject(response.body().toString()).getString("weather"));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonObject> call, Throwable t) {
-//
-//            }
-//        });
+//        getDailyForecast("37.57","126.98","metric","hourly","7","kr","7d25a27ec2361e69dcbb04d90feb6b23");
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = transFormat.format(calendar.getTime());
@@ -161,63 +151,63 @@ public class MyList extends Fragment {
 
         }
 
-        settingBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                settingViewLayout.openDrawer(settingView);
-            }
-        });
-        closeSettingBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                settingViewLayout.closeDrawer(settingView);
-            }
-        });
+//        settingBt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                settingViewLayout.openDrawer(settingView);
+//            }
+//        });
+//        closeSettingBt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                settingViewLayout.closeDrawer(settingView);
+//            }
+//        });
 
         //여기서 일단 오늘 일정 공유테스트 ㄱㄱ
-        shareBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FeedTemplate params = FeedTemplate
-                        .newBuilder(ContentObject.newBuilder("일정이 도착했습니다.",
-                                "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
-                                LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                                        .setMobileWebUrl("https://developers.kakao.com").build())
-                                .build())
-                        .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
-                                .setWebUrl("https://developers.kakao.com")
-                                .setMobileWebUrl("https://developers.kakao.com")
-                                .setAndroidExecutionParams("user="+auth.getCurrentUser().getDisplayName())
-                                .setIosExecutionParams("key1=value1")
-                                .build()))
-                        .build();
-                Map<String, String> serverCallbackArgs = new HashMap<String, String>();
-                serverCallbackArgs.put("user_id", auth.getCurrentUser().getDisplayName());
-
-                KakaoLinkService.getInstance().sendDefault(getActivity(), params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
-                    @Override
-                    public void onFailure(ErrorResult errorResult) {
-                        Log.d("TEST","FAILED");
-                    }
-
-                    @Override
-                    public void onSuccess(KakaoLinkResponse result) {
-                        // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
-                        Log.d("TEST","SUCCESS");
-                    }
-                });
-            }
-        });
-           logoutBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-
-                Toast.makeText(getActivity(),"로그아웃되었습니다.",Toast.LENGTH_SHORT).show();
-                logoutListener.finish(child);
-
-            }
-        });
+//        shareBt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FeedTemplate params = FeedTemplate
+//                        .newBuilder(ContentObject.newBuilder("일정이 도착했습니다.",
+//                                "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
+//                                LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+//                                        .setMobileWebUrl("https://developers.kakao.com").build())
+//                                .build())
+//                        .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
+//                                .setWebUrl("https://developers.kakao.com")
+//                                .setMobileWebUrl("https://developers.kakao.com")
+//                                .setAndroidExecutionParams("user="+auth.getCurrentUser().getDisplayName())
+//                                .setIosExecutionParams("key1=value1")
+//                                .build()))
+//                        .build();
+//                Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+//                serverCallbackArgs.put("user_id", auth.getCurrentUser().getDisplayName());
+//
+//                KakaoLinkService.getInstance().sendDefault(getActivity(), params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
+//                    @Override
+//                    public void onFailure(ErrorResult errorResult) {
+//                        Log.d("TEST","FAILED");
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(KakaoLinkResponse result) {
+//                        // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
+//                        Log.d("TEST","SUCCESS");
+//                    }
+//                });
+//            }
+//        });
+//           logoutBt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FirebaseAuth.getInstance().signOut();
+//
+//                Toast.makeText(getActivity(),"로그아웃되었습니다.",Toast.LENGTH_SHORT).show();
+//                logoutListener.finish(child);
+//
+//            }
+//        });
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
         recyclerView.setAdapter(recyclerViewAdapter);
 
@@ -234,11 +224,14 @@ public class MyList extends Fragment {
                 try {
                     JSONArray jsonArray;
                     JSONObject jsonObject = new JSONObject(response.body().toString());
-                    Log.d("JSON",jsonObject+"");
                     jsonArray = jsonObject.getJSONArray("weather");
-                    Log.d("JSONARRAY",jsonArray+"");
                     jsonObject = jsonArray.getJSONObject(0);
-                    t1.setText(jsonObject.getString("main"));
+//                    String weather = jsonObject.getString("description");
+//                    t1.setText(weather);
+                    String icon = jsonObject.getString("icon");
+                    String iconUrl = "http://openweathermap.org/img/wn/" + icon+ ".png";
+                    Glide.with(getActivity()).load(iconUrl).into(weatherIcon);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -251,6 +244,42 @@ public class MyList extends Fragment {
         });
     }
 
+    public void getDailyForecast(String latitude, String longitude,String units,String exclude,String cnt,String lang,String OPEN_WEATHER_MAP_KEY){
+        RetrofitClient retrofitClient = new RetrofitClient();
+        retrofitClient.buildRetrofit();
+        Call<JsonObject> response = retrofitClient.getInstance()
+                .buildRetrofit()
+                .getDailyForecast(latitude,longitude,units,exclude,cnt,lang,OPEN_WEATHER_MAP_KEY);
+        response.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                try {
+                    JSONArray jsonArray;
+                    JSONObject jsonObject = new JSONObject(response.body().toString());
+                    Log.d("JSONDAILY",jsonObject+"");
+                    jsonArray = jsonObject.getJSONArray("daily");
+                    Log.d("daily",jsonArray+"");
+//                    calendar.setTimeInMillis(Integer.parseInt(jsonObject.getString("dt"))*1000L);
+//                    Calendar calendar = Calendar.getInstance();
+//                    TimeZone tz = TimeZone.getDefault();
+//                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                    java.util.Date currenTimeZone=new java.util.Date((long)Integer.parseInt(jsonObject.getString("dt"))*1000);
+//                    Log.d("fdghdgfhdfgh",jsonObject.getString("dt"));
+//                    Log.d("dsafsafsadf",sdf.format(currenTimeZone));
+//                    Log.d("JSON",jsonObject+"");
+//                    jsonArray = jsonObject.getJSONArray("weather");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+    }
     public interface logoutListener {
         void finish(Fragment child);
     }

@@ -13,4 +13,14 @@ public interface RetrofitService {
             @Query("lon")String lon,
             @Query("APPID")String APPID
     );
+    @GET("forecast")
+    Call<JsonObject> getDailyForecast(
+            @Query("lat") String lat,
+            @Query("lon") String lon,
+            @Query("units") String units,
+            @Query("exclude") String exclude,
+            @Query("cnt") String cnt,
+            @Query("lang") String lang,
+            @Query("APPID") String APPID
+    );
 }
