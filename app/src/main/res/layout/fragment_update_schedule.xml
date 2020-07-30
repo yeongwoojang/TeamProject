@@ -2,18 +2,21 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/gradient"
     >
     <TextView
         android:id="@+id/questionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="일정을 수정하시겠습니까?"
+        android:fontFamily="@font/baemin"
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="20dp"
         android:gravity="center_horizontal"
+        android:layout_margin="20dp"
         android:layout_marginTop="16dp"
         ></TextView>
     <LinearLayout
@@ -28,12 +31,17 @@
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:text="예"
+            android:layout_margin="20dp"
+            android:background="@drawable/popup_button_shape"
             ></Button>
         <Button
             android:id="@+id/noBt"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:text="아니오"
+            android:layout_margin="20dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/popup_button_shape"
             ></Button>
     </LinearLayout>
 </LinearLayout>

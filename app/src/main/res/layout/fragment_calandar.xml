@@ -41,6 +41,11 @@
         android:layout_gravity="end"
         android:gravity="start"
         >
+        <FrameLayout
+            android:id="@+id/aboveLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
             <TextView
                 android:id="@+id/test"
                 android:layout_width="match_parent"
@@ -51,16 +56,20 @@
                 android:textSize="24dp"
                 android:padding="10dp"
                 />
-        <ImageButton
-            android:id="@+id/modifyBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="수정"
-            ></ImageButton>
+            <ImageButton
+                android:id="@+id/modifyBt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/round_add_circle_outline_black_18dp"
+                android:layout_gravity="end"
+                android:background="@color/transparent"
+                ></ImageButton>
+        </FrameLayout>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/test">
+            android:layout_below="@+id/aboveLayout">
             <TextView
                 android:id="@+id/test1"
                 android:layout_width="match_parent"

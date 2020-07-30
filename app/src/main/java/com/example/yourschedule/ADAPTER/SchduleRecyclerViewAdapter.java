@@ -166,6 +166,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             scheduleDTO.setDate(date);
             scheduleDTO.setSchedule(scheduleListSet);
             scheduleDTO.setIsComplete(isComplete);
+
         } else {
             Toast.makeText(activity, "하나 이상의 일정을 입력하세요", Toast.LENGTH_SHORT).show();
         }
@@ -173,5 +174,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                 getDisplayName())
                 .child(date.replace(".", "-"))
                 .setValue(scheduleDTO);
+
     }
+
 }
