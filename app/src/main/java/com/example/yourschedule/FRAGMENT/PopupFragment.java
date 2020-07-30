@@ -43,6 +43,7 @@ public class PopupFragment extends DialogFragment {
     public static final String TAG_EVENT_DIALOG = "dialog_event";
     public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
     SchduleRecyclerViewAdapter adapter;
+    ForDrawerListener forDrawerListener;
     Button previousBt, nextBt, storeBt, additionalBt;
     TextView dateView;
     RecyclerView schduleRecyclerView;
@@ -52,6 +53,8 @@ public class PopupFragment extends DialogFragment {
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
     String date;
+    boolean signal = false;
+
 
 
     public static PopupFragment newInstance() {
@@ -99,7 +102,6 @@ public class PopupFragment extends DialogFragment {
         schduleRecyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         schduleRecyclerView.setLayoutManager(linearLayoutManager);
-
         ReadDBData(new ReadDataCallback() {
             @Override
             public void onCallback(List<ScheduleDTO> value) {
@@ -157,7 +159,9 @@ public class PopupFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 adapter.addSchedule();
+                signal = true;
                 mDialogResult.finish();
+
             }
         });
 
@@ -192,6 +196,7 @@ public class PopupFragment extends DialogFragment {
     public interface ReadDataCallback {
         void onCallback(List<ScheduleDTO> value);
     }
+
     public void ReadDBData(ReadDataCallback readDataCallback){
         Log.d("Seqeunce",1+"");
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
@@ -216,4 +221,7 @@ public class PopupFragment extends DialogFragment {
                 });
     }
 
+    interface ForDrawerListener{
+        void getSignal();
+    }
 }
