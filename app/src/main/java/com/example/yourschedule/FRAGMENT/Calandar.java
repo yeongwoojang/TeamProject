@@ -1,10 +1,12 @@
 package com.example.yourschedule.FRAGMENT;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -40,9 +42,12 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -63,6 +68,13 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     private Fragment fragment;
     private Fragment fffff;
     private TextView test;
+    private TextView test1;
+    private View dragView;
+    View rootView;
+
+    List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
+
+    Calendar calendar = Calendar.getInstance();
 
 
     public Calandar newInstance() {
@@ -79,10 +91,12 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_calandar, container, false);
+        rootView = inflater.inflate(R.layout.fragment_calandar, container, false);
         slidingUpPanelLayout = rootView.findViewById(R.id.slidingView);
         materialCalendarView = rootView.findViewById(R.id.calendar);
         test = rootView.findViewById(R.id.test);
+        test1 = rootView.findViewById(R.id.test1);
+        dragView = rootView.findViewById((R.id.dragView));
         fffff = this;
 
         return rootView;
@@ -105,6 +119,9 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
             @Override
             public void onPanelSlide(View panel, float slideOffset){
                 Log.d("slide",slidingUpPanelLayout.getPanelState()+"");
+
+
+
             }
 
             @Override
@@ -130,6 +147,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView.setDateTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_Date);
         materialCalendarView.addDecorators(
                 new SaturDayDecorator(), new SunDayDecorator(), todayDecorator);
+
         ReadDBData(new CalendarCallback() {
             @Override
             public void onCallback(List<ScheduleDTO> value) {
@@ -170,8 +188,23 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 //        slidingUpPanelLayout.setPanelState();
 //        slidingUpPanelLayout.setPanelHeight(200);
         slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        test.setText(selectedDate);
+        test.setText("테스트"+selectedDate);
         Log.d("FirstState",slidingUpPanelLayout.getPanelState()+"");
+        Log.d("slide","db selectDate"+selectedDate);
+
+        //동적으로 바꾸기
+        //1.전체불러와서 해당날짜만 보여주기-o 2.선택할때마다 불러오기-x
+        //일단 대충 표시만되게 만듬
+        //날씨아이콘안나옴
+        test1.setText("");
+        for(int i=0;i<scheduleDTOSTemp.size();i++) {
+            if(scheduleDTOSTemp.get(i).getDate().equals(selectedDate)) {
+                test1.setText(test1.getText()+scheduleDTOSTemp.get(i).getSchedule().toString());
+                Log.d("slide","날짜"+scheduleDTOSTemp.get(i).getSchedule());
+            }
+        }
+
+
 //        if(slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.EXPANDED ||
 //                slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.ANCHORED ||
 //                slidingUpPanelLayout.getPanelState()==SlidingUpPanelLayout.PanelState.DRAGGING){
@@ -286,25 +319,34 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     }
 
     public void ReadDBData(CalendarCallback calendarCallback) {
-        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
+
         auth = FirebaseAuth.getInstance();
-        mDatabase.child(auth.getCurrentUser().getDisplayName())
+        mDatabase.child(auth.getCurrentUser().getDisplayName()).child((selectedDate.replace(".","-")))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         scheduleDTOSTemp.clear();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+
+                            Log.d("slide","db테스트"+selectedDate);
+                            Log.d("slide","db테스트"+scheduleDTO.getSchedule());
                             scheduleDTOSTemp.add(scheduleDTO);
+
+
+
 //                            if (scheduleDTO.getDate() != null) {
 //                            calendarCallback.onCallback(scheduleDTO.getDate());
 //                            }
                         }
+
                         calendarCallback.onCallback(scheduleDTOSTemp);
+
+
+
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
     }

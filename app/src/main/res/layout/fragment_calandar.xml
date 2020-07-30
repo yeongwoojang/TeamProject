@@ -42,15 +42,25 @@
         android:gravity="start"
         >
 
-            <TextView
-                android:id="@+id/test"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="공유하기"
-                android:fontFamily="@font/baemin"
-                android:textColor="#ffffff"
-                android:textSize="24dp"
-                android:padding="10dp"
-                />
+        <TextView
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="공유하기"
+            android:fontFamily="@font/baemin"
+            android:textColor="#ffffff"
+            android:textSize="24dp"
+            android:padding="10dp"
+            />
+
+        <TextView
+            android:id="@+id/test1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/baemin"
+            android:padding="10dp"
+            android:layout_marginTop ="50dp"
+            android:textColor="#ffffff"
+            android:textSize="24dp" />
     </RelativeLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

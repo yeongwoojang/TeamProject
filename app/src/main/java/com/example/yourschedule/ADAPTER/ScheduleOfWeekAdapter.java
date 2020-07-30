@@ -47,12 +47,12 @@ public class ScheduleOfWeekAdapter extends RecyclerView.Adapter<ScheduleOfWeekAd
         TextView scheduleText;
         public ViewHolder(View itemView) {
             super(itemView);
-            scheduleText = (TextView) itemView.findViewById(R.id.schedule);
+            scheduleText = (TextView) itemView.findViewById(R.id.scheduleChk);
         }
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_of_week_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_schedule_of_week, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
