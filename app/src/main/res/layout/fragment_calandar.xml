@@ -41,7 +41,6 @@
         android:layout_gravity="end"
         android:gravity="start"
         >
-
             <TextView
                 android:id="@+id/test"
                 android:layout_width="match_parent"
