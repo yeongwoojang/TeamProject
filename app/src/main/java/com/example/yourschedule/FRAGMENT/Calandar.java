@@ -118,7 +118,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView.setOnDateChangedListener(this);
         materialCalendarView.setOnMonthChangedListener(this);
         materialCalendarView.setTopbarVisible(true);
-
+        materialCalendarView.setDateTextAppearance(R.style.CalendarWidgetWeekDay);
         slidingUpPanelLayout.setPanelHeight(0);
         TodayDecorator todayDecorator = new TodayDecorator();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");

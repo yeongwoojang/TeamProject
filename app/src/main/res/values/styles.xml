@@ -8,5 +8,17 @@
         <item name="windowNoTitle">true</item>
 <!--        <item name="windowActionBar"></item>-->
     </style>
+    <style name="CalendarWidgetHeader">
+        <item name="android:textSize">9pt</item>
+        <item name="android:textColor">@color/white</item>
 
+    </style>
+
+    <style name="CalendarWidgetWeekDay" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">7pt</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/baemin</item>
+        <item name="fontFamily">@font/baemin</item>
+
+    </style>
 </resources>

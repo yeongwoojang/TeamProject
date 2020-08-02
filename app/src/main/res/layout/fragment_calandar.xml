@@ -25,10 +25,12 @@
             android:id="@+id/calendar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:mcv_headerTextAppearance="@style/TextAppearance.MaterialCalendarWidget.Header"
+            app:mcv_headerTextAppearance="@style/CalendarWidgetHeader"
             app:mcv_selectionColor="@color/mcv_selectionColor"
-            android:focusedMonthDateColor="@color/colorPrimaryDark"
+            android:focusedMonthDateColor="@color/white"
             app:mcv_titleAnimationOrientation="vertical"
+            app:mcv_arrowColor="@color/white"
+            app:mcv_weekDayTextAppearance="@style/CalendarWidgetWeekDay"
             ></com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
     </FrameLayout>

@@ -1,126 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
     <LinearLayout
         android:id="@+id/topLayout"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
-        >
+        android:orientation="horizontal"
+        android:weightSum="5">
+
         <ImageButton
             android:id="@+id/leftBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:background="@color/transparent"
-            android:src="@drawable/baseline_arrow_left_white_18dp"
-            android:layout_weight="1"
             android:layout_marginLeft="16dp"
-            ></ImageButton>
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:src="@drawable/baseline_arrow_left_white_18dp"></ImageButton>
+
         <TextView
             android:id="@+id/topMonthText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:fontFamily="@font/baemin"
+            android:gravity="center_horizontal"
             android:padding="10dp"
             android:text="상단텍스트"
-            android:gravity="center_horizontal"
-            android:textSize="9pt"
-            android:textStyle="bold"
-            android:fontFamily="@font/baemin"
             android:textColor="#ffffff"
-            android:layout_weight="3"
-            ></TextView>
+            android:textSize="9pt"
+            android:textStyle="bold"></TextView>
+
         <ImageButton
             android:id="@+id/rightBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:background="@color/transparent"
-            android:src="@drawable/baseline_arrow_right_white_18dp"
-            android:layout_weight="1"
             android:layout_marginRight="16dp"
-            ></ImageButton>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/graphLayout"
-        android:layout_below="@+id/topLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="5"
-        >
-        <TextView
-            android:id="@+id/labelText"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_weight="4"
-            android:gravity="right|center"
-            android:fontFamily="@font/baemin"
-            android:textSize="12pt"
-            android:textColor="#ffffff"
-            android:text="달성률"
-            ></TextView>
-        <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:id="@+id/chart1"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@color/transparent"
             android:layout_weight="1"
-             />
-        <SeekBar
-            android:id="@+id/seekBar2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="invisible"
-            />
-        <SeekBar
-            android:id="@+id/seekBar1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="invisible"
-            />
+            android:background="@color/transparent"
+            android:src="@drawable/baseline_arrow_right_white_18dp">
+        </ImageButton>
     </LinearLayout>
+            <LinearLayout
+                android:layout_below="@+id/topLayout"
+                android:id="@+id/divideLineTop"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+            </LinearLayout>
+    <ScrollView
+        android:layout_below="@+id/divideLineTop"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
-        android:id="@+id/countTextLayout"
-        android:layout_below="@+id/graphLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="4"
-        >
-        <TextView
-            android:id="@+id/entireCountText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12pt"
-            android:textColor="@color/white"
-            android:fontFamily="@font/baemin"
-            android:layout_weight="2"
-            ></TextView>
-        <TextView
-            android:id="@+id/completCountText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12pt"
-            android:textColor="@color/white"
-            android:fontFamily="@font/baemin"
-            android:layout_weight="2"
-            ></TextView>
+        android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/graphLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelText"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_weight="4"
+                    android:fontFamily="@font/baemin"
+                    android:gravity="right|center"
+                    android:text="달성률"
+                    android:textColor="#ffffff"
+                    android:textSize="12pt"></TextView>
+
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/chart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:background="@color/transparent" />
+
+                <SeekBar
+                    android:id="@+id/seekBar2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible" />
+
+                <SeekBar
+                    android:id="@+id/seekBar1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/countTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/graphLayout"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/entireCountText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/baemin"
+                    android:textColor="@color/white"
+                    android:textSize="9pt"></TextView>
+
+                <TextView
+                    android:id="@+id/completCountText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/baemin"
+                    android:textColor="@color/white"
+                    android:textSize="9pt"></TextView>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/completeList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/countTextLayout"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:fontFamily="@font/baemin"
+                android:text="완료목록"
+                android:textColor="@color/white"
+                android:textSize="9pt"></TextView>
+
+            <LinearLayout
+                android:id="@+id/divideLineCenter"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/completeList"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white"
+                android:orientation="horizontal"></LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divideLineCenter"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="16dp"
+                android:overScrollMode="never"
+                android:scrollbars="none"></androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/divideLineBottpm"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/recyclerView"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+            </LinearLayout>
     </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/countTextLayout"
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        ></androidx.recyclerview.widget.RecyclerView>
+</ScrollView>
 
 
 </RelativeLayout>
