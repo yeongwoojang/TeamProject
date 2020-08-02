@@ -117,9 +117,8 @@
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/chart2"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="140dp"
             android:background="@color/transparent"
-            android:layout_weight="1"
             />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView

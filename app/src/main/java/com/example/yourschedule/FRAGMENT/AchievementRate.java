@@ -316,8 +316,7 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                     if (week == cal.getMaximum(Calendar.WEEK_OF_MONTH) - 1 && endDay <= 7) {
                         endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                     }
-
-                    System.out.println(week + "주 : " + startDay + " ~ " + endDay);
+                    //week 시작, 끝 추가
                     weekstart.add(startDay);
                     weekend.add(endDay);
                 }
@@ -334,46 +333,59 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                         for (int j = 0; j < scheduleDTOS.size(); j++) {
                             if (weekstart.get(i) < Integer.parseInt(scheduleDTOS.get(j).getDay())
                                     && weekend.get(i) > Integer.parseInt(scheduleDTOS.get(j).getDay())) {
-                                Entire++;
                                 for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
                                     if (scheduleDTOS.get(j).getIsComplete().get(k)) {
                                         Choice++;
+                                        Entire++;
+                                    }
+                                    else{
+                                        Entire++;
                                     }
                                 }
 
                             }
+
                         }
-                        entries.add(new BarEntry(i * 2f, (float) ((double) Choice / (double) Entire * 100)));
-                        Log.d("stat", i + 1 + "주 - " + (float) ((double) Choice / (double) Entire * 100));
+                        if((float) ((double) Choice / (double) Entire * 100)>0) {
+                            entries.add(new BarEntry(i * 2f, (float) ((double) Choice / (double) Entire * 100)));
+
+                        }
+                        else{
+                            entries.add(new BarEntry(i * 2f, (float) 0));
+                        }
+                        Log.d("stat", i + 1 + "주 - " + entries.get(i));
                         Entire = 0;
                         Choice = 0;
                     }
 
+                    chart2.getDescription().setText("");
+//                    chart2.getDescription().setText(((int) ((double) Choice / (double) Entire * 100) + "%"));
 
-
+                    Log.d("stat_그래프 몇개?", entries.size()+"");
                 BarDataSet barDataSet = new BarDataSet(entries, "week_test");
-                    if (chart2.getData() != null &&
-                            chart2.getData().getDataSetCount() > 0) {
-//                  set1 = new BarDataSet(values, "witdraw per day");
-                        barDataSet.setValues(entries);
+                    barDataSet.setBarBorderWidth(0.9f);
+                    barDataSet.setColors(R.color.colorPrimary);
+                    BarData data1 = new BarData(barDataSet);
+                    chart2.setData(data1);
+//                    chart2.invalidate();
+//                    if (chart2.getData() != null &&
+//                            chart2.getData().getDataSetCount() > 0) {
+////                  set1 = new BarDataSet(values, "witdraw per day");
+//                        barDataSet.setValues(entries);
                         chart2.getData().notifyDataChanged();
                         chart2.notifyDataSetChanged();
-                    } else {
+//                    } else {
 //                        barDataSet = new BarDataSet(entries, "");
-//                        barDataSet.setBarBorderWidth(1f);
-//                        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-                    }
+//                    }
 
-                ArrayList<IBarDataSet> dataSets1 = new ArrayList<>();
-                dataSets1.add(barDataSet);
-                barDataSet.setValueTextColor(R.color.colorPrimary);
-                BarData data1 = new BarData(dataSets1);
-                data1.setValueTextSize(20f);
-                data1.setBarWidth(0.5f);
-//            data.setValueTypeface(tfLight);
-                data1.setBarWidth(barWidth);
-                chart2.setData(data1);
-                barDataSet.setColors(ContextCompat.getColor(chart2.getContext(), R.color.white));
+//                ArrayList<IBarDataSet> dataSets1 = new ArrayList<>();
+//                dataSets1.add(barDataSet);
+//                barDataSet.setValueTextColor(R.color.colorPrimary);
+//                data1.setValueTextSize(20f);
+//                data1.setBarWidth(0.5f);
+////            data.setValueTypeface(tfLight);
+//                data1.setBarWidth(barWidth);
+//                barDataSet.setColors(ContextCompat.getColor(chart2.getContext(), R.color.white));
                 }catch (Exception e){
 
                 }
