@@ -1,5 +1,7 @@
 package com.example.yourschedule.OBJECT;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,9 @@ public class ScheduleDTO {
         this.date = date;
     }
 
-
+    public String getDay() {
+    return this.date.charAt(8)+""+this.date.charAt(9);
+    }
 
     public List<String> getSchedule() {
         return schedule;

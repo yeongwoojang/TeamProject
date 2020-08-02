@@ -32,6 +32,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,6 +58,7 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
     TextView TopText,entireCountText,completeCountText;
     ImageButton rightBt, leftBt;
     private HorizontalBarChart chart;
+    private HorizontalBarChart chart2;
     private SeekBar seekBarX, seekBarY;
 
     @Override
@@ -65,6 +67,7 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
         SimpleDateFormat transFormat = new SimpleDateFormat("MM월 yyyy");
         Calendar currentCalendar = Calendar.getInstance();
         month = transFormat.format(currentCalendar.getTime());
+
     }
 
     //    private TextView tvX, tvY;
@@ -123,7 +126,6 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
         xl.setDrawLabels(false);
         xl.setEnabled(false);
 
-
         YAxis yl = chart.getAxisLeft();
 //        yl.setDrawAxisLine(true);
 //        yl.setDrawGridLines(true);
@@ -144,6 +146,40 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
         seekBarY.setProgress(1);
         seekBarX.setProgress(100);
 
+        //////chart2
+        chart2 = rootView.findViewById(R.id.chart2);
+        chart2.setDrawBarShadow(true);
+        chart2.setDrawValueAboveBar(true);
+        chart2.getDescription().setEnabled(true);
+        chart2.setPinchZoom(false);
+        chart2.setDrawGridBackground(true);
+        chart2.getXAxis().setDrawGridLines(false);
+        chart2.getAxisLeft().setDrawGridLines(false);
+        chart2.getAxisRight().setDrawGridLines(false);
+
+        XAxis xl2 = chart2.getXAxis();
+        xl2.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xl2.setDrawAxisLine(false);
+        xl2.setDrawGridLines(false);
+        xl2.setDrawLabels(false);
+        xl2.setEnabled(false);
+
+        YAxis yl2 = chart2.getAxisLeft();
+//        yl.setDrawAxisLine(true);
+//        yl.setDrawGridLines(true);
+        yl2.setAxisMinimum(0f);
+        yl2.setEnabled(false);
+        yl2.setAxisMaximum(100f);
+        yl2.setLabelCount(5);
+
+
+        YAxis yr2 = chart2.getAxisRight();
+        yr2.setDrawAxisLine(true);
+        yr2.setDrawGridLines(false);
+        yr2.setEnabled(false);
+        chart2.getLegend().setFormSize(0);
+        chart2.setFitBars(false);
+        chart2.animateY(1000);
 
 //        Legend l = chart.getLegend();
 //        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -193,6 +229,14 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                         }
                     }
                 }
+
+
+
+
+
+
+
+
                 entireCountText.setText("전체 목표 수 :"+ entireCount);
                 completeCountText.setText("완료한 목표 수 : "+completeCount);
                 rateAdapter = new RateAdapter(getActivity(), thatDates,scheduleDTO,month);
@@ -220,7 +264,7 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                 if (chart.getData() != null &&
                         chart.getData().getDataSetCount() > 0) {
                     set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
-//                    set1 = new BarDataSet(values, "witdraw per day");
+//                  set1 = new BarDataSet(values, "witdraw per day");
                     set1.setValues(values);
                     chart.getData().notifyDataChanged();
                     chart.notifyDataSetChanged();
@@ -239,9 +283,107 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                     chart.setData(data);
                     set1.setColors(ContextCompat.getColor(chart.getContext(), R.color.white));
                 }
+
+                ///////
+                /////조질까봐 따로 만듬/////
+                Calendar cal = Calendar.getInstance();
+                int intYear=Integer.parseInt(String.valueOf(cal.get(Calendar.YEAR)));
+                int intMonth=Integer.parseInt(String.valueOf(cal.get(Calendar.MONTH)));
+
+                //그냥 2개로 나눔
+                ArrayList<Integer> weekstart = new ArrayList<Integer>();
+                ArrayList<Integer> weekend = new ArrayList<Integer>();
+
+                weekstart.clear();
+                weekend.clear();
+
+                cal.set(Calendar.YEAR, intYear);
+                cal.set(Calendar.MONTH, intMonth - 1);
+
+                for (int week = 1; week < cal.getMaximum(Calendar.WEEK_OF_MONTH); week++) {
+                    cal.set(Calendar.WEEK_OF_MONTH, week);
+
+                    cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                    int startDay = cal.get(Calendar.DAY_OF_MONTH);
+
+                    cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                    int endDay = cal.get(Calendar.DAY_OF_MONTH);
+
+                    if (week == 1 && startDay >= 7) {
+                        startDay = 1;
+                    }
+
+                    if (week == cal.getMaximum(Calendar.WEEK_OF_MONTH) - 1 && endDay <= 7) {
+                        endDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                    }
+
+                    System.out.println(week + "주 : " + startDay + " ~ " + endDay);
+                    weekstart.add(startDay);
+                    weekend.add(endDay);
+                }
+
+                int Entire = 0;
+                int Choice = 0;
+                ArrayList<BarEntry> entries = new ArrayList<>();
+
+                try {
+                    Log.d("stat_month", Calendar.MONTH + "");
+                    Log.d("stat", weekstart.size() + "");
+                    Log.d("stat_scheduleDTOS SIZE", scheduleDTOS.size() + "");
+                    for (int i = 0; i < weekstart.size(); i++) {
+                        for (int j = 0; j < scheduleDTOS.size(); j++) {
+                            if (weekstart.get(i) < Integer.parseInt(scheduleDTOS.get(j).getDay())
+                                    && weekend.get(i) > Integer.parseInt(scheduleDTOS.get(j).getDay())) {
+                                Entire++;
+                                for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
+                                    if (scheduleDTOS.get(j).getIsComplete().get(k)) {
+                                        Choice++;
+                                    }
+                                }
+
+                            }
+                        }
+                        entries.add(new BarEntry(i * 2f, (float) ((double) Choice / (double) Entire * 100)));
+                        Log.d("stat", i + 1 + "주 - " + (float) ((double) Choice / (double) Entire * 100));
+                        Entire = 0;
+                        Choice = 0;
+                    }
+
+
+
+                BarDataSet barDataSet = new BarDataSet(entries, "week_test");
+                    if (chart2.getData() != null &&
+                            chart2.getData().getDataSetCount() > 0) {
+//                  set1 = new BarDataSet(values, "witdraw per day");
+                        barDataSet.setValues(entries);
+                        chart2.getData().notifyDataChanged();
+                        chart2.notifyDataSetChanged();
+                    } else {
+//                        barDataSet = new BarDataSet(entries, "");
+//                        barDataSet.setBarBorderWidth(1f);
+//                        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                    }
+
+                ArrayList<IBarDataSet> dataSets1 = new ArrayList<>();
+                dataSets1.add(barDataSet);
+                barDataSet.setValueTextColor(R.color.colorPrimary);
+                BarData data1 = new BarData(dataSets1);
+                data1.setValueTextSize(20f);
+                data1.setBarWidth(0.5f);
+//            data.setValueTypeface(tfLight);
+                data1.setBarWidth(barWidth);
+                chart2.setData(data1);
+                barDataSet.setColors(ContextCompat.getColor(chart2.getContext(), R.color.white));
+                }catch (Exception e){
+
+                }
+
             }
 
         });
+
+                ///////
+
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM월 ");
         leftBt.setOnClickListener(new View.OnClickListener() {
