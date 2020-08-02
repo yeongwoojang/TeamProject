@@ -1,7 +1,6 @@
 package com.example.yourschedule.FRAGMENT;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,11 +18,14 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.ADAPTER.RateAdapter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -37,7 +39,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,13 +46,15 @@ import java.util.List;
 
 public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChangeListener {
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
-    //    RecyclerView recyclerView;
-//    LinearLayoutManager linearLayoutManager;
-//    ScheduleOfWeekAdapter scheduleOfWeekAdapter;
+        RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+    RateAdapter rateAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+    List<String> scheduleDTO = new ArrayList<>();
+    List<String> thatDates = new ArrayList<>();
     FirebaseAuth auth;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
-    TextView TopText;
+    TextView TopText,entireCountText,completeCountText;
     ImageButton rightBt, leftBt;
     private HorizontalBarChart chart;
     private SeekBar seekBarX, seekBarY;
@@ -82,7 +85,17 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View rootView = inflater.inflate(R.layout.fragment_achievement_rate, container, false);
+
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         TopText = rootView.findViewById(R.id.topMonthText);
+        entireCountText = rootView.findViewById(R.id.entireCountText);
+        completeCountText = rootView.findViewById(R.id.completCountText);
+
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
         chart = rootView.findViewById(R.id.chart1);
@@ -141,7 +154,6 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
 //        l.setForm(Legend.LegendForm.CIRCLE);
 //        l.setTextColor(ContextCompat.getColor(chart.getContext(), R.color.white));
 //        l.setXEntrySpace(10f);
-//        recyclerView = rootView.findViewById(R.id.recyclerView);
         return rootView;
     }
 
@@ -160,25 +172,32 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
             public void onCallback(List<ScheduleDTO> value) {
                 scheduleDTOS.clear();
                 scheduleDTOS = value;
+                scheduleDTO.clear();
+                thatDates.clear();
+
                 for (int i = 0; i < scheduleDTOS.size(); i++) {
-                    Log.d("month", scheduleDTOS.get(i).getDate().substring(0, 7));
-                    Log.d("fsgsfdgdsg1", scheduleDTOS.get(i).getDate().substring(0, 4));
-                    Log.d("fsgsfdgdsg2", month.substring(4));
-                    Log.d("fsgsfdgdsg3", scheduleDTOS.get(i).getDate().substring(5, 7));
-                    Log.d("fsgsfdgdsg4", month.substring(0, 2));
                     if (scheduleDTOS.get(i).getDate().substring(0, 4).equals(month.substring(4))
                             && scheduleDTOS.get(i).getDate().substring(5, 7).equals(month.substring(0, 2))) {
                         for (int j = 0; j < scheduleDTOS.get(i).getIsComplete().size(); j++) {
+                            if(scheduleDTOS.get(i).getIsComplete().get(j)){
+                                thatDates.add(scheduleDTOS.get(i).getDate().substring(5));
+                            }
                             if (scheduleDTOS.get(i).getIsComplete().get(j)) {
                                 completeCount++;
                                 entireCount++;
+                                Log.d("aaaaaaaaaaa",scheduleDTOS.get(i).getSchedule().get(j));
+                                scheduleDTO.add(scheduleDTOS.get(i).getSchedule().get(j));
                             } else {
                                 entireCount++;
-
                             }
                         }
                     }
                 }
+                entireCountText.setText("전체 목표 수 :"+ entireCount);
+                completeCountText.setText("완료한 목표 수 : "+completeCount);
+                rateAdapter = new RateAdapter(getActivity(), thatDates,scheduleDTO,month);
+                recyclerView.setAdapter(rateAdapter);
+
                 Log.d("completeCount", completeCount + "");
                 Log.d("entireCount", entireCount + "");
                 Log.d("percent", ((double) completeCount / (double) entireCount * 100) + "");
@@ -205,7 +224,6 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                     set1.setValues(values);
                     chart.getData().notifyDataChanged();
                     chart.notifyDataSetChanged();
-
                 } else {
                     set1 = new BarDataSet(values, "");
 //                    set1.setDrawIcons(true);
@@ -222,7 +240,9 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                     set1.setColors(ContextCompat.getColor(chart.getContext(), R.color.white));
                 }
             }
+
         });
+
         SimpleDateFormat sdf = new SimpleDateFormat("MM월 ");
         leftBt.setOnClickListener(new View.OnClickListener() {
             @Override

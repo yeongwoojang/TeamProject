@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="5"
+    >
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="날짜"
+        android:layout_weight="4"
+        android:textColor="@color/white"
+        android:textSize="14pt"
+        ></TextView>
+    <TextView
+        android:id="@+id/complete_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="스케쥴"
+        android:layout_weight="1"
+        android:textColor="@color/white"
+        android:textSize="14pt"
+        android:gravity="center"
+        ></TextView>
+</LinearLayout>

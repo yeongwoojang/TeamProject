@@ -34,7 +34,7 @@ public class DrawerListAdapter extends RecyclerView.Adapter<DrawerListAdapter.Vi
     public DrawerListAdapter(Activity activity, List<String> scheduleDTO) {
         this.activity = activity;
         this.scheduleDTO = scheduleDTO;
-        Log.d("AdapterData",scheduleDTO+"");
+
     }
 
     @Override
