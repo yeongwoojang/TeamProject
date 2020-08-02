@@ -87,9 +87,7 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
         View rootView = inflater.inflate(R.layout.fragment_achievement_rate, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.addItemDecoration(
-                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
+        linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         TopText = rootView.findViewById(R.id.topMonthText);
@@ -193,8 +191,8 @@ public class AchievementRate extends Fragment implements SeekBar.OnSeekBarChange
                         }
                     }
                 }
-                entireCountText.setText("전체 목표 수 :"+ entireCount);
-                completeCountText.setText("완료한 목표 수 : "+completeCount);
+                entireCountText.setText("전체 :"+ entireCount);
+                completeCountText.setText("완료 : "+completeCount);
                 rateAdapter = new RateAdapter(getActivity(), thatDates,scheduleDTO,month);
                 recyclerView.setAdapter(rateAdapter);
 
