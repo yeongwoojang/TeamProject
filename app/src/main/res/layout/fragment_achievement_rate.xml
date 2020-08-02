@@ -46,17 +46,62 @@
             android:layout_marginRight="16dp"
             ></ImageButton>
     </LinearLayout>
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:layout_weight="5"
         >
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
+        <TextView
+            android:id="@+id/labelText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="70dp"
+            android:layout_weight="4"
+            android:gravity="right|center"
+            android:fontFamily="@font/baemin"
+            android:textSize="12pt"
+            android:textColor="#ffffff"
+            android:text="달성률"
+            ></TextView>
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/chart1"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@color/transparent"
+            android:layout_weight="1"
+             />
+
+
 
     </LinearLayout>
+    <SeekBar
+        android:id="@+id/seekBar2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="8dp"
+        android:layout_toLeftOf="@+id/tvYMax"
+        android:layout_marginRight="5dp"
+        android:max="200"
+        android:paddingBottom="12dp"
+        android:visibility="invisible"
+        />
+
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_above="@+id/seekBar2"
+        android:layout_margin="8dp"
+        android:layout_marginBottom="35dp"
+        android:layout_toLeftOf="@+id/tvXMax"
+        android:layout_marginRight="5dp"
+        android:max="500"
+        android:paddingBottom="12dp"
+        android:visibility="invisible"
+        />
 <!--    <androidx.recyclerview.widget.RecyclerView-->
 <!--        android:id="@+id/recyclerView"-->
 <!--        android:layout_width="match_parent"-->

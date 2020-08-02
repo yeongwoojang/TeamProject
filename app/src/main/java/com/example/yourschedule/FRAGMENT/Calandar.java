@@ -309,7 +309,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     dialogFragment.dismissAllowingStateLoss();
                     dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    drawerListAdapter.notifyDataSetChanged();
+//                    drawerListAdapter.notifyDataSetChanged();
                     ft.detach(fffff).attach(fffff).commit();
                     dialogFragment.dismiss();
                 }
@@ -337,7 +337,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     dialogFragment.dismissAllowingStateLoss();
                     dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    drawerListAdapter.notifyDataSetChanged();
+//                    drawerListAdapter.notifyDataSetChanged();
                     ft.detach(fffff).attach(fffff).commit();
                     dialogFragment.dismiss();
 
