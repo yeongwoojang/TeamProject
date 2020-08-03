@@ -20,7 +20,7 @@ public class ScheduleList extends Fragment implements MyList.logoutListener{
     private final int FRAGMENT3 = 2;
 
 
-    private final String[] topTab = {"일정목록", "일정 입력", "목표 달성률"};
+    private final String[] topTab = {"오늘의 일정", "달력", "월간 목표 달성률","주간 목표 달성률"};
 
     public ScheduleList newInstance() {
         return new ScheduleList();
@@ -46,6 +46,7 @@ public class ScheduleList extends Fragment implements MyList.logoutListener{
         top_tabs.getTabAt(0).setTag(0);
         top_tabs.getTabAt(1).setTag(1);
         top_tabs.getTabAt(2).setTag(2);
+        top_tabs.getTabAt(3).setTag(3);
         Fragment fragment;
         fragment = new MyList().newInstance();
         setChildFragment(fragment);
@@ -70,13 +71,14 @@ public class ScheduleList extends Fragment implements MyList.logoutListener{
                         break;
 
                     case 2:
-                        fragment = new AchievementRate().newInstance();
+                        fragment = new MonthAchievementRate().newInstance();
                         setChildFragment(fragment);
                         break;
 
-//                    case 3:
-//                        setChildFragment(FRAGMENT3);
-//                        break;
+                    case 3:
+                        fragment = new WeekAchievementRate().newInstance();
+                        setChildFragment(fragment);
+                        break;
                 }
             }
 

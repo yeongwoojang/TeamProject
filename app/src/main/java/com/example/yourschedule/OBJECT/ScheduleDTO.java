@@ -36,5 +36,7 @@ public class ScheduleDTO {
         this.isComplete = isComplete;
     }
 
-
+    public String getDay() {
+        return this.date.charAt(8)+""+this.date.charAt(9);
+    }
 }
