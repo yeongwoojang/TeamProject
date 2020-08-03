@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
+import com.example.yourschedule.FRAGMENT.WeatherOfWeek;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
     private final int FRAGMENT3 = 2;
-    private final String[] bottomTab = {"일정관리", "추가예정", "추가예정"};
+    private final String[] bottomTab = {"일정관리", "주간날씨", "추가예정"};
     private TabLayout bottom_tabs;
     private TextView t1;
     private SignInButton loginBt;
@@ -218,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
 
             case FRAGMENT2:
                 // '프래그먼트2' 호출
-                MyList graph = new MyList();
-                transaction.replace(R.id.fragment_container, graph);
+                WeatherOfWeek weatherOfWeek = new WeatherOfWeek();
+                transaction.replace(R.id.fragment_container, weatherOfWeek);
                 transaction.commit();
                 break;
         }
