@@ -149,9 +149,9 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                 thatDates.clear();
 
                 Calendar cal = Calendar.getInstance();
-                int intYear=Integer.parseInt(String.valueOf(cal.get(Calendar.YEAR)));
-                int intMonth=Integer.parseInt(String.valueOf(cal.get(Calendar.MONTH)));
-                Log.d("intMonth",intMonth+"");
+                int intYear = Integer.parseInt(String.valueOf(cal.get(Calendar.YEAR)));
+                int intMonth = Integer.parseInt(String.valueOf(cal.get(Calendar.MONTH)));
+                Log.d("intMonth", intMonth + "");
 
                 //그냥 2개로 나눔
                 ArrayList<Integer> weekStart = new ArrayList<Integer>();
@@ -162,116 +162,155 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                 weekEnd.clear();
 
                 cal.set(Calendar.YEAR, Integer.parseInt(array[1]));
-                cal.set(Calendar.MONTH, Integer.parseInt(array[0])-1);
+                cal.set(Calendar.MONTH, Integer.parseInt(array[0]) - 1);
 
                 int lastDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-                Log.d("lastDay",lastDayOfMonth+"");
+                Log.d("lastDay", lastDayOfMonth + "");
 
-                int howMuchWeek =cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
-                Log.d("howMuchWeek",howMuchWeek+"");
-                    Log.d("Sfdgsdgfsdfgsdfgsd",cal.getActualMaximum(Calendar.WEEK_OF_MONTH)+"");
-                for (int week = 1; week <=howMuchWeek; week++) {
+                int howMuchWeek = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+                Log.d("howMuchWeek", howMuchWeek + "");
+                Log.d("Sfdgsdgfsdfgsdfgsd", cal.getActualMaximum(Calendar.WEEK_OF_MONTH) + "");
+                for (int week = 1; week <= howMuchWeek; week++) {
                     cal.set(Calendar.WEEK_OF_MONTH, week);
                     cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                    Log.d("time",cal.getTime()+"");
+                    Log.d("time", cal.getTime() + "");
                     int startDay = cal.get(Calendar.DAY_OF_MONTH);
-                    Log.d("startDay",startDay+"");
+                    Log.d("startDay", startDay + "");
                     cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                     int endDay = cal.get(Calendar.DAY_OF_MONTH);
-                    Log.d("endDay",endDay+"");
+                    Log.d("endDay", endDay + "");
                     if (week == 1 && startDay >= 25) {
                         startDay = 1;
-                        Log.d("startDay2",startDay+"");
+                        Log.d("startDay2", startDay + "");
 
                     }
-                    Log.d("week",week+"");
-                    Log.d("sadfasg",cal.getActualMaximum(Calendar.DAY_OF_MONTH)+"");
-                    Log.d("rdsglkfjfskd",cal.getActualMaximum(Calendar.WEEK_OF_MONTH)+"");
+                    Log.d("week", week + "");
+                    Log.d("sadfasg", cal.getActualMaximum(Calendar.DAY_OF_MONTH) + "");
+                    Log.d("rdsglkfjfskd", cal.getActualMaximum(Calendar.WEEK_OF_MONTH) + "");
                     //for문을 돌다가 week가 해당 월의 마지막 주이고 마지막 날짜가 7보다 작을경우
                     if (week == howMuchWeek && endDay < 7) {
-                        Log.d("adsfasdfsdfasfsdf","진입");
+                        Log.d("adsfasdfsdfasfsdf", "진입");
                         //해당 월의 마지막 날짜를 endDay에 대입
                         endDay = lastDayOfMonth;
-                        Log.d("endDay2",endDay+"");
+                        Log.d("endDay2", endDay + "");
                     }
                     //week 시작, 끝 추가
                     weekStart.add(startDay);
                     weekEnd.add(endDay);
 
                 }
-                for(int i=0;i<weekStart.size();i++){
-                    Log.d("weekStart",weekStart.get(i)+"");
-                    Log.d("weekEnd",weekEnd.get(i)+"");
+                for (int i = 0; i < weekStart.size(); i++) {
+                    Log.d("weekStart", weekStart.get(i) + "");
+                    Log.d("weekEnd", weekEnd.get(i) + "");
                 }
                 int entireCount = 0;
                 int completeCount = 0;
                 ArrayList<BarEntry> entries = new ArrayList<>();
+                ArrayList<Integer> entireCountList = new ArrayList<>();
+                ArrayList<Integer> completeCountList = new ArrayList<>();
 
-
-                for(int i=0;i<scheduleDTOS.size();i++){
-                    if (scheduleDTOS.get(i).getDate().substring(0, 4).equals(month.substring(4))
-                            && scheduleDTOS.get(i).getDate().substring(5, 7).equals(month.substring(0, 2))) {
-                        for(int j=0;j<weekStart.size();j++){
-                            if(weekStart.get(j)<=Integer.parseInt(scheduleDTOS.get(i).getDay())
-                                    &&weekEnd.get(j)>=Integer.parseInt(scheduleDTOS.get(i).getDay())){
-                              switch (j){
-                                  case 0:
-                                      Log.d("whatWeek",1+"번 째 주입니다.");
-                                      break;
-                                  case 1:
-                                      Log.d("whatWeek",2+"번 째 주입니다.");
-                                      break;
-                                  case 2:
-                                      Log.d("whatWeek",3+"번 째 주입니다.");
-                                      break;
-                                  case 3:
-                                      Log.d("whatWeek",4+"번 째 주입니다.");
-                                      break;
-                                  case 4:
-                                      Log.d("whatWeek",5+"번 째 주입니다.");
-                                      break;
-                                  case 5:
-                                      Log.d("whatWeek",6+"번 째 주입니다.");
-                                  default: break;
-                              }
-                              continue;
+                for (int i = 0; i < weekStart.size(); i++) {
+                    entireCountList.add(i,0);
+                    completeCountList.add(i,0);
+                    for (int j = 0; j < scheduleDTOS.size(); j++) {
+                        if (scheduleDTOS.get(j).getDate().substring(0, 4).equals(month.substring(4))
+                                && scheduleDTOS.get(j).getDate().substring(5, 7).equals(month.substring(0, 2))) {
+                            if (weekStart.get(i) <= Integer.parseInt(scheduleDTOS.get(j).getDay())
+                                    && weekEnd.get(i) >= Integer.parseInt(scheduleDTOS.get(j).getDay())) {
+                                switch (i) {
+                                    case 0:
+                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 1 + "번 째 주입니다.");
+                                        if(entireCountList.get(0)!=0){
+                                            entireCountList.set(0,entireCountList.get(0)+scheduleDTOS.get(j).getIsComplete().size());
+                                        }else{
+                                            entireCountList.set(0,scheduleDTOS.get(j).getIsComplete().size());
+                                        }
+                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
+                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
+                                                completeCountList.set(0,completeCountList.get(0)+1);
+                                            }
+                                        }
+                                        break;
+                                    case 1:
+                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 2 + "번 째 주입니다.");
+                                        if(entireCountList.get(1)!=0){
+                                            entireCountList.set(1,entireCountList.get(1)+scheduleDTOS.get(j).getIsComplete().size());
+                                        }else{
+                                            entireCountList.set(1,scheduleDTOS.get(j).getIsComplete().size());
+                                        }
+                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
+                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
+                                                completeCountList.set(1,completeCountList.get(1)+1);
+                                            }
+                                        }
+                                        break;
+                                    case 2:
+                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 3 + "번 째 주입니다.");
+                                        if(entireCountList.get(2)!=0){
+                                            entireCountList.set(2,entireCountList.get(2)+scheduleDTOS.get(j).getIsComplete().size());
+                                        }else{
+                                            entireCountList.set(2,scheduleDTOS.get(j).getIsComplete().size());
+                                        }
+                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
+                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
+                                                completeCountList.set(2,completeCountList.get(2)+1);
+                                            }
+                                        }
+                                        break;
+                                    case 3:
+                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 4 + "번 째 주입니다.");
+                                        if(entireCountList.get(3)!=0){
+                                            entireCountList.set(3,entireCountList.get(3)+scheduleDTOS.get(j).getIsComplete().size());
+                                        }else{
+                                            entireCountList.set(3,scheduleDTOS.get(j).getIsComplete().size());
+                                        }
+                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
+                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
+                                                completeCountList.set(3,completeCountList.get(3)+1);
+                                            }
+                                        }
+                                        break;
+                                    case 4:
+                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 5 + "번 째 주입니다.");
+                                        if(entireCountList.get(4)!=0){
+                                            entireCountList.set(4,entireCountList.get(4)+scheduleDTOS.get(j).getIsComplete().size());
+                                        }else{
+                                            entireCountList.set(4,scheduleDTOS.get(j).getIsComplete().size());
+                                        }
+                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
+                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
+                                                completeCountList.set(4,completeCountList.get(4)+1);
+                                            }
+                                        }
+                                        break;
+                                    case 5:
+                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 6 + "번 째 주입니다.");
+                                        if(entireCountList.get(5)!=0){
+                                            entireCountList.set(5,entireCountList.get(5)+scheduleDTOS.get(j).getIsComplete().size());
+                                        }else{
+                                            entireCountList.set(5,scheduleDTOS.get(j).getIsComplete().size());
+                                        }
+                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
+                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
+                                                completeCountList.set(5,completeCountList.get(5)+1);
+                                            }
+                                        }
+                                    default:
+                                        break;
+                                }
+                                continue;
                             }
                         }
-                    }
 
-                }
-
-                try {
-                    Log.d("stat_month", Calendar.MONTH + "");
-                    Log.d("stat", weekStart.size() + "");
-                    Log.d("stat_scheduleDTOS SIZE", scheduleDTOS.size() + "");
-                    for (int i = 0; i < weekStart.size(); i++) {
-                        for (int j = 0; j < scheduleDTOS.size(); j++) {
-//                            if (weekStart.get(i) < Integer.parseInt(scheduleDTOS.get(j).getDay())
-//                                    && weekEnd.get(i) > Integer.parseInt(scheduleDTOS.get(j).getDay())) {
-//                                for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
-//                                    if (scheduleDTOS.get(j).getIsComplete().get(k)) {
-//                                        completeCount++;
-//                                        entireCount++;
-//                                    }
-//                                    else{
-//                                        entireCount++;
-//                                    }
-//                                }
-//
-//                            }
-
-                        }
-                        if((float) ((double) completeCount / (double) entireCount * 100)>0) {
+                        if ((float) ((double) completeCount / (double) entireCount * 100) > 0) {
                             entries.add(new BarEntry(i * 2f, (float) ((double) completeCount / (double) entireCount * 100)));
 
-                        }
-                        else{
+                        } else {
                             entries.add(new BarEntry(i * 2f, (float) 0));
                         }
                         Log.d("stat", i + 1 + "주 - " + entries.get(i));
-                        Log.d("completeCount",completeCount+"");
-                        Log.d("entireCount",entireCount+"");
+                        Log.d("completeCount", completeCount + "");
+                        Log.d("entireCount", entireCount + "");
                         entireCount = 0;
                         completeCount = 0;
                     }
@@ -279,7 +318,7 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                     chart2.getDescription().setText("");
 //                    chart2.getDescription().setText(((int) ((double) Choice / (double) Entire * 100) + "%"));
 
-                    Log.d("stat_그래프 몇개?", entries.size()+"");
+                    Log.d("stat_그래프 몇개?", entries.size() + "");
                     BarDataSet barDataSet = new BarDataSet(entries, "week_test");
                     barDataSet.setBarBorderWidth(0.9f);
                     barDataSet.setColors(R.color.white);
@@ -304,12 +343,16 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
 ////            data.setValueTypeface(tfLight);
 //                data1.setBarWidth(barWidth);
 //                barDataSet.setColors(ContextCompat.getColor(chart2.getContext(), R.color.white));
-                }catch (Exception e){
+//                }catch (Exception e){
+//
+//                }
 
                 }
-
+                Log.d("fdsggdfgsfg",entireCountList.get(1)+"");
+                Log.d("fdsggdfgsfg2",entireCountList.get(2)+"");
+                Log.d("dfghfdghhdfghdfh1",completeCountList.get(0)+"");
+                Log.d("dfghfdghhdfghdfh2",completeCountList.get(1)+"");
             }
-
         });
 
         ///////
