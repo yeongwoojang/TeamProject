@@ -32,7 +32,6 @@ public class YValueFormatter extends ValueFormatter {
             return "";
         }else{
             return mFormat.format(value) + " %";
-
         }
     }
 
