@@ -23,4 +23,13 @@ public interface RetrofitService {
             @Query("lang") String lang,
             @Query("APPID") String APPID
     );
+
+    @GET("onecall?")
+    Call<JsonObject> getWeekWeather(
+            @Query("lat") String lat,
+            @Query("lon") String lon,
+            @Query("exclude") String exclude,
+            @Query("APPID") String APPID
+    );
+
 }

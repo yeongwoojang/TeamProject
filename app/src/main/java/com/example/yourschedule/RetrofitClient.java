@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient{
 
     private RetrofitClient retrofitClient;
-    private JSONObject jsonObject;
+    private String jsonObject;
     public RetrofitClient getInstance(){
         retrofitClient = new RetrofitClient();
         return retrofitClient;
@@ -25,7 +25,7 @@ public class RetrofitClient{
 
     public RetrofitService buildRetrofit(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.openweathermap.org/data/2.5/")
+                .baseUrl("https://api.openweathermap.org/data/2.5/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -33,22 +33,41 @@ public class RetrofitClient{
         return service;
     }
 
-//    public void getCurrentWeather(String latitude, String longitude, String OPEN_WEATHER_MAP_KEY){
-//        Call<JsonObject> response = getInstance()
-//                .buildRetrofit()
-//                .getCurrentWeather(latitude,longitude,OPEN_WEATHER_MAP_KEY);
-//        response.enqueue(new Callback<JsonObject>() {
-//            @Override
-//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-//                    Log.d("JSON",jsonObject+"");
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JsonObject> call, Throwable t) {
-//
-//            }
-//        });
-//    }
+    public void getCurrentWeather(String latitude, String longitude, String OPEN_WEATHER_MAP_KEY){
+        Call<JsonObject> response = getInstance()
+                .buildRetrofit()
+                .getCurrentWeather(latitude,longitude,OPEN_WEATHER_MAP_KEY);
+        response.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                jsonObject = response.body().toString();
+                    Log.d("JSON C",jsonObject+"");
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("JSON C","실패");
+            }
+        });
+    }
+
+    public void getWeekWeather(String latitude, String longitude, String exclude, String OPEN_WEATHER_MAP_KEY){
+        Call<JsonObject> response = getInstance()
+                .buildRetrofit()
+                .getWeekWeather(latitude, longitude, exclude, OPEN_WEATHER_MAP_KEY);
+        response.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                jsonObject = response.body().toString();
+                Log.d("JSON W",jsonObject+"");
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("JSON W","실패");
+            }
+        });
+    }
 
 }
 
