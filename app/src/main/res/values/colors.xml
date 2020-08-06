@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#d2c2fd</color>
+    <color name="stringMainColor">#6200EE</color>
+    <color name="mainColor">#FFd2c2fd</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="transparent">#00000000</color>
     <color name ="white">#ffffff</color>
+    <color name ="recyclerViewColor">#E4DDF8</color>
+    <color name ="completeDateColor">#AC97EB</color>
+    <color name ="completeItemColor">#C0B0F2</color>
+
     <color name="mcv_selectionColor">#97FFFFFF</color>
 </resources>

@@ -6,11 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,28 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
-import com.example.yourschedule.OBJECT.Schdule;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 //import com.example.yourschedule.RetrofitClient;
 import com.example.yourschedule.RetrofitClient;
-import com.example.yourschedule.RetrofitService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.kakao.kakaolink.v2.KakaoLinkResponse;
-import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.ButtonObject;
-import com.kakao.message.template.ContentObject;
-import com.kakao.message.template.FeedTemplate;
-import com.kakao.message.template.LinkObject;
-import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,23 +39,14 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 
-import kotlin.jvm.internal.Intrinsics;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class MyList extends Fragment {
+public class TodayList extends Fragment {
 
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     RecyclerView recyclerView;
@@ -83,12 +61,12 @@ public class MyList extends Fragment {
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
     logoutListener logoutListener;
-    MyList child;
+    TodayList child;
     TextView t1;
     ImageView weatherIcon;
 
-    public MyList newInstance() {
-        return new MyList();
+    public TodayList newInstance() {
+        return new TodayList();
     }
 
 

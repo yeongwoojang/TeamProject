@@ -13,7 +13,7 @@ import com.example.yourschedule.R;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class ScheduleList extends Fragment implements MyList.logoutListener{
+public class ScheduleList extends Fragment implements TodayList.logoutListener{
 
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
@@ -48,7 +48,7 @@ public class ScheduleList extends Fragment implements MyList.logoutListener{
         top_tabs.getTabAt(2).setTag(2);
         top_tabs.getTabAt(3).setTag(3);
         Fragment fragment;
-        fragment = new MyList().newInstance();
+        fragment = new TodayList().newInstance();
         setChildFragment(fragment);
 
         top_tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -60,7 +60,7 @@ public class ScheduleList extends Fragment implements MyList.logoutListener{
 
                     case 0:
                         // '버튼1' 클릭 시 '프래그먼트1' 호출
-                        fragment = new MyList().newInstance();
+                        fragment = new TodayList().newInstance();
                         setChildFragment(fragment);
                         break;
 

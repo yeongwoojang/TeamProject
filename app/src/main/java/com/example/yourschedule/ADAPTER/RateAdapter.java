@@ -52,13 +52,13 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder>{
         if(position>0){
             if(thatDates.get(position).equals(thatDates.get(position-1))){
                 holder.thatDate.setText("");
+                holder.thatDate.setBackground(activity.getDrawable(R.color.transparent));
             }else{
                 holder.thatDate.setText(thatDates.get(position));
             }
         }
         holder.completeScheduleText.setText(scheduleDTO.get(position));
         Log.d("position",position+"");
-
     }
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView thatDate;

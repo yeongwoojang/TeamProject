@@ -20,7 +20,7 @@
         android:layout_weight="5"
         android:text="일정1"
         android:fontFamily="@font/baemin"
-        android:textColor="#ffffff"
+        android:textColor="@color/white"
         android:padding="10dp"
         android:textSize="9pt"
         android:maxLines="8"

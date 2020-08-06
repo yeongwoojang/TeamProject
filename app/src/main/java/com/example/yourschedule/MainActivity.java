@@ -1,24 +1,18 @@
 package com.example.yourschedule;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.yourschedule.FRAGMENT.MyList;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.example.yourschedule.FRAGMENT.WeatherOfWeek;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,21 +30,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.kakao.auth.AuthType;
-import com.kakao.auth.ISessionCallback;
-import com.kakao.auth.Session;
-import com.kakao.network.ErrorResult;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.MeV2ResponseCallback;
-import com.kakao.usermgmt.response.MeV2Response;
-import com.kakao.usermgmt.response.model.Profile;
-import com.kakao.usermgmt.response.model.UserAccount;
-import com.kakao.util.OptionalBoolean;
-import com.kakao.util.exception.KakaoException;
-
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
