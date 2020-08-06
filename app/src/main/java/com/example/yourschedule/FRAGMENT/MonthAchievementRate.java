@@ -1,17 +1,20 @@
 package com.example.yourschedule.FRAGMENT;
 
 import android.annotation.SuppressLint;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.ADAPTER.RateAdapter;
+import com.example.yourschedule.Formatter.YValueFormatter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -31,6 +35,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -44,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MonthAchievementRate extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class MonthAchievementRate extends Fragment {
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -52,27 +57,25 @@ public class MonthAchievementRate extends Fragment implements SeekBar.OnSeekBarC
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     List<String> scheduleDTO = new ArrayList<>();
     List<String> thatDates = new ArrayList<>();
-    String[] spinnerItem = new String[] { "월간", "주간"};
     FirebaseAuth auth;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
-    TextView TopText, entireCountText, completeCountText;
+    TextView TopText,completeListBt;
     ImageButton rightBt, leftBt;
-    private HorizontalBarChart chart;
-    private SeekBar seekBarX, seekBarY;
-    private Spinner spinner;
-
+    private HorizontalBarChart barChart;
+    boolean isCompleteListBtClick;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SimpleDateFormat transFormat = new SimpleDateFormat("MM월 yyyy");
         Calendar currentCalendar = Calendar.getInstance();
         month = transFormat.format(currentCalendar.getTime());
+        isCompleteListBtClick = false;
     }
 
-    //    private TextView tvX, tvY;
+
     private int completeCount;
     private int entireCount;
-    private Fragment fffff;
+    private Fragment fragment;
 
     String month;
 
@@ -84,76 +87,76 @@ public class MonthAchievementRate extends Fragment implements SeekBar.OnSeekBarC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View rootView = inflater.inflate(R.layout.fragment_month_achievement_rate, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        spinner = rootView.findViewById(R.id.spinner);
         TopText = rootView.findViewById(R.id.topMonthText);
-        entireCountText = rootView.findViewById(R.id.entireCountText);
-        completeCountText = rootView.findViewById(R.id.completCountText);
-
+        completeListBt = rootView.findViewById(R.id.completeListBt);
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
-        chart = rootView.findViewById(R.id.chart1);
-        fffff = this;
+        fragment = this;
 
-        seekBarX = rootView.findViewById(R.id.seekBar1);
-        seekBarY = rootView.findViewById(R.id.seekBar2);
 
-        seekBarY.setOnSeekBarChangeListener(this);
-        seekBarX.setOnSeekBarChangeListener(this);
+        barChart = rootView.findViewById(R.id.horizontalBar);
+        barChart.setDrawBarShadow(true);
+        barChart.getDescription().setEnabled(false);
+        barChart.setPinchZoom(false);
+        barChart.setDrawGridBackground(false);
+        barChart.setTouchEnabled(false);
+        barChart.setDrawValueAboveBar(false);
 
-        chart = rootView.findViewById(R.id.chart1);
-        chart.setDrawBarShadow(true);
-        chart.setDrawValueAboveBar(true);
-        chart.getDescription().setEnabled(true);
-        chart.setPinchZoom(false);
-        chart.setDrawGridBackground(true);
-        chart.getXAxis().setDrawGridLines(false);
-        chart.getAxisLeft().setDrawGridLines(false);
-        chart.getAxisRight().setDrawGridLines(false);
-        XAxis xl = chart.getXAxis();
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xl.setDrawAxisLine(false);
+
+
+
+
+        XAxis xl = barChart.getXAxis();
         xl.setDrawGridLines(false);
-        xl.setDrawLabels(false);
-        xl.setEnabled(false);
+        xl.setDrawAxisLine(false);
+        xl.setDrawLabels(true);
+        xl.setEnabled(true);
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.white));
+        xl.setAxisMinimum(0f);
+        xl.setAxisMaximum(10f);
+        xl.setLabelCount(5,true);
+//        xl.setGranularity(1f);
+        xl.setCenterAxisLabels(false);
 
-
-        YAxis yl = chart.getAxisLeft();
-//        yl.setDrawAxisLine(true);
-//        yl.setDrawGridLines(true);
+        xl.setTextSize(20);
+        xl.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+        xl.setValueFormatter(new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                Log.d("sequence",value    +"");
+                if(value==5f){
+                    return "달성률";
+                }else{
+                    return "";
+                }
+            }
+        });
+        Log.d("labels",xl.getLabelCount()+"");
+        YAxis yl = barChart.getAxisLeft();
+        yl.setDrawAxisLine(false);
+        yl.setDrawGridLines(false);
         yl.setAxisMinimum(0f);
-        yl.setEnabled(false);
         yl.setAxisMaximum(100f);
-        yl.setLabelCount(5);
+        yl.setEnabled(false);
 
-
-        YAxis yr = chart.getAxisRight();
-        yr.setDrawAxisLine(true);
+        YAxis yr = barChart.getAxisRight();
+        yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
         yr.setEnabled(false);
-        chart.getLegend().setFormSize(0);
-        chart.setFitBars(false);
-        chart.animateY(1000);
-        // setting data
-        seekBarY.setProgress(1);
-        seekBarX.setProgress(100);
+
+        barChart.getLegend().setFormSize(0);
+        barChart.setFitBars(false);
+        barChart.animateY(1000);
 
 
-//        Legend l = chart.getLegend();
-//        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-//        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-//        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-//        l.setDrawInside(false);
-//        l.setFormSize(10f);
-//        l.setForm(Legend.LegendForm.CIRCLE);
-//        l.setTextColor(ContextCompat.getColor(chart.getContext(), R.color.white));
-//        l.setXEntrySpace(10f);
         return rootView;
     }
 
@@ -184,7 +187,6 @@ public class MonthAchievementRate extends Fragment implements SeekBar.OnSeekBarC
                             if (scheduleDTOS.get(i).getIsComplete().get(j)) {
                                 completeCount++;
                                 entireCount++;
-                                Log.d("aaaaaaaaaaa", scheduleDTOS.get(i).getSchedule().get(j));
                                 scheduleDTO.add(scheduleDTOS.get(i).getSchedule().get(j));
                             } else {
                                 entireCount++;
@@ -192,54 +194,39 @@ public class MonthAchievementRate extends Fragment implements SeekBar.OnSeekBarC
                         }
                     }
                 }
-                entireCountText.setText("전체 :" + entireCount);
-                completeCountText.setText("완료 : " + completeCount);
+
+                float barWidth = 9f;
+                float spaceForBar = 10f;
+                ArrayList<BarEntry> entries = new ArrayList<>();
+                if(completeCount!=0){
+                    entries.add(new BarEntry(5f, (float) ((double) completeCount / (double) entireCount * 100)));
+                }else{
+                    entries.add(new BarEntry(5f,0f));
+                }
+
+
+
+                BarDataSet barDataSet;
+                barDataSet = new BarDataSet(entries, "");
+                barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+                dataSets.add(barDataSet);
+                BarData barData = new BarData(dataSets);
+                barData.setValueTextSize(20f);
+                barData.setBarWidth(barWidth);
+                barData.setDrawValues(true);
+                barData.setValueFormatter(new YValueFormatter());
+                barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
+
+                barChart.setData(barData);
+
+                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
+
                 rateAdapter = new RateAdapter(getActivity(), thatDates, scheduleDTO, month);
                 recyclerView.setAdapter(rateAdapter);
+                rateAdapter.notifyDataSetChanged();
 
-                Log.d("completeCount", completeCount + "");
-                Log.d("entireCount", entireCount + "");
-                Log.d("percent", ((double) completeCount / (double) entireCount * 100) + "");
-                float barWidth = 100;
-                float spaceForBar = 10f;
-                ArrayList<BarEntry> values = new ArrayList<>();
-                for (int i = 0; i < seekBarX.getProgress(); i++) {
-                    float val = (float) (Math.random() * seekBarY.getProgress());
-                    values.add(new BarEntry(2, (float) ((double) completeCount / (double) entireCount * 100)
-                    ));
-                }
-                chart.getDescription().setText(((int) ((double) completeCount / (double) entireCount * 100) + "%"));
-                chart.getDescription().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
-                chart.getDescription().setTextSize(20);
-                chart.getDescription().setTextColor(R.color.colorPrimary);
-                chart.getDescription().setTextAlign(Paint.Align.RIGHT);
-
-                BarDataSet set1;
-
-                if (chart.getData() != null &&
-                        chart.getData().getDataSetCount() > 0) {
-                    set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
-//                    set1 = new BarDataSet(values, "witdraw per day");
-                    set1.setValues(values);
-                    chart.getData().notifyDataChanged();
-                    chart.notifyDataSetChanged();
-                } else {
-                    set1 = new BarDataSet(values, "");
-//                    set1.setDrawIcons(true);
-
-                    ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-                    dataSets.add(set1);
-                    set1.setValueTextColor(R.color.colorPrimary);
-                    BarData data = new BarData(dataSets);
-                    data.setValueTextSize(20f);
-                    data.setBarWidth(0.5f);
-//            data.setValueTypeface(tfLight);
-                    data.setBarWidth(barWidth);
-                    chart.setData(data);
-                    set1.setColors(ContextCompat.getColor(chart.getContext(), R.color.white));
-                }
             }
-
         });
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM월 ");
@@ -250,22 +237,20 @@ public class MonthAchievementRate extends Fragment implements SeekBar.OnSeekBarC
                     month = 12 + "월 " + (Integer.parseInt(month.substring(4)) - 1);
                 } else {
                     String[] array = month.split("월");
-                    Log.d("sdfgsdgfd", array[0]);
+
                     if ((Integer.parseInt(array[0])) > 10) {
                         month = (Integer.parseInt(array[0]) - 1) + "월 " + Integer.parseInt(month.substring(4));
                     } else {
                         month = "0" + (Integer.parseInt(array[0]) - 1) + "월 " + Integer.parseInt(month.substring(4));
                     }
                 }
-                Log.d("alterMonth", month);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.detach(fffff).attach(fffff).commit();
+                ft.detach(fragment).attach(fragment).commit();
             }
         });
         rightBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("cccMonth", (Integer.parseInt(month.substring(0, 2))) + "");
                 if ((Integer.parseInt(month.substring(0, 2)) == 12)) {
                     month = "0" + 1 + "월 " + (Integer.parseInt(month.substring(4)) + 1);
                 } else {
@@ -279,33 +264,60 @@ public class MonthAchievementRate extends Fragment implements SeekBar.OnSeekBarC
                     }
 
                 }
-                Log.d("alterMonth", month);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.detach(fffff).attach(fffff).commit();
+                ft.detach(fragment).attach(fragment).commit();
+            }
+        });
+
+//        Animation slideDown = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        AnimationSet downSet = new AnimationSet(false);
+//        AnimationSet upSet = new AnimationSet(true);
+//        downSet.setInterpolator(new AccelerateInterpolator());
+//
+        Animation down = new TranslateAnimation(0,0,0,10.0f);
+//        Animation up = new TranslateAnimation(0,0,100.0f,0);
+        down.setDuration(1000);
+//        up.setDuration(1000);
+        downSet.addAnimation(down);
+        downSet.setFillAfter(true);
+//        upSet.addAnimation(upSet);
+//        slideDown.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+        recyclerView.setAnimation(downSet);
+        completeListBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isCompleteListBtClick){
+                    recyclerView.setVisibility(View.GONE);
+
+                    isCompleteListBtClick = false;
+                }else{
+//                    recyclerView.clearAnimation();
+//                    recyclerView.startAnimation(downSet);
+                    recyclerView.setVisibility(View.VISIBLE);
+//                    recyclerView.setAnimation(slideDown);
+//                    recyclerView.animate().translationY(recyclerView.getHeight());
+                    isCompleteListBtClick = true;
+                }
             }
         });
     }
 
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//        tvX.setText(String.valueOf(seekBarX.getProgress()));
-//        tvY.setText(String.valueOf(seekBarY.getProgress()));
-
-//        setData(seekBarX.getProgress(), seekBarY.getProgress());
-        chart.setFitBars(false);
-        chart.invalidate();
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
 
     public interface CalendarCallback {
         void onCallback(List<ScheduleDTO> value);

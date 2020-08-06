@@ -1,16 +1,13 @@
 package com.example.yourschedule.FRAGMENT;
 
 import android.annotation.SuppressLint;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,13 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.ADAPTER.RateAdapter;
+import com.example.yourschedule.Formatter.WeekValueFormatter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
+import com.example.yourschedule.Formatter.YValueFormatter;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -44,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class WeekAchievementRate extends Fragment {
     public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -54,9 +52,9 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
     List<String> thatDates = new ArrayList<>();
     FirebaseAuth auth;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
-    TextView TopText,entireCountText,completeCountText;
+    TextView TopText, completeListBt, notCompleteListBt;
     ImageButton rightBt, leftBt;
-    private HorizontalBarChart chart2;
+    private HorizontalBarChart barChart;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +65,7 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
 
     }
 
-    private Fragment fffff;
+    private Fragment fragment;
 
     String month;
 
@@ -79,8 +77,8 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View rootView = inflater.inflate(R.layout.fragment_week_achievement_rate, container, false);
 
 //        recyclerView = rootView.findViewById(R.id.recyclerView);
@@ -90,46 +88,49 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
 //        recyclerView.setLayoutManager(linearLayoutManager);
 
         TopText = rootView.findViewById(R.id.topMonthText);
-
+        completeListBt = rootView.findViewById(R.id.completeListBt);
+        notCompleteListBt = rootView.findViewById(R.id.notCompleteListText);
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
-        fffff = this;
+        fragment = this;
+
+        barChart = rootView.findViewById(R.id.horizontalBar);
+        barChart.setDrawBarShadow(true);
+        barChart.getDescription().setEnabled(false);
+        barChart.setPinchZoom(false);
+        barChart.setDrawGridBackground(false);
+        barChart.setTouchEnabled(false);
+        barChart.setClickable(true);
+        barChart.setDragEnabled(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setDrawValueAboveBar(false);
+
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getAxisLeft().setDrawGridLines(false);
+        barChart.getAxisRight().setDrawGridLines(false);
+
+        XAxis xl = barChart.getXAxis();
+        xl.setDrawAxisLine(false);
+        xl.setDrawLabels(true);
+        xl.setEnabled(true);
+        xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.white));
 
 
-        //////chart2
-        chart2 = rootView.findViewById(R.id.chart2);
-        chart2.setDrawBarShadow(true);
-        chart2.setDrawValueAboveBar(true);
-        chart2.getDescription().setEnabled(true);
-        chart2.setPinchZoom(false);
-        chart2.setDrawGridBackground(true);
-        chart2.getXAxis().setDrawGridLines(false);
-        chart2.getAxisLeft().setDrawGridLines(false);
-        chart2.getAxisRight().setDrawGridLines(false);
-
-        XAxis xl2 = chart2.getXAxis();
-        xl2.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xl2.setDrawAxisLine(false);
-        xl2.setDrawGridLines(false);
-        xl2.setDrawLabels(false);
-        xl2.setEnabled(false);
-
-        YAxis yl2 = chart2.getAxisLeft();
-//        yl.setDrawAxisLine(true);
-//        yl.setDrawGridLines(true);
-        yl2.setAxisMinimum(0f);
-        yl2.setEnabled(false);
-        yl2.setAxisMaximum(100f);
-        yl2.setLabelCount(5);
+        YAxis yl = barChart.getAxisLeft();
+        yl.setAxisMinimum(0f);
+        yl.setAxisMaximum(100f);
+        yl.setEnabled(false);
+        yl.setDrawLabels(false);
 
 
-        YAxis yr2 = chart2.getAxisRight();
-        yr2.setDrawAxisLine(true);
-        yr2.setDrawGridLines(false);
-        yr2.setEnabled(false);
-        chart2.getLegend().setFormSize(0);
-        chart2.setFitBars(false);
-        chart2.animateY(1000);
+        YAxis yr = barChart.getAxisRight();
+        yr.setDrawAxisLine(false);
+        yr.setEnabled(false);
+        yr.setDrawLabels(false);
+
+        barChart.getLegend().setFormSize(0);
+        barChart.setFitBars(true);
+        barChart.animateY(1000);
 
         return rootView;
     }
@@ -139,6 +140,7 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
         super.onViewCreated(view, savedInstanceState);
         //이번달
         TopText.setText(month);
+
         ReadDBData(new Calandar.CalendarCallback() {
             @SuppressLint("ResourceType")
             @Override
@@ -157,7 +159,6 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                 ArrayList<Integer> weekStart = new ArrayList<Integer>();
                 ArrayList<Integer> weekEnd = new ArrayList<Integer>();
                 String[] array = month.split("월 ");
-                Log.d("sdfgsdgfd", array[1]);
                 weekStart.clear();
                 weekEnd.clear();
 
@@ -194,24 +195,33 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                         endDay = lastDayOfMonth;
                         Log.d("endDay2", endDay + "");
                     }
-                    //week 시작, 끝 추가
                     weekStart.add(startDay);
                     weekEnd.add(endDay);
-
+                    ArrayList<String> labels = new ArrayList<>();
+                    for (int i = weekStart.size(); i > 0; i--) {
+                        labels.add(i + "");
+                    }
+                    barChart.getXAxis().setValueFormatter(new WeekValueFormatter(labels));
+                    barChart.getXAxis().setTextSize(20);
+                    barChart.getXAxis().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+                    barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+                    barChart.getXAxis().setGranularity(1f);
+                    barChart.getXAxis().setCenterAxisLabels(false);
                 }
                 for (int i = 0; i < weekStart.size(); i++) {
                     Log.d("weekStart", weekStart.get(i) + "");
                     Log.d("weekEnd", weekEnd.get(i) + "");
                 }
-                int entireCount = 0;
-                int completeCount = 0;
+
                 ArrayList<BarEntry> entries = new ArrayList<>();
                 ArrayList<Integer> entireCountList = new ArrayList<>();
                 ArrayList<Integer> completeCountList = new ArrayList<>();
-
                 for (int i = 0; i < weekStart.size(); i++) {
-                    entireCountList.add(i,0);
-                    completeCountList.add(i,0);
+                    entireCountList.add(i, 0);
+                    completeCountList.add(i, 0);
+                }
+                for (int i = 0; i < weekStart.size(); i++) {
+
                     for (int j = 0; j < scheduleDTOS.size(); j++) {
                         if (scheduleDTOS.get(j).getDate().substring(0, 4).equals(month.substring(4))
                                 && scheduleDTOS.get(j).getDate().substring(5, 7).equals(month.substring(0, 2))) {
@@ -220,79 +230,79 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                                 switch (i) {
                                     case 0:
                                         Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 1 + "번 째 주입니다.");
-                                        if(entireCountList.get(0)!=0){
-                                            entireCountList.set(0,entireCountList.get(0)+scheduleDTOS.get(j).getIsComplete().size());
-                                        }else{
-                                            entireCountList.set(0,scheduleDTOS.get(j).getIsComplete().size());
+                                        if (entireCountList.get(0) != 0) {
+                                            entireCountList.set(0, entireCountList.get(0) + scheduleDTOS.get(j).getIsComplete().size());
+                                        } else {
+                                            entireCountList.set(0, scheduleDTOS.get(j).getIsComplete().size());
                                         }
-                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
-                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
-                                                completeCountList.set(0,completeCountList.get(0)+1);
+                                        for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
+                                            if (scheduleDTOS.get(j).getIsComplete().get(k)) {
+                                                completeCountList.set(0, completeCountList.get(0) + 1);
                                             }
                                         }
                                         break;
                                     case 1:
                                         Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 2 + "번 째 주입니다.");
-                                        if(entireCountList.get(1)!=0){
-                                            entireCountList.set(1,entireCountList.get(1)+scheduleDTOS.get(j).getIsComplete().size());
-                                        }else{
-                                            entireCountList.set(1,scheduleDTOS.get(j).getIsComplete().size());
+                                        if (entireCountList.get(1) != 0) {
+                                            entireCountList.set(1, entireCountList.get(1) + scheduleDTOS.get(j).getIsComplete().size());
+                                        } else {
+                                            entireCountList.set(1, scheduleDTOS.get(j).getIsComplete().size());
                                         }
-                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
-                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
-                                                completeCountList.set(1,completeCountList.get(1)+1);
+                                        for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
+                                            if (scheduleDTOS.get(j).getIsComplete().get(k)) {
+                                                completeCountList.set(1, completeCountList.get(1) + 1);
                                             }
                                         }
                                         break;
                                     case 2:
                                         Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 3 + "번 째 주입니다.");
-                                        if(entireCountList.get(2)!=0){
-                                            entireCountList.set(2,entireCountList.get(2)+scheduleDTOS.get(j).getIsComplete().size());
-                                        }else{
-                                            entireCountList.set(2,scheduleDTOS.get(j).getIsComplete().size());
+                                        if (entireCountList.get(2) != 0) {
+                                            entireCountList.set(2, entireCountList.get(2) + scheduleDTOS.get(j).getIsComplete().size());
+                                        } else {
+                                            entireCountList.set(2, scheduleDTOS.get(j).getIsComplete().size());
                                         }
-                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
-                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
-                                                completeCountList.set(2,completeCountList.get(2)+1);
+                                        for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
+                                            if (scheduleDTOS.get(j).getIsComplete().get(k)) {
+                                                completeCountList.set(2, completeCountList.get(2) + 1);
                                             }
                                         }
                                         break;
                                     case 3:
                                         Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 4 + "번 째 주입니다.");
-                                        if(entireCountList.get(3)!=0){
-                                            entireCountList.set(3,entireCountList.get(3)+scheduleDTOS.get(j).getIsComplete().size());
-                                        }else{
-                                            entireCountList.set(3,scheduleDTOS.get(j).getIsComplete().size());
+                                        if (entireCountList.get(3) != 0) {
+                                            entireCountList.set(3, entireCountList.get(3) + scheduleDTOS.get(j).getIsComplete().size());
+                                        } else {
+                                            entireCountList.set(3, scheduleDTOS.get(j).getIsComplete().size());
                                         }
-                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
-                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
-                                                completeCountList.set(3,completeCountList.get(3)+1);
+                                        for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
+                                            if (scheduleDTOS.get(j).getIsComplete().get(k)) {
+                                                completeCountList.set(3, completeCountList.get(3) + 1);
                                             }
                                         }
                                         break;
                                     case 4:
                                         Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 5 + "번 째 주입니다.");
-                                        if(entireCountList.get(4)!=0){
-                                            entireCountList.set(4,entireCountList.get(4)+scheduleDTOS.get(j).getIsComplete().size());
-                                        }else{
-                                            entireCountList.set(4,scheduleDTOS.get(j).getIsComplete().size());
+                                        if (entireCountList.get(4) != 0) {
+                                            entireCountList.set(4, entireCountList.get(4) + scheduleDTOS.get(j).getIsComplete().size());
+                                        } else {
+                                            entireCountList.set(4, scheduleDTOS.get(j).getIsComplete().size());
                                         }
-                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
-                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
-                                                completeCountList.set(4,completeCountList.get(4)+1);
+                                        for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
+                                            if (scheduleDTOS.get(j).getIsComplete().get(k)) {
+                                                completeCountList.set(4, completeCountList.get(4) + 1);
                                             }
                                         }
                                         break;
                                     case 5:
                                         Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 6 + "번 째 주입니다.");
-                                        if(entireCountList.get(5)!=0){
-                                            entireCountList.set(5,entireCountList.get(5)+scheduleDTOS.get(j).getIsComplete().size());
-                                        }else{
-                                            entireCountList.set(5,scheduleDTOS.get(j).getIsComplete().size());
+                                        if (entireCountList.get(5) != 0) {
+                                            entireCountList.set(5, entireCountList.get(5) + scheduleDTOS.get(j).getIsComplete().size());
+                                        } else {
+                                            entireCountList.set(5, scheduleDTOS.get(j).getIsComplete().size());
                                         }
-                                        for(int k=0;k<scheduleDTOS.get(j).getIsComplete().size();k++){
-                                            if(scheduleDTOS.get(j).getIsComplete().get(k)){
-                                                completeCountList.set(5,completeCountList.get(5)+1);
+                                        for (int k = 0; k < scheduleDTOS.get(j).getIsComplete().size(); k++) {
+                                            if (scheduleDTOS.get(j).getIsComplete().get(k)) {
+                                                completeCountList.set(5, completeCountList.get(5) + 1);
                                             }
                                         }
                                     default:
@@ -301,62 +311,38 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                                 continue;
                             }
                         }
+                    }
+                }
 
-                        if ((float) ((double) completeCount / (double) entireCount * 100) > 0) {
-                            entries.add(new BarEntry(i * 2f, (float) ((double) completeCount / (double) entireCount * 100)));
 
-                        } else {
-                            entries.add(new BarEntry(i * 2f, (float) 0));
-                        }
-                        Log.d("stat", i + 1 + "주 - " + entries.get(i));
-                        Log.d("completeCount", completeCount + "");
-                        Log.d("entireCount", entireCount + "");
-                        entireCount = 0;
-                        completeCount = 0;
+                float barWidth = 9f;
+                float spaceForBar = 10f;
+                for (int i = 0; i < weekStart.size(); i++) {
+                    if (completeCountList.get(i) != 0) {
+                        entries.add(new BarEntry((weekStart.size() - 1 - i) * spaceForBar, (float) ((double) completeCountList.get(i) / (double) entireCountList.get(i) * 100)));
+                    } else {
+                        entries.add(new BarEntry((weekStart.size() - 1 - i) * spaceForBar, 0f));
                     }
 
-                    chart2.getDescription().setText("");
-//                    chart2.getDescription().setText(((int) ((double) Choice / (double) Entire * 100) + "%"));
-
-                    Log.d("stat_그래프 몇개?", entries.size() + "");
-                    BarDataSet barDataSet = new BarDataSet(entries, "week_test");
-                    barDataSet.setBarBorderWidth(0.9f);
-                    barDataSet.setColors(R.color.white);
-                    BarData data1 = new BarData(barDataSet);
-                    chart2.setData(data1);
-//                    chart2.invalidate();
-//                    if (chart2.getData() != null &&
-//                            chart2.getData().getDataSetCount() > 0) {
-////                  set1 = new BarDataSet(values, "witdraw per day");
-//                        barDataSet.setValues(entries);
-                    chart2.getData().notifyDataChanged();
-                    chart2.notifyDataSetChanged();
-//                    } else {
-//                        barDataSet = new BarDataSet(entries, "");
-//                    }
-
-//                ArrayList<IBarDataSet> dataSets1 = new ArrayList<>();
-//                dataSets1.add(barDataSet);
-//                barDataSet.setValueTextColor(R.color.colorPrimary);
-//                data1.setValueTextSize(20f);
-//                data1.setBarWidth(0.5f);
-////            data.setValueTypeface(tfLight);
-//                data1.setBarWidth(barWidth);
-//                barDataSet.setColors(ContextCompat.getColor(chart2.getContext(), R.color.white));
-//                }catch (Exception e){
-//
-//                }
-
                 }
-                Log.d("fdsggdfgsfg",entireCountList.get(1)+"");
-                Log.d("fdsggdfgsfg2",entireCountList.get(2)+"");
-                Log.d("dfghfdghhdfghdfh1",completeCountList.get(0)+"");
-                Log.d("dfghfdghhdfghdfh2",completeCountList.get(1)+"");
+
+
+                BarDataSet barDataSet;
+                barDataSet = new BarDataSet(entries, "");
+
+                barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+                dataSets.add(barDataSet);
+                BarData barData = new BarData(dataSets);
+                barData.setValueTextSize(20f);
+                barData.setBarWidth(barWidth);
+                barData.setDrawValues(true);
+                barData.setValueFormatter(new YValueFormatter());
+                barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
+                barChart.setData(barData);
+                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
             }
         });
-
-        ///////
-
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM월 ");
         leftBt.setOnClickListener(new View.OnClickListener() {
@@ -366,7 +352,6 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                     month = 12 + "월 " + (Integer.parseInt(month.substring(4)) - 1);
                 } else {
                     String[] array = month.split("월");
-                    Log.d("sdfgsdgfd", array[0]);
                     if ((Integer.parseInt(array[0])) > 10) {
                         month = (Integer.parseInt(array[0]) - 1) + "월 " + Integer.parseInt(month.substring(4));
                     } else {
@@ -375,15 +360,15 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                 }
                 Log.d("alterMonth", month);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.detach(fffff).attach(fffff).commit();
+                ft.detach(fragment).attach(fragment).commit();
             }
         });
         rightBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("cccMonth",(Integer.parseInt(month.substring(0, 2)))+"");
+                Log.d("cccMonth", (Integer.parseInt(month.substring(0, 2))) + "");
                 if ((Integer.parseInt(month.substring(0, 2)) == 12)) {
-                    month = "0"+1 + "월 " + (Integer.parseInt(month.substring(4)) + 1);
+                    month = "0" + 1 + "월 " + (Integer.parseInt(month.substring(4)) + 1);
                 } else {
                     String[] array = month.split("월");
                     if (Integer.parseInt(array[0]) > 8) {
@@ -397,37 +382,26 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                 }
                 Log.d("alterMonth", month);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.detach(fffff).attach(fffff).commit();
+                ft.detach(fragment).attach(fragment).commit();
+            }
+        });
+
+        completeListBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        notCompleteListBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
 
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//        tvX.setText(String.valueOf(seekBarX.getProgress()));
-//        tvY.setText(String.valueOf(seekBarY.getProgress()));
-
-//        setData(seekBarX.getProgress(), seekBarY.getProgress());
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    public interface CalendarCallback {
-        void onCallback(List<ScheduleDTO> value);
-    }
-
-    public interface OnReturn {
-        void onReturnData(List<ScheduleDTO> value);
-    }
 
     public void ReadDBData(Calandar.CalendarCallback calendarCallback) {
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
@@ -453,4 +427,5 @@ public class WeekAchievementRate extends Fragment implements SeekBar.OnSeekBarCh
                     }
                 });
     }
+
 }

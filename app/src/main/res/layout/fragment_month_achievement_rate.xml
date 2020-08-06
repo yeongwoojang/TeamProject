@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical"
     >
     <LinearLayout
-        android:layout_alignParentTop="true"
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,17 +58,9 @@
         android:background="@color/white"
         android:orientation="horizontal">
     </LinearLayout>
-    <Spinner
-        android:layout_below="@+id/divideLineTop"
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="2dp"
-        >
-    </Spinner>
+
     <ScrollView
-        android:layout_below="@+id/spinner"
+        android:layout_below="@+id/divideLineTop"
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -80,118 +73,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_weight="5"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/labelText"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_weight="4"
-                    android:fontFamily="@font/baemin"
-                    android:gravity="right|center"
-                    android:text="달성률"
-                    android:textColor="#ffffff"
-                    android:textSize="12pt"></TextView>
-
                 <com.github.mikephil.charting.charts.HorizontalBarChart
-                    android:id="@+id/chart1"
+                    android:id="@+id/horizontalBar"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:layout_weight="1"
-                    android:background="@color/transparent" />
 
-                <SeekBar
-                    android:id="@+id/seekBar2"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:visibility="invisible" />
-
-                <SeekBar
-                    android:id="@+id/seekBar1"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:visibility="invisible" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/countTextLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/graphLayout"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="16dp"
-                android:orientation="horizontal"
-                android:weightSum="4">
-
-                <TextView
-                    android:id="@+id/entireCountText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:fontFamily="@font/baemin"
-                    android:textColor="@color/white"
-                    android:textSize="9pt"></TextView>
-
-                <TextView
-                    android:id="@+id/completCountText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:fontFamily="@font/baemin"
-                    android:textColor="@color/white"
-                    android:textSize="9pt"></TextView>
+                  />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/completeList"
+                android:id="@+id/completeListBt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/countTextLayout"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="16dp"
-                android:fontFamily="@font/baemin"
+                android:padding="8dp"
                 android:text="완료목록"
+                android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="9pt"></TextView>
-
-            <LinearLayout
-                android:id="@+id/divideLineCenter"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/completeList"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/white"
-                android:orientation="horizontal"></LinearLayout>
-
+                android:textSize="9pt"
+                android:fontFamily="@font/baemin"
+                android:background="@drawable/recyclerview_border"
+                ></TextView>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/divideLineCenter"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="16dp"
                 android:overScrollMode="never"
-                android:scrollbars="none"></androidx.recyclerview.widget.RecyclerView>
+                android:background="@color/transparent"
+                android:scrollbars="none"
+                android:visibility="gone"
+                >
+            </androidx.recyclerview.widget.RecyclerView>
 
-            <LinearLayout
-                android:id="@+id/divideLineBottpm"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/recyclerView"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="5dp"
-                android:background="@color/white"
-                android:orientation="horizontal">
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

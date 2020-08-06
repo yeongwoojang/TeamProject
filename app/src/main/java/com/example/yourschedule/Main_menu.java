@@ -1,15 +1,6 @@
 package com.example.yourschedule;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.example.yourschedule.FRAGMENT.MyList;
-import com.example.yourschedule.FRAGMENT.ScheduleList;
-import com.google.android.material.tabs.TabLayout;
 
 public class Main_menu extends AppCompatActivity {
 

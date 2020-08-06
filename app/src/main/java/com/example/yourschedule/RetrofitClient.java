@@ -1,16 +1,9 @@
 package com.example.yourschedule;
 
-import android.util.Log;
+import com.example.yourschedule.ForRetrofit.RetrofitService;
 
-import com.example.yourschedule.FRAGMENT.MyList;
-import com.google.gson.JsonObject;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

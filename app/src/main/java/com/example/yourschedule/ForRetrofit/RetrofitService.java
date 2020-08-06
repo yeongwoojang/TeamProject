@@ -1,4 +1,4 @@
-package com.example.yourschedule;
+package com.example.yourschedule.ForRetrofit;
 
 import com.google.gson.JsonObject;
 

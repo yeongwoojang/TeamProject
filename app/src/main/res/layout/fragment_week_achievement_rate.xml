@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/transparent"
     >
     <LinearLayout
         android:id="@+id/topLayout"
@@ -57,12 +58,49 @@
         android:orientation="horizontal"
         >
         <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:id="@+id/chart2"
+            android:id="@+id/horizontalBar"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="@color/transparent"
             />
     </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/countTextLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/completeListBt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:padding="8dp"
+            android:text="완료목록"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="9pt"
+            android:fontFamily="@font/baemin"
+            android:background="@drawable/recyclerview_border"
+            ></TextView>
+        <TextView
+            android:id="@+id/notCompleteListText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:padding="8dp"
+            android:text="미완료목록"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="9pt"
+            android:fontFamily="@font/baemin"
+            android:background="@drawable/recyclerview_border"
+            ></TextView>
+    </LinearLayout>
+
 <!--    <androidx.recyclerview.widget.RecyclerView-->
 <!--        android:layout_below="@id/countTextLayout"-->
 <!--        android:id="@+id/recyclerView"-->
@@ -70,6 +108,4 @@
 <!--        android:layout_height="wrap_content"-->
 <!--        android:layout_marginTop="2dp"-->
 <!--        ></androidx.recyclerview.widget.RecyclerView>-->
-
-
 </RelativeLayout>
