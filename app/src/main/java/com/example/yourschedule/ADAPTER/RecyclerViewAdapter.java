@@ -37,10 +37,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.today = today;
+        Log.d("goExec","adapter");
     }
 
     @Override
     public int getItemCount(){
+        Log.d("goExec","getCount");
+
         for(int i=0;i<scheduleDTOS.size();i++){
             if(scheduleDTOS.get(i).getDate().equals(today)){
                 itemIndex = i;
@@ -69,6 +72,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        Log.d("goExec","onCreateViewHolder");
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -76,6 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int posotion){
+        Log.d("goExec","onBindViewHolder");
 
 
 

@@ -8,7 +8,7 @@
         ></corners>
 
     <stroke
-        android:width="20dp"
+        android:width="10dp"
         android:color="#C0B0F2"
         ></stroke>
     <solid

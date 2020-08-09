@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
     android:orientation="vertical"
     >
     <LinearLayout
@@ -35,7 +34,7 @@
             android:textColor="#ffffff"
             android:textSize="9pt"
             android:textStyle="bold"></TextView>
-
+z
         <ImageButton
             android:id="@+id/rightBt"
             android:layout_width="wrap_content"
@@ -59,34 +58,16 @@
         android:orientation="horizontal">
     </LinearLayout>
 
-    <ScrollView
-        android:layout_below="@+id/divideLineTop"
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:id="@+id/graphLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
                 <com.github.mikephil.charting.charts.HorizontalBarChart
                     android:id="@+id/horizontalBar"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-
-                  />
-            </LinearLayout>
-
+                    android:layout_marginTop="10dp"
+                    />
             <TextView
                 android:id="@+id/completeListBt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:padding="8dp"
@@ -103,13 +84,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:overScrollMode="never"
-                android:background="@color/transparent"
+                android:paddingBottom="20dp"
+                android:clipToPadding="true"
                 android:scrollbars="none"
                 android:visibility="gone"
                 >
             </androidx.recyclerview.widget.RecyclerView>
-
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>
