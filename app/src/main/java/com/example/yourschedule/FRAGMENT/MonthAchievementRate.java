@@ -3,6 +3,7 @@ package com.example.yourschedule.FRAGMENT;
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -62,14 +66,12 @@ public class MonthAchievementRate extends Fragment {
     TextView TopText,completeListBt;
     ImageButton rightBt, leftBt;
     private HorizontalBarChart barChart;
-    boolean isCompleteListBtClick;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SimpleDateFormat transFormat = new SimpleDateFormat("MM월 yyyy");
         Calendar currentCalendar = Calendar.getInstance();
         month = transFormat.format(currentCalendar.getTime());
-        isCompleteListBtClick = false;
     }
 
 
@@ -222,9 +224,10 @@ public class MonthAchievementRate extends Fragment {
 
                 barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
 
-                rateAdapter = new RateAdapter(getActivity(), thatDates, scheduleDTO, month);
+                rateAdapter = new RateAdapter(getActivity(), thatDates, scheduleDTOS, month);
                 recyclerView.setAdapter(rateAdapter);
                 rateAdapter.notifyDataSetChanged();
+//                recyclerView.getRecycledViewPool().setMaxRecycledViews(rateAdapter.getOldPosition(), 0);
 
             }
         });
@@ -269,49 +272,32 @@ public class MonthAchievementRate extends Fragment {
             }
         });
 
-//        Animation slideDown = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
-        AnimationSet downSet = new AnimationSet(false);
-//        AnimationSet upSet = new AnimationSet(true);
-//        downSet.setInterpolator(new AccelerateInterpolator());
-//
-        Animation down = new TranslateAnimation(0,0,0,10.0f);
-//        Animation up = new TranslateAnimation(0,0,100.0f,0);
-        down.setDuration(1000);
-//        up.setDuration(1000);
+        Animation slideDown = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
+        AnimationSet downSet = new AnimationSet(true);
+        downSet.setInterpolator(new CycleInterpolator(1));
+        Animation down = new TranslateAnimation(0,0,0,20.0f);
+        down.setDuration(700);
         downSet.addAnimation(down);
-        downSet.setFillAfter(true);
-//        upSet.addAnimation(upSet);
-//        slideDown.setAnimationListener(new Animation.AnimationListener() {
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//
-//            }
-//        });
+
+        downSet.setFillAfter(false);
         recyclerView.setAnimation(downSet);
+
+        List<ExpandableListAdapter> data = new ArrayList<>();
+
+
         completeListBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isCompleteListBtClick){
+                if(recyclerView.getVisibility()==View.VISIBLE){
+                    recyclerView.scrollToPosition(0);
                     recyclerView.setVisibility(View.GONE);
 
-                    isCompleteListBtClick = false;
+
                 }else{
-//                    recyclerView.clearAnimation();
-//                    recyclerView.startAnimation(downSet);
+                    recyclerView.clearAnimation();
                     recyclerView.setVisibility(View.VISIBLE);
-//                    recyclerView.setAnimation(slideDown);
-//                    recyclerView.animate().translationY(recyclerView.getHeight());
-                    isCompleteListBtClick = true;
+                    recyclerView.startAnimation(downSet);
+
                 }
             }
         });
