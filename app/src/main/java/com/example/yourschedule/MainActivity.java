@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext = null;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+    private static int ONE_MINUTE = 5626;
+
 
 
     @Override
@@ -53,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         startActivity(new Intent(this, LoadingActivity.class));
         setContentView(R.layout.activity_main);
+//        new AlamHATT(getApplicationContext()).alam();
 
         mContext = this;
+
         t1 = (TextView)findViewById(R.id.test);
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
         loginBt = (SignInButton) findViewById(R.id.login_button);

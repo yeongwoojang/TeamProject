@@ -1,6 +1,7 @@
 package com.example.yourschedule.FRAGMENT;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -159,6 +160,7 @@ public class PopupFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 adapter.addSchedule();
+
                 signal = true;
                 mDialogResult.finish();
 

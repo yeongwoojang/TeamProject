@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListSubViewAdapter extends RecyclerView.Adapter<ListSubViewAdapter.ViewHolder> {
@@ -20,12 +21,20 @@ public class ListSubViewAdapter extends RecyclerView.Adapter<ListSubViewAdapter.
     List<ScheduleDTO> scheduleDTOS;
     Activity activity;
     String thatDate;
+    List<String> completeItemList = new ArrayList<String>();
     public ListSubViewAdapter(Activity activity, List<ScheduleDTO> scheduleDTOS, String thatDate) {
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.thatDate = thatDate;
         for(int i=0;i<scheduleDTOS.size();i++){
             Log.d("data",scheduleDTOS.get(i).getSchedule()+"");
+        }
+        for(int i=0;i<scheduleDTOS.size();i++){
+            for(int j=0;j<scheduleDTOS.get(i).getIsComplete().size();j++){
+                if(scheduleDTOS.get(i).getIsComplete().get(j)){
+                    completeItemList.add(scheduleDTOS.get(i).getSchedule().get(j));
+                }
+            }
         }
     }
 
@@ -40,15 +49,14 @@ public class ListSubViewAdapter extends RecyclerView.Adapter<ListSubViewAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.completeItem.setText(scheduleDTOS.get(0).getSchedule().get(position));
-        Log.d("sibal",scheduleDTOS.get(0).getSchedule().get(position));
+        holder.completeItem.setText(completeItemList.get(position));
 
 
     }
 
     @Override
     public int getItemCount() {
-        return scheduleDTOS.get(0).getSchedule().size();
+        return completeItemList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
