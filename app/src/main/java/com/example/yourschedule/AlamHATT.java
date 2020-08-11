@@ -15,19 +15,17 @@ public class AlamHATT {
         this.context = context;
     }
 
-    public void alam(){
+    public void alam(Calendar calendar){
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context,Broadcast.class);
 
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
 
-        Calendar calendar = Calendar.getInstance();
         //알람시간 calendar에 set해주기
 
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 14, 46, 0);
         Log.d("time",calendar.getTime()+"");
         //알람 예약
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
 
 
     }

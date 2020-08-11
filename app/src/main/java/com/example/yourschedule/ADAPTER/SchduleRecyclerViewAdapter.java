@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.AlamHATT;
 import com.example.yourschedule.AlarmReceiver;
 import com.example.yourschedule.DeviceBootReceiver;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
@@ -206,7 +207,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 17:00:00";
+            String alarmTime = date+" 09:00:00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
@@ -216,12 +217,14 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(currentDateTime);
+            calendar.setTimeInMillis(calendar.getTimeInMillis());
             Log.d("cur",calendar.getTime()+"입니다.");
             Log.d("current",currentDateTime+"입니다.");
             Toast.makeText(activity,currentDateTime + "으로 알람이 설정되었습니다!", Toast.LENGTH_LONG).show();
-            SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-            editor.putLong("nextNotifyTime", (long)calendar.getTimeInMillis());
-            editor.apply();
+//            SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+//            editor.putLong("nextNotifyTime", (long)calendar.getTimeInMillis());
+//            editor.apply();
+            new AlamHATT(activity).alam(calendar);
             diaryNotification(calendar);
         } else {
             Toast.makeText(activity, "하나 이상의 일정을 입력하세요", Toast.LENGTH_SHORT).show();
@@ -236,47 +239,31 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
     void diaryNotification(Calendar calendar)
     {
-//        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        Boolean dailyNotify = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DAILY_NOTIFICATION, true);
         Boolean dailyNotify = true; // 무조건 알람을 사용
 
         PackageManager pm = activity.getPackageManager();
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
+
+
         Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, 0, alarmIntent, 0);
-        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
 
+        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
 
         // 사용자가 매일 알람을 허용했다면
         if (dailyNotify) {
-
-
             if (alarmManager != null) {
-
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                        AlarmManager.INTERVAL_DAY, pendingIntent);
-
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 }
             }
-
 //             부팅 후 실행되는 리시버 사용가능하게 설정
             pm.setComponentEnabledSetting(receiver,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
-
         }
-//        else { //Disable Daily Notifications
-//            if (PendingIntent.getBroadcast(this, 0, alarmIntent, 0) != null && alarmManager != null) {
-//                alarmManager.cancel(pendingIntent);
-//                //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
-//            }
-//            pm.setComponentEnabledSetting(receiver,
-//                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-//                    PackageManager.DONT_KILL_APP);
-//        }
+
     }
 
 }
