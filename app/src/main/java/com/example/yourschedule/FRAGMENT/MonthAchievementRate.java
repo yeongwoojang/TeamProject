@@ -272,13 +272,11 @@ public class MonthAchievementRate extends Fragment {
             }
         });
 
-        Animation slideDown = AnimationUtils.loadAnimation(getActivity(),R.anim.slide_down);
         AnimationSet downSet = new AnimationSet(true);
         downSet.setInterpolator(new CycleInterpolator(1));
         Animation down = new TranslateAnimation(0,0,0,20.0f);
         down.setDuration(700);
         downSet.addAnimation(down);
-
         downSet.setFillAfter(false);
         recyclerView.setAnimation(downSet);
 
@@ -289,10 +287,9 @@ public class MonthAchievementRate extends Fragment {
             @Override
             public void onClick(View view) {
                 if(recyclerView.getVisibility()==View.VISIBLE){
+                    rateAdapter.closeSubView();
                     recyclerView.scrollToPosition(0);
                     recyclerView.setVisibility(View.GONE);
-
-
                 }else{
                     recyclerView.clearAnimation();
                     recyclerView.setVisibility(View.VISIBLE);
