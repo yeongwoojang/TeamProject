@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.AlamHATT;
 import com.example.yourschedule.AlarmReceiver;
+import com.example.yourschedule.AlarmService;
 import com.example.yourschedule.DeviceBootReceiver;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
@@ -160,25 +161,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
     //일정을 저장하는 메소드
     public void addSchedule() {
-
-
-//        calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.set(Calendar.YEAR,Integer.parseInt(alarmTime.substring(0,4)));
-//        calendar.set(Calendar.MONTH,Integer.parseInt(alarmTime.substring(5,7))-1);
-//        calendar.set(Calendar.DATE,Integer.parseInt(alarmTime.substring(8,10)));
-//        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(alarmTime.substring(11,13)));
-//        calendar.set(Calendar.MINUTE, 0);
-//        calendar.set(Calendar.SECOND, 0);
-
-//            editor.clear();
-//            editor.commit();
-
-
-//        long millis = sharedPreferences.getLong("nextNotifyTime", (long)calendar.getTimeInMillis());
-//        Calendar nextNotifyTime = new GregorianCalendar();
-//        nextNotifyTime.setTimeInMillis(millis);
-
-//        Log.d("next",nextNotifyTime.getTime()+"");
         auth = FirebaseAuth.getInstance();
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         List<Boolean> isComplete = new ArrayList<>();
@@ -208,7 +190,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 19:18:00";
+            String alarmTime = date+" 22:10:00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
@@ -243,16 +225,19 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         PackageManager pm = activity.getPackageManager();
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
 
-
         Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
+//        Intent alarmIntent = new Intent(activity, AlarmService.class);
+//        alarmIntent.setAction(AlarmService.ALARM_SERVICE);
+        alarmIntent.putExtra("calendar",calendar);
+//        activity.startService(alarmIntent);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, 0, alarmIntent, 0);
-
+//
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
-
-        // 사용자가 매일 알람을 허용했다면
+//
+//         사용자가 매일 알람을 허용했다면
         if (dailyNotify) {
             if (alarmManager != null) {
-//                alarmManager.setAlarmClock(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
+//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
                 alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),pendingIntent),pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

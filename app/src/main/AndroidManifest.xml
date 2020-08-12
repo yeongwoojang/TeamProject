@@ -43,10 +43,10 @@
         </receiver>
     
         <receiver android:name=".AlarmReceiver" />
-<!--        <service-->
-<!--            android:name=".AlarmService"-->
-<!--            android:enabled="true"-->
-<!--            ></service>-->
+        <service
+            android:name=".AlarmService"
+            android:enabled="true"
+            ></service>
     </application>
 
 </manifest>
