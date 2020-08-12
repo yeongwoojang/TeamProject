@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.AlarmManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.AlamHATT;
@@ -207,7 +208,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 09:00:00";
+            String alarmTime = date+" 19:18:00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
@@ -221,10 +222,8 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("cur",calendar.getTime()+"입니다.");
             Log.d("current",currentDateTime+"입니다.");
             Toast.makeText(activity,currentDateTime + "으로 알람이 설정되었습니다!", Toast.LENGTH_LONG).show();
-//            SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-//            editor.putLong("nextNotifyTime", (long)calendar.getTimeInMillis());
-//            editor.apply();
-            new AlamHATT(activity).alam(calendar);
+
+//            new AlamHATT(activity).alam(calendar);
             diaryNotification(calendar);
         } else {
             Toast.makeText(activity, "하나 이상의 일정을 입력하세요", Toast.LENGTH_SHORT).show();
@@ -240,7 +239,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     void diaryNotification(Calendar calendar)
     {
         Boolean dailyNotify = true; // 무조건 알람을 사용
-
+//
         PackageManager pm = activity.getPackageManager();
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
 
@@ -253,9 +252,11 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         // 사용자가 매일 알람을 허용했다면
         if (dailyNotify) {
             if (alarmManager != null) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
+//                alarmManager.setAlarmClock(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
+                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),pendingIntent),pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),pendingIntent),pendingIntent);
                 }
             }
 //             부팅 후 실행되는 리시버 사용가능하게 설정

@@ -25,7 +25,8 @@ public class AlamHATT {
 
         Log.d("time",calendar.getTime()+"");
         //알람 예약
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+        alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),sender),sender);
+
 
 
     }

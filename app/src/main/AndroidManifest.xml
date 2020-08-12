@@ -41,8 +41,12 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
+    
         <receiver android:name=".AlarmReceiver" />
+<!--        <service-->
+<!--            android:name=".AlarmService"-->
+<!--            android:enabled="true"-->
+<!--            ></service>-->
     </application>
 
 </manifest>

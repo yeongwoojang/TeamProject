@@ -8,6 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
+import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,12 +24,32 @@ import java.util.Locale;
 import static android.content.Context.MODE_PRIVATE;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    private static PowerManager.WakeLock sCpuWakeLock;
+    private static WifiManager.WifiLock sWifiLock;
+    private static ConnectivityManager manager;
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        if (sCpuWakeLock != null) {
+            return;
+        }
+
+        if (sWifiLock != null) {
+            return;
+        }
+
+        WifiManager wifiManager = (WifiManager)context.getSystemService(context.WIFI_SERVICE);
+        sWifiLock = wifiManager.createWifiLock("wifilock");
+        sWifiLock.setReferenceCounted(true);
+        sWifiLock.acquire();
+
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notificationIntent = new Intent(context, MainActivity.class);
-        Log.d("start","AlarmReceiver");
+//        Log.d("start","AlarmReceiver");
 
 
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
