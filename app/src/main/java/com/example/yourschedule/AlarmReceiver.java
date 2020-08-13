@@ -25,17 +25,17 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static PowerManager.WakeLock sCpuWakeLock;
-    private static WifiManager.WifiLock sWifiLock;
-    private static ConnectivityManager manager;
-    private static final String WAKELOCK_TAG = "testous:wakelock";
+//    private static PowerManager.WakeLock sCpuWakeLock;
+//    private static WifiManager.WifiLock sWifiLock;
+//    private static ConnectivityManager manager;
+//    private static final String WAKELOCK_TAG = "testous:wakelock";
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         Calendar calendar = (Calendar) intent.getSerializableExtra("calendar");
         Intent alarmServiceIntent = new Intent(context,AlarmService.class);
-        alarmServiceIntent.putExtra("calendar",calendar);
+//        alarmServiceIntent.putExtra("calendar",calendar);
         context.startService(alarmServiceIntent);
 //        if (sCpuWakeLock != null) {
 //            return;

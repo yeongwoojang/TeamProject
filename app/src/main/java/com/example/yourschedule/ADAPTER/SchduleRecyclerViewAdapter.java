@@ -190,7 +190,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 22:10:00";
+            String alarmTime = date+" 19:38:00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
@@ -201,12 +201,16 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(currentDateTime);
             calendar.setTimeInMillis(calendar.getTimeInMillis());
-            Log.d("cur",calendar.getTime()+"입니다.");
-            Log.d("current",currentDateTime+"입니다.");
-            Toast.makeText(activity,currentDateTime + "으로 알람이 설정되었습니다!", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity,alarmTime.substring(0,10)+" 12시에 알람이 설정되었습니다!", Toast.LENGTH_LONG).show();
 
-//            new AlamHATT(activity).alam(calendar);
-            diaryNotification(calendar);
+            //Preference에 설정한 값 저장
+            SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+            editor.putLong(alarmTime.substring(0,10)+"", (long)calendar.getTimeInMillis());
+            editor.apply();
+            Log.d("split",alarmTime.substring(0,10)+"");
+
+
+            diaryNotification(calendar,alarmTime.substring(0,10));
         } else {
             Toast.makeText(activity, "하나 이상의 일정을 입력하세요", Toast.LENGTH_SHORT).show();
         }
@@ -218,30 +222,37 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     }
 
 
-    void diaryNotification(Calendar calendar)
+    void diaryNotification(Calendar calendar,String aTime)
     {
+        String year = aTime.substring(0,10).substring(0,4);
+        String month = aTime.substring(0,10).substring(5,7);
+        String day = aTime.substring(8,10);
+
         Boolean dailyNotify = true; // 무조건 알람을 사용
-//
-        PackageManager pm = activity.getPackageManager();
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
+        PackageManager pm = activity.getPackageManager();
 
         Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
-//        Intent alarmIntent = new Intent(activity, AlarmService.class);
-//        alarmIntent.setAction(AlarmService.ALARM_SERVICE);
         alarmIntent.putExtra("calendar",calendar);
-//        activity.startService(alarmIntent);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, 0, alarmIntent, 0);
+
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                activity, Integer.parseInt(year+month+day),
+                alarmIntent,0);
 //
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
-//
+        SharedPreferences sharedPreferences= activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
+        long time = sharedPreferences.getLong(aTime+"", calendar.getTimeInMillis());
+        Log.d("asdfasdf",time+"");
+
 //         사용자가 매일 알람을 허용했다면
         if (dailyNotify) {
             if (alarmManager != null) {
 //                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
-                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),pendingIntent),pendingIntent);
+                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(),pendingIntent),pendingIntent);
+                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
                 }
             }
 //             부팅 후 실행되는 리시버 사용가능하게 설정
@@ -249,7 +260,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         }
-
     }
 
 }
