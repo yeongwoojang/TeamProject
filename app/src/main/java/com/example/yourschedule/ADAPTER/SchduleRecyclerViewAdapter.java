@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -190,7 +191,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 19:38:00";
+            String alarmTime = date+" 22:30:00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
@@ -249,10 +250,12 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         if (dailyNotify) {
             if (alarmManager != null) {
 //                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
-                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
+//                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
+//                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                }else{
+                    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
                 }
             }
 //             부팅 후 실행되는 리시버 사용가능하게 설정
