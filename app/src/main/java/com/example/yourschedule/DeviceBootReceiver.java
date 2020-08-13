@@ -28,7 +28,6 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
             if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
                 context.startForegroundService(alarmIntent);
-
             }else{
                 context.startService(alarmIntent);
             }
@@ -43,11 +42,11 @@ public class DeviceBootReceiver extends BroadcastReceiver {
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(year+month+day), alarmIntent, 0);
 
-            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            if (manager != null) {
-                manager.setRepeating(AlarmManager.RTC_WAKEUP, millis,
-                        AlarmManager.INTERVAL_DAY, pendingIntent);
+            if (alarmManager != null) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(millis,pendingIntent),pendingIntent);
             }
         }
     }

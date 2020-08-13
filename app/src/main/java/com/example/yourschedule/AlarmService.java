@@ -65,7 +65,7 @@ public class AlarmService extends Service {
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent pendingI = PendingIntent.getActivity(getApplicationContext(), 0,
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
                     notificationIntent, 0);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "default");
@@ -74,8 +74,6 @@ public class AlarmService extends Service {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
                 builder.setSmallIcon(R.drawable.ic_launcher_foreground); //mipmap 사용시 Oreo 이상에서 시스템 UI 에러남
-
-
                 String channelName = "매일 알람 채널";
                 String description = "매일 정해진 시간에 알람합니다.";
                 int importance = NotificationManager.IMPORTANCE_HIGH; //소리와 알림메시지를 같이 보여줌
@@ -88,8 +86,6 @@ public class AlarmService extends Service {
                     notificationManager.createNotificationChannel(channel);
                 }
             }else builder.setSmallIcon(R.mipmap.ic_launcher); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
-
-
             builder.setAutoCancel(true)
                     .setDefaults(NotificationCompat.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())
@@ -97,9 +93,12 @@ public class AlarmService extends Service {
                     .setContentTitle("YourList")
                     .setContentText("오늘 일정을 확인하세요!")
                     .setContentInfo("INFO")
-                    .setContentIntent(pendingI);
+                    .setContentIntent(pendingIntent);
             if (notificationManager != null) {
                 // 노티피케이션 동작시킴
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    startForeground(1234, builder.build());
+                }
                 notificationManager.notify(1234, builder.build());
             }
         }

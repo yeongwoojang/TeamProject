@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -35,8 +36,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Calendar calendar = (Calendar) intent.getSerializableExtra("calendar");
         Intent alarmServiceIntent = new Intent(context,AlarmService.class);
-//        alarmServiceIntent.putExtra("calendar",calendar);
-        context.startService(alarmServiceIntent);
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            context.startForegroundService(alarmServiceIntent);
+        }else{
+            context.startService(alarmServiceIntent);
+        }
 //        if (sCpuWakeLock != null) {
 //            return;
 //        }else{
