@@ -74,7 +74,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     private Fragment fffff;
     private TextView test;
     private TextView test1;
-    private ImageButton modifyBt;
+    private TextView modifyBt;
 
 
 
@@ -120,8 +120,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView.setTopbarVisible(true);
 
 
-        Log.d("DefaultState",slidingUpPanelLayout.getPanelState()+"");
-//        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
         slidingUpPanelLayout.setPanelHeight(0);
         TodayDecorator todayDecorator = new TodayDecorator();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");

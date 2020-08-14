@@ -39,7 +39,7 @@
         android:id="@+id/dragView"
         android:layout_width="match_parent"
         android:layout_height="426px"
-        android:background="#eee6ff"
+        android:background="@drawable/recyclerview_border"
         android:layout_gravity="end"
         android:gravity="start"
         >
@@ -58,14 +58,24 @@
                 android:textSize="24dp"
                 android:padding="10dp"
                 />
-            <ImageButton
+<!--            <ImageButton-->
+<!--                android:id="@+id/modifyBt"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:src="@drawable/round_add_circle_outline_black_18dp"-->
+<!--                android:layout_gravity="end"-->
+<!--                android:background="@color/transparent"-->
+<!--                ></ImageButton>-->
+            <TextView
                 android:id="@+id/modifyBt"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/round_add_circle_outline_black_18dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:background="@color/transparent"
-                ></ImageButton>
+                android:text="추가"
+                android:textColor="@color/white"
+                android:textSize="9pt"
+                ></TextView>
         </FrameLayout>
 
         <FrameLayout
