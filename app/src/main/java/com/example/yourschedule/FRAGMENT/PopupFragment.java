@@ -106,10 +106,8 @@ public class PopupFragment extends DialogFragment {
         ReadDBData(new ReadDataCallback() {
             @Override
             public void onCallback(List<ScheduleDTO> value) {
-                Log.d("CallBack?","onNo...");
                 scheduleDTOS.clear();
                 scheduleDTOS = value;
-                Log.d("scheduleDTOSSize",scheduleDTOS.size()+"");
                 if(mDialogResult.update()){
                     adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,true);
                 }else{

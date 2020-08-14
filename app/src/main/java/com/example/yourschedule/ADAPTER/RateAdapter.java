@@ -53,7 +53,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
         this.dateOfMonth = dateOfMonth;
         this.thatDates = thatDates;
         reSetDates();
-        Log.d("executing", "instructuer");
 
     }
 
@@ -76,8 +75,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.d("size", thatDates.size() + "");
-        Log.d("executing", "getItemCount");
 
         return thatDates.size();
     }
@@ -87,7 +84,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.complete_item, parent, false);
         ViewHolder viewHolder = new RateAdapter.ViewHolder(view);
-        Log.d("executing", "onCreateViewHolder");
 
         return viewHolder;
     }
@@ -97,7 +93,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             holder.onBind(position);
-            Log.d("executing", "onBindViewHolder");
         }
 
     }
@@ -112,11 +107,9 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
 //            completeScheduleText = (TextView)itemView.findViewById(R.id.complete_schedule);
             recyclerView = (RecyclerView) itemView.findViewById(R.id.subRecycleView);
             thatDate = (TextView) itemView.findViewById(R.id.date);
-            Log.d("executing", "ViewHolder");
         }
 
         void onBind(int position) {
-            Log.d("executing", "onBind");
             this.position = position;
             thatDate.setText(thatDates.get(position));
 
@@ -131,8 +124,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
         @Override
         public void onClick(View view) {
             colsePosition =0;
-            Log.d("executing", "onClick");
-            Log.d("position", position + "");
             scheduleOfDate.clear();
             for (int i = 0; i < scheduleDTOS.size(); i++) {
                 if (scheduleDTOS.get(i).getDate().substring(5).equals(thatDates.get(position))) {
@@ -146,7 +137,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
                 }
             }
 
-            Log.d("whatData", position + "..." + scheduleOfDate.get(0).getSchedule() + "");
 
             //펼처진 상태
             if (selectedItems.get(position)) {

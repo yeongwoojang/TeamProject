@@ -1,4 +1,4 @@
-package com.example.yourschedule;
+package com.example.yourschedule.ALARM;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,14 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
+import android.os.SystemClock;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -45,8 +41,12 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
             if (alarmManager != null) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-//                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(millis,pendingIntent),pendingIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                }else{
+                    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
+                }
             }
         }
     }

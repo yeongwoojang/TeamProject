@@ -26,9 +26,7 @@ public class ListSubViewAdapter extends RecyclerView.Adapter<ListSubViewAdapter.
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.thatDate = thatDate;
-        for(int i=0;i<scheduleDTOS.size();i++){
-            Log.d("data",scheduleDTOS.get(i).getSchedule()+"");
-        }
+
         for(int i=0;i<scheduleDTOS.size();i++){
             for(int j=0;j<scheduleDTOS.get(i).getIsComplete().size();j++){
                 if(scheduleDTOS.get(i).getIsComplete().get(j)){

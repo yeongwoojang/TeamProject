@@ -153,7 +153,6 @@ public class WeekAchievementRate extends Fragment {
                 Calendar cal = Calendar.getInstance();
                 int intYear = Integer.parseInt(String.valueOf(cal.get(Calendar.YEAR)));
                 int intMonth = Integer.parseInt(String.valueOf(cal.get(Calendar.MONTH)));
-                Log.d("intMonth", intMonth + "");
 
                 //그냥 2개로 나눔
                 ArrayList<Integer> weekStart = new ArrayList<Integer>();
@@ -166,34 +165,22 @@ public class WeekAchievementRate extends Fragment {
                 cal.set(Calendar.MONTH, Integer.parseInt(array[0]) - 1);
 
                 int lastDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-                Log.d("lastDay", lastDayOfMonth + "");
 
                 int howMuchWeek = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
-                Log.d("howMuchWeek", howMuchWeek + "");
-                Log.d("Sfdgsdgfsdfgsdfgsd", cal.getActualMaximum(Calendar.WEEK_OF_MONTH) + "");
                 for (int week = 1; week <= howMuchWeek; week++) {
                     cal.set(Calendar.WEEK_OF_MONTH, week);
                     cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                    Log.d("time", cal.getTime() + "");
                     int startDay = cal.get(Calendar.DAY_OF_MONTH);
-                    Log.d("startDay", startDay + "");
                     cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                     int endDay = cal.get(Calendar.DAY_OF_MONTH);
-                    Log.d("endDay", endDay + "");
                     if (week == 1 && startDay >= 25) {
                         startDay = 1;
-                        Log.d("startDay2", startDay + "");
 
                     }
-                    Log.d("week", week + "");
-                    Log.d("sadfasg", cal.getActualMaximum(Calendar.DAY_OF_MONTH) + "");
-                    Log.d("rdsglkfjfskd", cal.getActualMaximum(Calendar.WEEK_OF_MONTH) + "");
                     //for문을 돌다가 week가 해당 월의 마지막 주이고 마지막 날짜가 7보다 작을경우
                     if (week == howMuchWeek && endDay < 7) {
-                        Log.d("adsfasdfsdfasfsdf", "진입");
                         //해당 월의 마지막 날짜를 endDay에 대입
                         endDay = lastDayOfMonth;
-                        Log.d("endDay2", endDay + "");
                     }
                     weekStart.add(startDay);
                     weekEnd.add(endDay);
@@ -209,8 +196,6 @@ public class WeekAchievementRate extends Fragment {
                     barChart.getXAxis().setCenterAxisLabels(false);
                 }
                 for (int i = 0; i < weekStart.size(); i++) {
-                    Log.d("weekStart", weekStart.get(i) + "");
-                    Log.d("weekEnd", weekEnd.get(i) + "");
                 }
 
                 ArrayList<BarEntry> entries = new ArrayList<>();
@@ -229,7 +214,6 @@ public class WeekAchievementRate extends Fragment {
                                     && weekEnd.get(i) >= Integer.parseInt(scheduleDTOS.get(j).getDay())) {
                                 switch (i) {
                                     case 0:
-                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 1 + "번 째 주입니다.");
                                         if (entireCountList.get(0) != 0) {
                                             entireCountList.set(0, entireCountList.get(0) + scheduleDTOS.get(j).getIsComplete().size());
                                         } else {
@@ -242,7 +226,6 @@ public class WeekAchievementRate extends Fragment {
                                         }
                                         break;
                                     case 1:
-                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 2 + "번 째 주입니다.");
                                         if (entireCountList.get(1) != 0) {
                                             entireCountList.set(1, entireCountList.get(1) + scheduleDTOS.get(j).getIsComplete().size());
                                         } else {
@@ -255,7 +238,6 @@ public class WeekAchievementRate extends Fragment {
                                         }
                                         break;
                                     case 2:
-                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 3 + "번 째 주입니다.");
                                         if (entireCountList.get(2) != 0) {
                                             entireCountList.set(2, entireCountList.get(2) + scheduleDTOS.get(j).getIsComplete().size());
                                         } else {
@@ -268,7 +250,6 @@ public class WeekAchievementRate extends Fragment {
                                         }
                                         break;
                                     case 3:
-                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 4 + "번 째 주입니다.");
                                         if (entireCountList.get(3) != 0) {
                                             entireCountList.set(3, entireCountList.get(3) + scheduleDTOS.get(j).getIsComplete().size());
                                         } else {
@@ -281,7 +262,6 @@ public class WeekAchievementRate extends Fragment {
                                         }
                                         break;
                                     case 4:
-                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 5 + "번 째 주입니다.");
                                         if (entireCountList.get(4) != 0) {
                                             entireCountList.set(4, entireCountList.get(4) + scheduleDTOS.get(j).getIsComplete().size());
                                         } else {
@@ -294,7 +274,6 @@ public class WeekAchievementRate extends Fragment {
                                         }
                                         break;
                                     case 5:
-                                        Log.d("whatWeek", scheduleDTOS.get(j).getDate() + "는" + 6 + "번 째 주입니다.");
                                         if (entireCountList.get(5) != 0) {
                                             entireCountList.set(5, entireCountList.get(5) + scheduleDTOS.get(j).getIsComplete().size());
                                         } else {
@@ -358,7 +337,6 @@ public class WeekAchievementRate extends Fragment {
                         month = "0" + (Integer.parseInt(array[0]) - 1) + "월 " + Integer.parseInt(month.substring(4));
                     }
                 }
-                Log.d("alterMonth", month);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.detach(fragment).attach(fragment).commit();
             }
@@ -366,7 +344,6 @@ public class WeekAchievementRate extends Fragment {
         rightBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("cccMonth", (Integer.parseInt(month.substring(0, 2))) + "");
                 if ((Integer.parseInt(month.substring(0, 2)) == 12)) {
                     month = "0" + 1 + "월 " + (Integer.parseInt(month.substring(4)) + 1);
                 } else {
@@ -380,7 +357,6 @@ public class WeekAchievementRate extends Fragment {
                     }
 
                 }
-                Log.d("alterMonth", month);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.detach(fragment).attach(fragment).commit();
             }

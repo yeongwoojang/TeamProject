@@ -247,7 +247,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
         for (int i = 0; i < scheduleDTOS.size(); i++) {
             if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
-                Log.d("ScheduleData", scheduleDTOS.get(i).getSchedule() + "");
                 drawerListAdapter = new DrawerListAdapter(getActivity(), scheduleDTOS.get(i).getSchedule());
                 recyclerView.setAdapter(drawerListAdapter);
                 test1.setVisibility(View.INVISIBLE);

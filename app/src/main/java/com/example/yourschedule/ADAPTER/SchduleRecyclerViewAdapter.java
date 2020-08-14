@@ -20,13 +20,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.AlarmManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.yourschedule.AlamHATT;
-import com.example.yourschedule.AlarmReceiver;
-import com.example.yourschedule.AlarmService;
-import com.example.yourschedule.DeviceBootReceiver;
+import com.example.yourschedule.ALARM.DeviceBootReceiver;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,9 +36,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -191,7 +185,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 22:30:00";
+            String alarmTime = date+" 18:09:00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
@@ -208,8 +202,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
             editor.putLong(alarmTime.substring(0,10)+"", (long)calendar.getTimeInMillis());
             editor.apply();
-            Log.d("split",alarmTime.substring(0,10)+"");
-
 
             diaryNotification(calendar,alarmTime.substring(0,10));
         } else {
@@ -233,27 +225,21 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
         PackageManager pm = activity.getPackageManager();
 
-        Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
-        alarmIntent.putExtra("calendar",calendar);
-
-
+        Intent alarmIntent = new Intent("com.test.alarmtestous.ALARM_START");
+        alarmIntent.putExtra("requestCode",year+month+day);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 activity, Integer.parseInt(year+month+day),
-                alarmIntent,0);
+                alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 //
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         SharedPreferences sharedPreferences= activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
         long time = sharedPreferences.getLong(aTime+"", calendar.getTimeInMillis());
-        Log.d("asdfasdf",time+"");
 
-//         사용자가 매일 알람을 허용했다면
+//         사용자가 알람을 허용했다면
         if (dailyNotify) {
             if (alarmManager != null) {
-//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (long)calendar.getTimeInMillis(), pendingIntent);
-//                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
                 }else{
                     alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
                 }

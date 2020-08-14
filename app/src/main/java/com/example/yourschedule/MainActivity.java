@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,8 @@ import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity {
+
+
     public static final int RC_SIGN_IN =10;
 //    private SessionCallback sessionCallback = new SessionCallback();
     //유저 프로필
@@ -61,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
+
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//        Intent mIntent = new Intent(mContext,AlarmReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,0,mIntent,0);
+//        alarmManager.cancel(pendingIntent);
 
         t1 = (TextView)findViewById(R.id.test);
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);

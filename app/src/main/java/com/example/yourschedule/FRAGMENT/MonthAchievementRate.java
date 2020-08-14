@@ -133,7 +133,6 @@ public class MonthAchievementRate extends Fragment {
         xl.setValueFormatter(new IndexAxisValueFormatter(){
             @Override
             public String getFormattedValue(float value) {
-                Log.d("sequence",value    +"");
                 if(value==5f){
                     return "달성률";
                 }else{
@@ -141,7 +140,6 @@ public class MonthAchievementRate extends Fragment {
                 }
             }
         });
-        Log.d("labels",xl.getLabelCount()+"");
         YAxis yl = barChart.getAxisLeft();
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);

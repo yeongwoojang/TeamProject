@@ -233,9 +233,7 @@ public class TodayList extends Fragment {
                 try {
                     JSONArray jsonArray;
                     JSONObject jsonObject = new JSONObject(response.body().toString());
-                    Log.d("JSONDAILY",jsonObject+"");
                     jsonArray = jsonObject.getJSONArray("daily");
-                    Log.d("daily",jsonArray+"");
 //                    calendar.setTimeInMillis(Integer.parseInt(jsonObject.getString("dt"))*1000L);
 //                    Calendar calendar = Calendar.getInstance();
 //                    TimeZone tz = TimeZone.getDefault();
