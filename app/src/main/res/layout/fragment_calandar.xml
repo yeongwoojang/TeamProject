@@ -12,34 +12,38 @@
     app:umanoPanelHeight="0dp"
     app:umanoDragView="@id/dragView"
     app:umanoShadowHeight="0dp"
+    app:umanoOverlay="true"
     android:orientation="vertical">
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/calendar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:mcv_headerTextAppearance="@style/CalendarWidgetHeader"
             app:mcv_selectionColor="@color/mcv_selectionColor"
             android:focusedMonthDateColor="@color/white"
             app:mcv_titleAnimationOrientation="vertical"
             app:mcv_arrowColor="@color/white"
             app:mcv_weekDayTextAppearance="@style/CalendarWidgetWeekDay"
+            app:mcv_tileHeight="65dp"
+            app:mcv_calendarMode="month"
             ></com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+    </LinearLayout>
 
-    </FrameLayout>
 </LinearLayout>
     <RelativeLayout
         android:id="@+id/dragView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="426px"
-        android:background="#eee6ff"
+        android:background="@drawable/drawer_shape"
         android:layout_gravity="end"
         android:gravity="start"
         >
@@ -52,20 +56,23 @@
                 android:id="@+id/test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="공유하기"
                 android:fontFamily="@font/baemin"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="24dp"
                 android:padding="10dp"
                 />
-            <ImageButton
+            <TextView
                 android:id="@+id/modifyBt"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/round_add_circle_outline_black_18dp"
-                android:layout_gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
                 android:background="@color/transparent"
-                ></ImageButton>
+                android:text="일정추가"
+                android:fontFamily="@font/baemin"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:textSize="7pt"
+                ></TextView>
         </FrameLayout>
 
         <FrameLayout
@@ -78,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/baemin"
                 android:padding="2dp"
+                android:gravity="start"
                 android:layout_marginTop="10dp"
                 android:textColor="#000000"
                 android:textSize="24dp" />

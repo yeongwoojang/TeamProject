@@ -1,22 +1,21 @@
-package com.example.yourschedule;
+package com.example.yourschedule.ACTIVITY;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.example.yourschedule.FRAGMENT.WeatherOfWeek;
+import com.example.yourschedule.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,16 +32,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 
 public class MainActivity extends AppCompatActivity {
 
 
-    public static final int RC_SIGN_IN =10;
-//    private SessionCallback sessionCallback = new SessionCallback();
-    //유저 프로필
+    public static final int RC_SIGN_IN = 10;
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
     private final int FRAGMENT3 = 2;
@@ -50,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout bottom_tabs;
     private TextView t1;
     private SignInButton loginBt;
+
+
     private Context mContext = null;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
-    private static int ONE_MINUTE = 5626;
-
 
 
     @Override
@@ -63,23 +57,24 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoadingActivity.class));
         setContentView(R.layout.activity_main);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         mContext = this;
 
 //        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 //        Intent mIntent = new Intent(mContext,AlarmReceiver.class);
 //        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,0,mIntent,0);
 //        alarmManager.cancel(pendingIntent);
-
-        t1 = (TextView)findViewById(R.id.test);
+        t1 = (TextView) findViewById(R.id.test);
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
         loginBt = (SignInButton) findViewById(R.id.login_button);
-//        Typeface typeface = Typeface.createFromAsset(getAssets(),"@font/baemin.ttf");
         for (int i = 0; i < bottomTab.length; i++) {
             bottom_tabs.addTab(bottom_tabs.newTab());
             TextView view = new TextView(this);
             view.setGravity(bottom_tabs.GRAVITY_CENTER);
-//            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/myfont.ttf"));
-            view.setTextColor(Color.parseColor("#ffffff"));
+            view.setTextColor(getResources().getColor(R.color.white));
+            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/baemin.ttf"));
             view.setText(bottomTab[i]);
             bottom_tabs.getTabAt(i).setCustomView(view);
         }
@@ -89,25 +84,17 @@ public class MainActivity extends AppCompatActivity {
         bottom_tabs.getTabAt(FRAGMENT3).setTag(FRAGMENT3);
 
         mAuth = FirebaseAuth.getInstance();
-        Intent intent = getIntent();
-        Log.d("test",mAuth.getCurrentUser()+"");
-            if(mAuth.getCurrentUser()!=null){
-                loginBt.setVisibility(View.INVISIBLE);
-                bottom_tabs.setVisibility(View.VISIBLE);
-                callFragment(FRAGMENT1);
-                Log.d("test",mAuth.getCurrentUser().getDisplayName());
-                String testData = new String();
-                testData = (String)intent.getDataString();
-                if(testData!=null){
-                Log.d("test",testData);
-                }else{
-                    Log.d("test","공유받은 데이터가 없습니다.");
-                }
-            }else{
-                loginBt.setVisibility(View.VISIBLE);
-                bottom_tabs.setVisibility(View.INVISIBLE);
-                Toast.makeText(this,"로그인해서 일정을 확인하세요!",Toast.LENGTH_SHORT).show();
-            }
+        Log.d("test", mAuth.getCurrentUser() + "");
+        if (mAuth.getCurrentUser() != null) {
+            loginBt.setVisibility(View.INVISIBLE);
+            bottom_tabs.setVisibility(View.VISIBLE);
+            callFragment(FRAGMENT1);
+            Log.d("test", mAuth.getCurrentUser().getDisplayName());
+            String testData = new String();
+        } else {
+            loginBt.setVisibility(View.VISIBLE);
+            bottom_tabs.setVisibility(View.INVISIBLE);
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -156,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         });
 //        callFragment(FRAGMENT1);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -174,8 +162,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        // [START_EXCLUDE silent]
-        // [END_EXCLUDE]
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -184,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d("Login",user.getDisplayName()+"Login, Success!");
+                            Log.d("Login", user.getDisplayName() + "Login, Success!");
                             loginBt.setVisibility(View.INVISIBLE);
                             bottom_tabs.setVisibility(View.VISIBLE);
                             callFragment(FRAGMENT1);
@@ -207,20 +193,18 @@ public class MainActivity extends AppCompatActivity {
             case FRAGMENT1:
                 // '프래그먼트1' 호출
                 ScheduleList scheduleList = new ScheduleList();
-                transaction.replace(R.id.fragment_container, scheduleList);
+                transaction.replace(R.id.main_fragment_container, scheduleList);
                 transaction.commit();
                 break;
 
             case FRAGMENT2:
                 // '프래그먼트2' 호출
                 WeatherOfWeek weatherOfWeek = new WeatherOfWeek();
-                transaction.replace(R.id.fragment_container, weatherOfWeek);
+                transaction.replace(R.id.main_fragment_container, weatherOfWeek);
                 transaction.commit();
                 break;
         }
     }
-
-
 
 
 }

@@ -1,36 +1,29 @@
-package com.example.yourschedule;
+package com.example.yourschedule.ALARM;
 
-import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.PowerManager;
-import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.yourschedule.ACTIVITY.MainActivity;
+import com.example.yourschedule.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class AlarmService extends Service {
 
-    ServiceThread thread;
     public AlarmService() {
     }
 
@@ -43,9 +36,6 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("service","onStartCommand()");
-        ServiceHandler handler = new ServiceHandler();
-        thread = new ServiceThread(handler);
-//        thread.stopForever();
         return START_STICKY;
     }
 
@@ -60,14 +50,6 @@ public class AlarmService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         stopSelf();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d("service","onDestroy()");
-        ServiceHandler handler = new ServiceHandler();
-        thread = new ServiceThread(handler);
-        thread.start();
     }
 
 //    @Override
@@ -204,7 +186,6 @@ public class AlarmService extends Service {
                         startForeground(1, builder.build());
                     }
                     notificationManager.notify(1234, builder.build());
-                    thread.stopForever();
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.yourschedule.FRAGMENT;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
     private final int FRAGMENT3 = 2;
 
 
-    private final String[] topTab = {"오늘의 일정", "달력", "월간 목표 달성률","주간 목표 달성률"};
+    private final String[] topTab = {"오늘의 일정", "달력", "목표 달성률"};
 
     public ScheduleList newInstance() {
         return new ScheduleList();
@@ -32,13 +33,16 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_schedule_list, container, false);
+        ViewGroup.LayoutParams params;
         final TabLayout top_tabs = rootView.findViewById(R.id.top_tabs);
         for (int i = 0; i < topTab.length; i++) {
             top_tabs.addTab(top_tabs.newTab());
             TextView view = new TextView(getActivity());
             view.setGravity(top_tabs.GRAVITY_CENTER);
             view.setText(topTab[i]);
-//            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/myfont.ttf"));
+            view.setTextColor(getActivity().getResources().getColor(R.color.white));
+//            view.setBackground(ContextCompat.getDrawable(getActivity(), R.color.deepPurple900));
+            view.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
             top_tabs.getTabAt(i).setCustomView(view);
 
         }
@@ -46,7 +50,6 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
         top_tabs.getTabAt(0).setTag(0);
         top_tabs.getTabAt(1).setTag(1);
         top_tabs.getTabAt(2).setTag(2);
-        top_tabs.getTabAt(3).setTag(3);
         Fragment fragment;
         fragment = new TodayList().newInstance();
         setChildFragment(fragment);
@@ -56,8 +59,6 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
             public void onTabSelected(TabLayout.Tab tab) {
                 Fragment fragment;
                 switch (Integer.parseInt(String.valueOf(tab.getTag()))) {
-
-
                     case 0:
                         // '버튼1' 클릭 시 '프래그먼트1' 호출
                         fragment = new TodayList().newInstance();
@@ -72,11 +73,6 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
 
                     case 2:
                         fragment = new MonthAchievementRate().newInstance();
-                        setChildFragment(fragment);
-                        break;
-
-                    case 3:
-                        fragment = new WeekAchievementRate().newInstance();
                         setChildFragment(fragment);
                         break;
                 }
@@ -101,7 +97,7 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
         if (!child.isAdded()) {
-            fragmentTransaction.replace(R.id.fragment_container, child);
+            fragmentTransaction.replace(R.id.sub_fragment_container, child);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }

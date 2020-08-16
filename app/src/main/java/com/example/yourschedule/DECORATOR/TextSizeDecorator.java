@@ -1,42 +1,37 @@
 package com.example.yourschedule.DECORATOR;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 
-import com.example.yourschedule.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
-import java.util.Date;
+import java.util.Calendar;
 
-public class TodayDecorator implements DayViewDecorator {
+public class TextSizeDecorator implements DayViewDecorator {
+    private final Calendar calendar = Calendar.getInstance();
+//    private CalendarDay date;
 
-    private CalendarDay date;
-    Context context;
-    public TodayDecorator(Context context) {
-        date = CalendarDay.today();
-        this.context = context;
+    public TextSizeDecorator() {
+//        date = CalendarDay.today();
     }
+
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        return date != null &&day.equals(date);
+        day.copyTo(calendar);
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+        return weekDay != Calendar.SUNDAY && weekDay != Calendar.SATURDAY && !day.equals(CalendarDay.today());
     }
 
     @Override
     public void decorate(DayViewFacade view) {
         view.addSpan(new StyleSpan(Typeface.NORMAL));
-        view.addSpan(new RelativeSizeSpan(1.2f));
-        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.gray700)));
-
-    }
-
-    public void setDate(Date date) {
-        this.date = CalendarDay.from(date);
-
+        view.addSpan(new RelativeSizeSpan(1.1f));
+        view.addSpan(new ForegroundColorSpan(Color.parseColor("#ffffff")));
     }
 }

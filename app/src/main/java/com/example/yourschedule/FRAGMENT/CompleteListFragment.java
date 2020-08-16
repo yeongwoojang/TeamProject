@@ -1,15 +1,10 @@
 package com.example.yourschedule.FRAGMENT;
 
+
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -18,7 +13,6 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,17 +24,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.ADAPTER.RateAdapter;
-import com.example.yourschedule.DECORATOR.CustomTypeFaceSpan;
 import com.example.yourschedule.Formatter.YValueFormatter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -54,26 +43,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MonthAchievementRate extends Fragment {
+public class CompleteListFragment extends Fragment {
+
+    String month;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     RateAdapter rateAdapter;
+    TextView TopText,completeListBt;
+    ImageButton rightBt, leftBt;
+    FirebaseAuth auth;
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     List<String> scheduleDTO = new ArrayList<>();
     List<String> thatDates = new ArrayList<>();
-    FirebaseAuth auth;
-    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
-    TextView TopText,completeListBt;
-    ImageButton rightBt, leftBt,menuBt;
-    private HorizontalBarChart barChart;
     private int completeCount;
     private int entireCount;
     private Fragment fragment;
 
-    String month;
-
-    public MonthAchievementRate newInstance() {
-        return new MonthAchievementRate();
+    public CompleteListFragment newInstance() {
+        return new CompleteListFragment();
     }
 
     @Override
@@ -84,73 +72,20 @@ public class MonthAchievementRate extends Fragment {
         month = transFormat.format(currentCalendar.getTime());
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_month_achievement_rate, container, false);
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_complete_list_popup, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         TopText = rootView.findViewById(R.id.topMonthText);
-        completeListBt = rootView.findViewById(R.id.completeListBt);
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
-        menuBt = rootView.findViewById(R.id.menuBt);
+        completeListBt =rootView.findViewById(R.id.completeListBt);
         fragment = this;
-
-
-        barChart = rootView.findViewById(R.id.horizontalBar);
-        barChart.setDrawBarShadow(true);
-        barChart.getDescription().setEnabled(false);
-        barChart.setPinchZoom(false);
-        barChart.setDrawGridBackground(false);
-        barChart.setTouchEnabled(false);
-        barChart.setDrawValueAboveBar(false);
-
-        XAxis xl = barChart.getXAxis();
-        xl.setDrawGridLines(false);
-        xl.setDrawAxisLine(false);
-        xl.setDrawLabels(true);
-        xl.setEnabled(true);
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.white));
-        xl.setAxisMinimum(0f);
-        xl.setAxisMaximum(10f);
-        xl.setLabelCount(5,true);
-        xl.setCenterAxisLabels(false);
-
-        xl.setTextSize(20);
-        xl.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
-        xl.setValueFormatter(new IndexAxisValueFormatter(){
-            @Override
-            public String getFormattedValue(float value) {
-                if(value==5f){
-                    return "달성률";
-                }else{
-                    return "";
-                }
-            }
-        });
-        YAxis yl = barChart.getAxisLeft();
-        yl.setDrawAxisLine(false);
-        yl.setDrawGridLines(false);
-        yl.setAxisMinimum(0f);
-        yl.setAxisMaximum(100f);
-        yl.setEnabled(false);
-
-        YAxis yr = barChart.getAxisRight();
-        yr.setDrawAxisLine(false);
-        yr.setDrawGridLines(false);
-        yr.setEnabled(false);
-
-        barChart.getLegend().setFormSize(0);
-        barChart.setFitBars(false);
-        barChart.animateY(1000);
-
         return rootView;
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -186,43 +121,11 @@ public class MonthAchievementRate extends Fragment {
                         }
                     }
                 }
-
-                float barWidth = 9f;
-                float spaceForBar = 10f;
-                ArrayList<BarEntry> entries = new ArrayList<>();
-                if(completeCount!=0){
-                    entries.add(new BarEntry(5f, (float) ((double) completeCount / (double) entireCount * 100)));
-                }else{
-                    entries.add(new BarEntry(5f,0f));
-                }
-
-
-
-                BarDataSet barDataSet;
-                barDataSet = new BarDataSet(entries, "");
-                barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
-                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-                dataSets.add(barDataSet);
-                BarData barData = new BarData(dataSets);
-                barData.setValueTextSize(20f);
-                barData.setBarWidth(barWidth);
-                barData.setDrawValues(true);
-                barData.setValueFormatter(new YValueFormatter());
-                barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
-
-                barChart.setData(barData);
-
-                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
-
                 rateAdapter = new RateAdapter(getActivity(), thatDates, scheduleDTOS, month);
                 recyclerView.setAdapter(rateAdapter);
                 rateAdapter.notifyDataSetChanged();
-//                recyclerView.getRecycledViewPool().setMaxRecycledViews(rateAdapter.getOldPosition(), 0);
-
             }
         });
-
-        SimpleDateFormat sdf = new SimpleDateFormat("MM월 ");
         leftBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -262,55 +165,6 @@ public class MonthAchievementRate extends Fragment {
             }
         });
 
-
-        Fragment beforeFragment = fragment;
-
-        menuBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu menu = new PopupMenu(getActivity(),view, Gravity.TOP);
-                getActivity().getMenuInflater().inflate(R.menu.rate_menu,menu.getMenu());
-
-                for (int i = 0; i < menu.getMenu().size(); i++) {
-                    MenuItem menuItem = menu.getMenu().getItem(i);
-                    Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf");
-                    SpannableString mNewTitle = new SpannableString(menuItem.getTitle());
-                    mNewTitle.setSpan(new CustomTypeFaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                    menuItem.setTitle(mNewTitle);
-                }
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                        switch (menuItem.getItemId()){
-                            case R.id.monthRate :
-                                fragment = new MonthAchievementRate().newInstance();
-                                fragmentTransaction.replace(R.id.testFragment, fragment);
-                                fragmentTransaction.addToBackStack(null);
-                                fragmentTransaction.commitAllowingStateLoss();
-                                break;
-                            case R.id.weekRate :
-                                fragment = new WeekAchievementRate().newInstance();
-                                    fragmentTransaction.replace(R.id.testFragment, fragment);
-                                    fragmentTransaction.addToBackStack(null);
-                                    fragmentTransaction.commitAllowingStateLoss();
-                                break;
-                            case R.id.completeList :
-                                fragment = new CompleteListFragment().newInstance();
-                                fragmentTransaction.replace(R.id.testFragment, fragment);
-                                fragmentTransaction.addToBackStack(null);
-                                fragmentTransaction.commitAllowingStateLoss();
-                        }
-
-                        return false;
-                    }
-                });
-                menu.show();
-
-            }
-        });
-
-
         AnimationSet downSet = new AnimationSet(true);
         downSet.setInterpolator(new CycleInterpolator(1));
         Animation down = new TranslateAnimation(0,0,0,20.0f);
@@ -336,25 +190,8 @@ public class MonthAchievementRate extends Fragment {
                 }
             }
         });
+
     }
-
-
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.rate_menu,menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-
-    public interface CalendarCallback {
-        void onCallback(List<ScheduleDTO> value);
-    }
-
-    public interface OnReturn {
-        void onReturnData(List<ScheduleDTO> value);
-    }
-
     public void ReadDBData(Calandar.CalendarCallback calendarCallback) {
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
@@ -375,7 +212,9 @@ public class MonthAchievementRate extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
     }
 }
+

@@ -42,7 +42,6 @@ import java.util.List;
 public class PopupFragment extends DialogFragment {
 
     public static final String TAG_EVENT_DIALOG = "dialog_event";
-    public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
     SchduleRecyclerViewAdapter adapter;
     ForDrawerListener forDrawerListener;
     Button previousBt, nextBt, storeBt, additionalBt;

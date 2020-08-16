@@ -43,15 +43,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    // 카카오 로그인
-    implementation "com.kakao.sdk:v2-user-rx:2.0.0-beta02"
-    // 카카오톡.
-    implementation "com.kakao.sdk:v2-talk-rx:2.0.0-beta02"
-    // 카카오링크
-    implementation "com.kakao.sdk:v2-link-rx:2.0.0-beta02"
-    implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
-    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
-
     //파이어베이스
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'com.google.firebase:firebase-auth:19.3.1'

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/dialog"
     android:orientation="vertical"
-    android:background="@drawable/gradient"
+    android:background="@drawable/complete_list_sc_style"
     tools:context=".FRAGMENT.PopupFragment"
     >
     <LinearLayout

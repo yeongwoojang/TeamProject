@@ -1,9 +1,9 @@
 package com.example.yourschedule.DECORATOR;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.yourschedule.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -12,23 +12,28 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
 import java.util.Calendar;
 
-public class SaturDayDecorator implements DayViewDecorator {
+public class DivideDecorator implements DayViewDecorator {
     private final Calendar calendar = Calendar.getInstance();
-
+        private CalendarDay date;
     Context context;
-    public SaturDayDecorator(Context context) {
+
+    public DivideDecorator(Context context) {
         this.context = context;
     }
+
     @Override
     public boolean shouldDecorate(CalendarDay day) {
         day.copyTo(calendar);
         int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
-        return weekDay == Calendar.SATURDAY;
+        return weekDay==Calendar.SUNDAY||weekDay==Calendar.SATURDAY||
+                weekDay==Calendar.FRIDAY||weekDay==Calendar.THURSDAY||
+                weekDay==Calendar.WEDNESDAY||weekDay==Calendar.TUESDAY||
+                weekDay==Calendar.MONDAY;
     }
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.blue500)));
-        view.addSpan(new RelativeSizeSpan(1.1f));
+//        view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.calendar_divide));
+
     }
 }

@@ -1,31 +1,21 @@
 package com.example.yourschedule.ALARM;
 
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
-import android.os.Build;
-import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.yourschedule.MainActivity;
+import com.example.yourschedule.ACTIVITY.MainActivity;
 import com.example.yourschedule.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -37,6 +27,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("service","onReceive()");
+
         Toast.makeText(context, "Incoming Call Received", Toast.LENGTH_LONG).show();
 //        Intent alarmServiceIntent = new Intent(context,AlarmService.class);
 //        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){

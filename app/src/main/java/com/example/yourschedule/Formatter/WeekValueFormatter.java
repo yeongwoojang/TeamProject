@@ -23,7 +23,6 @@ public class WeekValueFormatter extends IndexAxisValueFormatter {
     public String getFormattedValue(float value) {
         //value = 0f,10f,20f,30f,40f,50f
         int val = (int)(value/10f);
-        Log.d("val",val+"");
         String label = "";
         if (val >= 0 && val < mValues.size()) {
             label = mValues.get(val)+"주차";

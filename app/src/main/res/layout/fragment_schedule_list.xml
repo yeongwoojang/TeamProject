@@ -18,12 +18,15 @@
             android:id="@+id/top_tabs"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:tabIndicatorColor="#ffffff"
+            app:tabIndicatorColor="@color/oneMinus"
+            app:tabIndicator="@drawable/custom_indicator"
+            app:tabIndicatorGravity="top"
+            android:background="@drawable/tap_shape"
             >
         </com.google.android.material.tabs.TabLayout>
     </LinearLayout>
     <FrameLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/sub_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/top_layout"
