@@ -1,6 +1,4 @@
-package com.example.yourschedule;
-
-import com.example.yourschedule.ForRetrofit.RetrofitService;
+package com.example.yourschedule.ForRetrofit;
 
 import org.json.JSONObject;
 

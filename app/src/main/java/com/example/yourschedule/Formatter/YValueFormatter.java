@@ -27,7 +27,6 @@ public class YValueFormatter extends ValueFormatter {
 
     @Override
     public String getFormattedValue(float value) {
-        Log.d("valueY",value+"");
         if(value==0f){
             return "";
         }else{

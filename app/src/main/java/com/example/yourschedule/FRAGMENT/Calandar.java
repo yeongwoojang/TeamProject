@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.yourschedule.ADAPTER.DrawerListAdapter;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 import com.example.yourschedule.ADAPTER.SchduleRecyclerViewAdapter;
+import com.example.yourschedule.DECORATOR.DivideDecorator;
+import com.example.yourschedule.DECORATOR.TextSizeDecorator;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.DECORATOR.SaturDayDecorator;
@@ -122,7 +124,8 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
 
         slidingUpPanelLayout.setPanelHeight(0);
-        TodayDecorator todayDecorator = new TodayDecorator();
+        TodayDecorator todayDecorator = new TodayDecorator(getActivity());
+        TextSizeDecorator textSizeDecorator = new TextSizeDecorator(getActivity());
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -192,7 +195,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView.setDynamicHeightEnabled(true);
         materialCalendarView.setDateTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_Date);
         materialCalendarView.addDecorators(
-                new SaturDayDecorator(), new SunDayDecorator(), todayDecorator);
+                new SaturDayDecorator(getActivity()), new SunDayDecorator(getActivity()), todayDecorator,textSizeDecorator);
         ReadDBData(new CalendarCallback() {
             @Override
             public void onCallback(List<ScheduleDTO> value) {
@@ -204,7 +207,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     if (scheduleDTOS.get(i).getDate() != null) {
                         try {
                             Log.d("CallbackAccess", "working....");
-                            scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()));
+                            scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()),getActivity());
                             materialCalendarView.addDecorators(scheduleDecorator);
                         } catch (ParseException e) {
                         }

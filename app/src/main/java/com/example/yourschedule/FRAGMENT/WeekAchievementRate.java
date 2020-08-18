@@ -15,10 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.ADAPTER.RateAdapter;
+import com.example.yourschedule.ADAPTER.WeekRateAdapter;
 import com.example.yourschedule.Formatter.WeekValueFormatter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
@@ -40,19 +42,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class WeekAchievementRate extends Fragment {
-    public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
-    RateAdapter rateAdapter;
+    WeekRateAdapter weekRateAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     List<String> scheduleDTO = new ArrayList<>();
     List<String> thatDates = new ArrayList<>();
+    List<String> mlabels = new ArrayList<>();
     FirebaseAuth auth;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
-    TextView TopText, completeListBt, notCompleteListBt;
+    TextView TopText, completeListBt;
     ImageButton rightBt, leftBt;
     private HorizontalBarChart barChart;
 
@@ -77,19 +81,17 @@ public class WeekAchievementRate extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View rootView = inflater.inflate(R.layout.fragment_week_achievement_rate, container, false);
 
-//        recyclerView = rootView.findViewById(R.id.recyclerView);
-//        linearLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.addItemDecoration(
-//                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
-//        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         TopText = rootView.findViewById(R.id.topMonthText);
         completeListBt = rootView.findViewById(R.id.completeListBt);
-        notCompleteListBt = rootView.findViewById(R.id.notCompleteListText);
+//        notCompleteListBt = rootView.findViewById(R.id.notCompleteListText);
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
         fragment = this;
@@ -149,7 +151,6 @@ public class WeekAchievementRate extends Fragment {
                 scheduleDTOS = value;
                 scheduleDTO.clear();
                 thatDates.clear();
-
                 Calendar cal = Calendar.getInstance();
                 int intYear = Integer.parseInt(String.valueOf(cal.get(Calendar.YEAR)));
                 int intMonth = Integer.parseInt(String.valueOf(cal.get(Calendar.MONTH)));
@@ -175,7 +176,6 @@ public class WeekAchievementRate extends Fragment {
                     int endDay = cal.get(Calendar.DAY_OF_MONTH);
                     if (week == 1 && startDay >= 25) {
                         startDay = 1;
-
                     }
                     //for문을 돌다가 week가 해당 월의 마지막 주이고 마지막 날짜가 7보다 작을경우
                     if (week == howMuchWeek && endDay < 7) {
@@ -188,14 +188,14 @@ public class WeekAchievementRate extends Fragment {
                     for (int i = weekStart.size(); i > 0; i--) {
                         labels.add(i + "");
                     }
+                    mlabels.clear();
+                    mlabels.addAll(labels);
                     barChart.getXAxis().setValueFormatter(new WeekValueFormatter(labels));
                     barChart.getXAxis().setTextSize(20);
                     barChart.getXAxis().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
                     barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
                     barChart.getXAxis().setGranularity(1f);
                     barChart.getXAxis().setCenterAxisLabels(false);
-                }
-                for (int i = 0; i < weekStart.size(); i++) {
                 }
 
                 ArrayList<BarEntry> entries = new ArrayList<>();
@@ -293,7 +293,6 @@ public class WeekAchievementRate extends Fragment {
                     }
                 }
 
-
                 float barWidth = 9f;
                 float spaceForBar = 10f;
                 for (int i = 0; i < weekStart.size(); i++) {
@@ -312,6 +311,7 @@ public class WeekAchievementRate extends Fragment {
                 barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
                 ArrayList<IBarDataSet> dataSets = new ArrayList<>();
                 dataSets.add(barDataSet);
+
                 BarData barData = new BarData(dataSets);
                 barData.setValueTextSize(20f);
                 barData.setBarWidth(barWidth);
@@ -320,6 +320,15 @@ public class WeekAchievementRate extends Fragment {
                 barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
                 barChart.setData(barData);
                 barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
+
+                HashSet<String> reSetDates = new HashSet<String>(mlabels);
+                mlabels = new ArrayList<String>(reSetDates);
+                Collections.sort(mlabels);
+
+                weekRateAdapter = new WeekRateAdapter(getActivity(), mlabels, scheduleDTOS, month);
+                recyclerView.setAdapter(weekRateAdapter);
+                weekRateAdapter.notifyDataSetChanged();
+
             }
         });
 
@@ -365,16 +374,10 @@ public class WeekAchievementRate extends Fragment {
         completeListBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+               recyclerView.setVisibility(View.VISIBLE);
             }
         });
 
-        notCompleteListBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
 

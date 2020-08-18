@@ -1,93 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-    <LinearLayout
-        android:id="@+id/topLayout"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/testFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:weightSum="5">
+        android:layout_height="match_parent"
+        android:background="@color/mainColor">
 
-        <ImageButton
-            android:id="@+id/leftBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:src="@drawable/baseline_arrow_left_white_18dp"></ImageButton>
-
-        <TextView
-            android:id="@+id/topMonthText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:fontFamily="@font/baemin"
-            android:gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="상단텍스트"
-            android:textColor="#ffffff"
-            android:textSize="9pt"
-            android:textStyle="bold"></TextView>
-z
-        <ImageButton
-            android:id="@+id/rightBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:background="@color/transparent"
-            android:src="@drawable/baseline_arrow_right_white_18dp">
-        </ImageButton>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/topLayout"
-        android:id="@+id/divideLineTop"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/white"
-        android:orientation="horizontal">
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-                <com.github.mikephil.charting.charts.HorizontalBarChart
-                    android:id="@+id/horizontalBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="10dp"
-                    />
-            <TextView
-                android:id="@+id/completeListBt"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:padding="8dp"
-                android:text="완료목록"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="9pt"
-                android:fontFamily="@font/baemin"
-                android:background="@drawable/recyclerview_border"
-                ></TextView>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <LinearLayout
+                android:id="@+id/topLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <ImageButton
+                    android:id="@+id/leftBt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="16dp"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:src="@drawable/baseline_arrow_left_white_18dp"></ImageButton>
+
+                <TextView
+                    android:id="@+id/topMonthText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="상단텍스트"
+                    android:textColor="@color/white"
+                    android:textSize="9pt"
+                    android:textStyle="bold"></TextView>
+
+
+                <ImageButton
+                    android:id="@+id/rightBt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:src="@drawable/baseline_arrow_right_white_18dp"></ImageButton>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/divideLineTop"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/topLayout"
                 android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="16dp"
-                android:scrollbars="vertical"
-                android:fadeScrollbars="false"
-                android:scrollbarStyle="outsideInset"
-                android:visibility="gone"
-                >
-            </androidx.recyclerview.widget.RecyclerView>
-</LinearLayout>
+                android:background="@color/white"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/horizontalBar"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/completeListBt"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/recyclerview_border"
+                        android:fontFamily="@font/baemin"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="완료목록"
+                        android:textColor="@color/white"
+                        android:textSize="9pt"></TextView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/completeListBt"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:fadeScrollbars="false"
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="vertical"
+                        android:visibility="gone"
+                        ></androidx.recyclerview.widget.RecyclerView>
+                </RelativeLayout>
+        </LinearLayout>
+    </FrameLayout>
+    <ImageButton
+        android:id="@+id/menuBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/menu_button"
+        android:src="@drawable/baseline_menu_white_18"></ImageButton>
+</FrameLayout>

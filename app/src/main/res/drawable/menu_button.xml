@@ -1,0 +1,23 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid
+        android:color="@color/deepPurple400"
+        />
+    <stroke
+        android:width="4dp"
+        android:color="@color/deepPurple400"
+        />
+    <padding
+        android:left="7dp"
+        android:top="7dp"
+        android:right="7dp"
+        android:bottom="7dp" />
+    <corners android:radius="4dp" />
+    <size
+        android:width="40dp"
+        android:height="40dp"
+        ></size>
+
+</shape>
+
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/week"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:text="날짜"
+        android:layout_weight="4"
+        android:fontFamily="@font/baemin"
+        android:textColor="@color/white"
+        android:textSize="9pt"
+        android:background="@drawable/complete_list_date_style"
+        ></TextView>
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/subRecycleView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_marginLeft="16dp"-->
+<!--        android:layout_marginRight="16dp"-->
+<!--        >-->
+<!--    </androidx.recyclerview.widget.RecyclerView>-->
+</LinearLayout>

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.ALARM.AlarmReceiver;
 import com.example.yourschedule.ALARM.DeviceBootReceiver;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
@@ -67,7 +68,9 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
                 }
             }
-            scheduleSet.addAll(scheduleListSet);
+
+
+
 
         } else {
             for (int i = 0; i < 3; i++) {
@@ -176,6 +179,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     }
                 }
             }
+
         if (scheduleListSet.size() >= 1) {
             Arrays.asList(scheduleListSet);
             Arrays.asList(isComplete);
@@ -185,13 +189,14 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 18:09:00";
+            String alarmTime = date+" 14:00:00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(currentDateTime);
@@ -220,17 +225,18 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         String year = aTime.substring(0,10).substring(0,4);
         String month = aTime.substring(0,10).substring(5,7);
         String day = aTime.substring(8,10);
-
         Boolean dailyNotify = true; // 무조건 알람을 사용
+
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
         PackageManager pm = activity.getPackageManager();
 
-        Intent alarmIntent = new Intent("com.test.alarmtestous.ALARM_START");
+        Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
+        alarmIntent.setAction("test");
         alarmIntent.putExtra("requestCode",year+month+day);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 activity, Integer.parseInt(year+month+day),
                 alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-//
+
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         SharedPreferences sharedPreferences= activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
         long time = sharedPreferences.getLong(aTime+"", calendar.getTimeInMillis());

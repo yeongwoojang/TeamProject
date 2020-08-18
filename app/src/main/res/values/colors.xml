@@ -1,13 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="stringMainColor">#6200EE</color>
+    <color name="stringMainColor">#7E3FF2</color>
     <color name="mainColor">#FFd2c2fd</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="transparent">#00000000</color>
-    <color name ="white">#ffffff</color>
-    <color name ="recyclerViewColor">#E4DDF8</color>
-    <color name ="completeDateColor">#AC97EB</color>
-    <color name ="completeItemColor">#C0B0F2</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="four">#8055D6</color>
+    <color name="three">#9766F4</color>
+    <color name="two">#B694F6</color>
+    <color name="one">#D3BFF9</color>
+    <color name="oneMinus">#EFE5FD</color>
+
+<!--red-->
+    <color name="red50">#FFEBEE</color>
+    <color name="red100">#FFCDD2</color>
+    <color name="red200">#EF9A9A</color>
+    <color name="red300">#E57373</color>
+    <color name="red400">#EF5350</color>
+    <color name="red500">#F44336</color>
+    <color name="red600">#E53935</color>
+    <color name="red700">#D32F2F</color>
+
+<!--blue-->
+    <color name="blue50">#E3F2FD</color>
+    <color name="blue100">#BBDEFB</color>
+    <color name="blue200">#90CAF9</color>
+    <color name="blue300">#64B5F6</color>
+    <color name="blue400">#42A5F5</color>
+    <color name="blue500">#2196F3</color>
+    <color name="blue600">#1E88E5</color>
+    <color name="blue700">#1E88E5</color>
+
+
+<!--gary-->
+    <color name="gray50">#FAFAFA</color>
+    <color name="gray100">#F5F5F5</color>
+    <color name="gray200">#EEEEEE</color>
+    <color name="gray300">#E0E0E0</color>
+    <color name="gray400">#BDBDBD</color>
+    <color name="gray500">#9E9E9E</color>
+    <color name="gray600">#757575</color>
+    <color name="gray700">#616161</color>
+
+<!--    DeepPurple-->
+    <color name="deepPurple50">#EDE7F6</color>
+    <color name="deepPurple100">#D1C4E9</color>
+    <color name="deepPurple200">#B39DDB</color>
+    <color name="deepPurple300">#9575CD</color>
+    <color name="deepPurple400">#7E57C2</color>
+    <color name="deepPurple500">#673AB7</color>
+    <color name="deepPurple600">#5E35B1</color>
+    <color name="deepPurple700">#512DA8</color>
+    <color name="deepPurple800">#4527A0</color>
+    <color name="deepPurple900">#311B92</color>
+
+
+    <color name="recyclerViewColor">#E4DDF8</color>
+    <color name="completeDateColor">#AC97EB</color>
+    <color name="completeItemColor">#C0B0F2</color>
 
     <color name="mcv_selectionColor">#97FFFFFF</color>
 </resources>

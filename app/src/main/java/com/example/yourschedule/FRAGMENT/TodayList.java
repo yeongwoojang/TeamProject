@@ -2,7 +2,6 @@ package com.example.yourschedule.FRAGMENT;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,8 @@ import com.bumptech.glide.Glide;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
-//import com.example.yourschedule.RetrofitClient;
-import com.example.yourschedule.RetrofitClient;
+//import com.example.yourschedule.ForRetrofit.RetrofitClient;
+import com.example.yourschedule.ForRetrofit.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +47,6 @@ import retrofit2.Response;
 
 public class TodayList extends Fragment {
 
-    public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
@@ -128,53 +126,6 @@ public class TodayList extends Fragment {
 
         }
 
-//        settingBt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                settingViewLayout.openDrawer(settingView);
-//            }
-//        });
-//        closeSettingBt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                settingViewLayout.closeDrawer(settingView);
-//            }
-//        });
-
-        //여기서 일단 오늘 일정 공유테스트 ㄱㄱ
-//        shareBt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FeedTemplate params = FeedTemplate
-//                        .newBuilder(ContentObject.newBuilder("일정이 도착했습니다.",
-//                                "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
-//                                LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-//                                        .setMobileWebUrl("https://developers.kakao.com").build())
-//                                .build())
-//                        .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
-//                                .setWebUrl("https://developers.kakao.com")
-//                                .setMobileWebUrl("https://developers.kakao.com")
-//                                .setAndroidExecutionParams("user="+auth.getCurrentUser().getDisplayName())
-//                                .setIosExecutionParams("key1=value1")
-//                                .build()))
-//                        .build();
-//                Map<String, String> serverCallbackArgs = new HashMap<String, String>();
-//                serverCallbackArgs.put("user_id", auth.getCurrentUser().getDisplayName());
-//
-//                KakaoLinkService.getInstance().sendDefault(getActivity(), params, serverCallbackArgs, new ResponseCallback<KakaoLinkResponse>() {
-//                    @Override
-//                    public void onFailure(ErrorResult errorResult) {
-//                        Log.d("TEST","FAILED");
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(KakaoLinkResponse result) {
-//                        // 템플릿 밸리데이션과 쿼터 체크가 성공적으로 끝남. 톡에서 정상적으로 보내졌는지 보장은 할 수 없다. 전송 성공 유무는 서버콜백 기능을 이용하여야 한다.
-//                        Log.d("TEST","SUCCESS");
-//                    }
-//                });
-//            }
-//        });
 //           logoutBt.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

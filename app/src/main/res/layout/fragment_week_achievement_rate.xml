@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/transparent"
+    android:background="@color/mainColor"
     >
     <LinearLayout
         android:id="@+id/topLayout"
@@ -19,7 +19,7 @@
             android:id="@+id/leftBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="center"
             android:background="@color/transparent"
             android:src="@drawable/baseline_arrow_left_white_18dp"
             android:layout_weight="1"
@@ -34,15 +34,14 @@
             android:gravity="center_horizontal"
             android:textSize="9pt"
             android:textStyle="bold"
-            android:fontFamily="@font/baemin"
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
             android:layout_weight="3"
             ></TextView>
         <ImageButton
             android:id="@+id/rightBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="center"
             android:background="@color/transparent"
             android:src="@drawable/baseline_arrow_right_white_18dp"
             android:layout_weight="1"
@@ -84,28 +83,28 @@
             android:fontFamily="@font/baemin"
             android:background="@drawable/recyclerview_border"
             ></TextView>
-        <TextView
-            android:id="@+id/notCompleteListText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:padding="8dp"
-            android:text="미완료목록"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="9pt"
-            android:fontFamily="@font/baemin"
-            android:background="@drawable/recyclerview_border"
-            ></TextView>
+<!--        <TextView-->
+<!--            android:id="@+id/notCompleteListText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginLeft="16dp"-->
+<!--            android:layout_marginRight="16dp"-->
+<!--            android:padding="8dp"-->
+<!--            android:text="미완료목록"-->
+<!--            android:gravity="center"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="9pt"-->
+<!--            android:fontFamily="@font/baemin"-->
+<!--            android:background="@drawable/recyclerview_border"-->
+<!--            ></TextView>-->
     </LinearLayout>
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:layout_below="@id/countTextLayout"-->
-<!--        android:id="@+id/recyclerView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        ></androidx.recyclerview.widget.RecyclerView>-->
-</RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/countTextLayout"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:visibility="gone"
+        ></androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>
