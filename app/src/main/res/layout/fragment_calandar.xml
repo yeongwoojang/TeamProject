@@ -72,6 +72,7 @@
                 android:textColor="@color/black"
                 android:padding="10dp"
                 android:textSize="7pt"
+
                 ></TextView>
         </FrameLayout>
 
