@@ -22,14 +22,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW"></action>-->
-<!--                <category android:name="android.intent.category.DEFAULT"></category>-->
-<!--                <category android:name="android.intent.category.BROWSABLE"></category>-->
-<!--                <data-->
-<!--                    android:host="@string/kakaolink_host"-->
-<!--                    android:scheme="@string/kakao_scheme" />-->
-<!--            </intent-filter>-->
         </activity>
 
         <receiver android:name=".ALARM.DeviceBootReceiver"
@@ -48,11 +40,10 @@
         </receiver>
 
 
-
-        <!--        <service-->
-<!--            android:name=".AlarmService"-->
-<!--            android:enabled="true"-->
-<!--            android:stopWithTask="false"></service>-->
+        <service
+            android:name=".ALARM.AlarmService"
+            android:enabled="true"
+            android:stopWithTask="false"></service>
     </application>
 
 </manifest>

@@ -68,7 +68,9 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
                 }
             }
-            scheduleSet.addAll(scheduleListSet);
+
+
+
 
         } else {
             for (int i = 0; i < 3; i++) {
@@ -177,6 +179,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     }
                 }
             }
+
         if (scheduleListSet.size() >= 1) {
             Arrays.asList(scheduleListSet);
             Arrays.asList(isComplete);
