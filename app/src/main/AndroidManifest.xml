@@ -3,8 +3,8 @@
     package="com.example.yourschedule">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -15,35 +15,45 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".testWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/test_widget_info" />
+        </receiver>
 
         <activity android:name=".ACTIVITY.LoadingActivity" />
         <activity android:name=".ACTIVITY.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ALARM.DeviceBootReceiver"
+        <receiver
+            android:name=".ALARM.DeviceBootReceiver"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-    
-        <receiver android:name=".ALARM.AlarmReceiver"
+        <receiver
+            android:name=".ALARM.AlarmReceiver"
             android:enabled="true"
             android:exported="true">
-        <intent-filter>
-            <action android:name="com.test.alarmtestous.ALARM_START" />
-        </intent-filter>
+            <intent-filter>
+                <action android:name="com.test.alarmtestous.ALARM_START" />
+            </intent-filter>
         </receiver>
-
 
         <service
             android:name=".ALARM.AlarmService"
             android:enabled="true"
-            android:stopWithTask="false"></service>
+            android:stopWithTask="false" />
     </application>
 
 </manifest>
