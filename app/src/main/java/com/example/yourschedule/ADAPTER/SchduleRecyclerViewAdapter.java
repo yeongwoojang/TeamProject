@@ -68,11 +68,8 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
                 }
             }
-
-
-
-
         } else {
+
             for (int i = 0; i < 3; i++) {
                 scheduleListSet.add(i, "");
             }
@@ -189,7 +186,10 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Log.d("calendar",calendar.getTime()+"");
 
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 14:00:00";
+            String alarmTime = date+" 18:07" +
+                    "" +
+                    "" +
+                    ":00";
             Log.d("alarmTime",alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);

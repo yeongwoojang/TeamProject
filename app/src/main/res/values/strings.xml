@@ -2,8 +2,6 @@
     <string name="app_name">YourSchedule</string>
 
 
-
-
     <string name="viewGithub">View on GitHub</string>
     <string name="reportProblem">Problem Report</string>
     <string name="viewWebsite">Developer Website</string>
@@ -52,4 +50,6 @@
     <string name="dash">-</string>
     <string name="scrollViewStart">START OF SCROLLVIEW</string>
     <string name="scrollViewEnd">END OF SCROLLVIEW</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

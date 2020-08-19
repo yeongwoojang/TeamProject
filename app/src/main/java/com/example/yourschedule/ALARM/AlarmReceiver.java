@@ -3,6 +3,7 @@ package com.example.yourschedule.ALARM;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,8 +30,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("service","onReceive()");
 
-
+        String requestCode = intent.getStringExtra("requestCode");
         Intent alarmServiceIntent = new Intent(context,AlarmService.class);
+        alarmServiceIntent.putExtra("requestCode",requestCode);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
             context.startForegroundService(alarmServiceIntent);
         }else{
