@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
+
+    <ImageButton
+        android:id="@+id/scheduleChk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:src="@drawable/baseline_panorama_fish_eye_white_18"
+        ></ImageButton>
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:text="일정1"
+        android:fontFamily="@font/baemin"
+        android:textColor="@color/black"
+        android:padding="10dp"
+        android:textSize="9pt"
+        android:maxLines="8"
+        android:inputType="textMultiLine"
+        ></TextView>
+</LinearLayout>
