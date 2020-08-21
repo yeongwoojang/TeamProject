@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.widget.DatePicker;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,9 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.ADAPTER.DrawerListAdapter;
-import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
-import com.example.yourschedule.ADAPTER.SchduleRecyclerViewAdapter;
-import com.example.yourschedule.DECORATOR.DivideDecorator;
 import com.example.yourschedule.DECORATOR.TextSizeDecorator;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
@@ -52,15 +47,14 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Calandar extends Fragment implements OnDateSelectedListener, OnMonthChangedListener {
 
-    public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     MaterialCalendarView materialCalendarView;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -71,11 +65,13 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     String selectedDate = "";
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     FirebaseAuth auth;
-    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
+    DatabaseReference mReference;
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+
     private Fragment fragment;
     private Fragment fffff;
     private TextView test;
-    private TextView test1;
+    private TextView defaultText;
     private TextView modifyBt;
 
 
@@ -87,6 +83,8 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
     }
 
@@ -100,7 +98,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         recyclerView = rootView.findViewById(R.id.drawerListView);
         modifyBt = rootView.findViewById(R.id.modifyBt);
         test = rootView.findViewById(R.id.test);
-        test1 = rootView.findViewById(R.id.test1);
+        defaultText = rootView.findViewById(R.id.test1);
         fffff = this;
 
         return rootView;
@@ -110,8 +108,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
@@ -119,16 +115,16 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
         materialCalendarView.setOnDateChangedListener(this);
         materialCalendarView.setOnMonthChangedListener(this);
+
         materialCalendarView.setTopbarVisible(true);
 
         slidingUpPanelLayout.setPanelHeight(0);
         TodayDecorator todayDecorator = new TodayDecorator(getActivity());
         TextSizeDecorator textSizeDecorator = new TextSizeDecorator(getActivity());
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-                Log.d("slide", slidingUpPanelLayout.getPanelState() + "");
+//                Log.d("slide", slidingUpPanelLayout.getPanelState() + "");
             }
 
             @Override
@@ -166,6 +162,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 boolean isGetUpdateFragment = false;
                 for (int i = 0; i < scheduleDTOS.size(); i++) {
                     if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
+                        Log.d("selectedDate","from modifyBt");
                         areYouUpdate = true;
                         getUpdateScheduleFragment();
                         isGetUpdateFragment = true;
@@ -197,14 +194,13 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         ReadDBData(new CalendarCallback() {
             @Override
             public void onCallback(List<ScheduleDTO> value) {
-                Log.d("CallbackAccess", "AccessCallback");
                 SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
                 scheduleDTOS.clear();
                 scheduleDTOS = value;
                 for (int i = 0; i < scheduleDTOS.size(); i++) {
                     if (scheduleDTOS.get(i).getDate() != null) {
                         try {
-                            Log.d("CallbackAccess", "working....");
+                            Log.d("getDate",scheduleDTOS.get(i).getDate());
                             scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()),getActivity());
                             materialCalendarView.addDecorators(scheduleDecorator);
                         } catch (ParseException e) {
@@ -230,11 +226,8 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         display.getSize(size);
         int slideablePanelHeight = size.y / 3;
         int animationDuration = 300;
-        test1.setText("일정이 없습니다.");
-//        SlidingUpPanelResizeAnimation animation = new SlidingUpPanelResizeAnimation(slidingUpPanelLayout, slideablePanelHeight, animationDuration);
-//        slidingUpPanelLayout.startAnimation(animation);
-//        slidingUpPanelLayout.setPanelState();
-//        slidingUpPanelLayout.setPanelHeight(200);
+        defaultText.setText("일정이 없습니다.");
+
         slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
         test.setText(selectedDate);
 
@@ -243,34 +236,16 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         //일단 대충 표시만되게 만듬
         //날씨아이콘안나옴
         recyclerView.setVisibility(View.INVISIBLE);
-        test1.setVisibility(View.VISIBLE);
+        defaultText.setVisibility(View.VISIBLE);
 
         for (int i = 0; i < scheduleDTOS.size(); i++) {
             if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
                 drawerListAdapter = new DrawerListAdapter(getActivity(), scheduleDTOS.get(i).getSchedule());
                 recyclerView.setAdapter(drawerListAdapter);
-                test1.setVisibility(View.INVISIBLE);
+                defaultText.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);
-//                test1.setText(test1.getText()+scheduleDTOSTemp.get(i).getSchedule().toString());
             }
         }
-
-
-//        boolean isGetUpdateFragment = false;
-//        for (int i = 0; i < scheduleDTOS.size(); i++) {
-//            if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
-//                areYouUpdate = true;
-//                getUpdateScheduleFragment();
-//                isGetUpdateFragment = true;
-//                break;
-//            } else {
-//                continue;
-//            }
-//        }
-//        if (!isGetUpdateFragment) {
-//            areYouUpdate = false;
-//            getPopupFragment(false);
-//        }
 
     }
 
@@ -308,7 +283,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     dialogFragment.dismissAllowingStateLoss();
                     dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                    drawerListAdapter.notifyDataSetChanged();
                     ft.detach(fffff).attach(fffff).commit();
                     dialogFragment.dismiss();
                 }
@@ -336,7 +310,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     dialogFragment.dismissAllowingStateLoss();
                     dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                    drawerListAdapter.notifyDataSetChanged();
                     ft.detach(fffff).attach(fffff).commit();
                     dialogFragment.dismiss();
 
@@ -358,13 +331,14 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-//        calendarUpdate();
     }
 
     public void ReadDBData(CalendarCallback calendarCallback) {
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
+        mReference = mDatabase.getReference("일정");
+        mReference.keepSynced(true);
         auth = FirebaseAuth.getInstance();
-        mDatabase.child(auth.getCurrentUser().getDisplayName())
+        mReference.child(auth.getCurrentUser().getDisplayName())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -372,9 +346,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
                             scheduleDTOSTemp.add(scheduleDTO);
-//                            if (scheduleDTO.getDate() != null) {
-//                            calendarCallback.onCallback(scheduleDTO.getDate());
-//                            }
+//                            Log.d("snapShot",snapshot.getKey());
                         }
                         calendarCallback.onCallback(scheduleDTOSTemp);
                     }
@@ -419,7 +391,6 @@ class SlidingUpPanelResizeAnimation extends Animation {
         mLayout.setPanelHeight((int) dimension);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
 
-//        mLayout.requestLayout();
     }
 
 }

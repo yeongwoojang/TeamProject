@@ -92,7 +92,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-//            completeScheduleText = (TextView)itemView.findViewById(R.id.complete_schedule);
             recyclerView = (RecyclerView) itemView.findViewById(R.id.subRecycleView);
             thatDate = (TextView) itemView.findViewById(R.id.date);
         }
@@ -115,11 +114,6 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
             scheduleOfDate.clear();
             for (int i = 0; i < scheduleDTOS.size(); i++) {
                 if (scheduleDTOS.get(i).getDate().substring(5).equals(thatDates.get(position))) {
-//                    for (int j = 0; j < scheduleDTOS.get(i).getIsComplete().size(); j++) {
-//                        if (scheduleDTOS.get(i).getIsComplete().get(j)) {
-//                            scheduleDTO.add(scheduleDTOS.get(i).getSchedule().get(j));
-//                        }
-//                    }
                     scheduleOfDate.add(scheduleDTOS.get(i));
                     break;
                 }
@@ -161,35 +155,17 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
                 public void onAnimationUpdate(ValueAnimator animation) {
 
                     int value = (int) animation.getAnimatedValue();
-//                    RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(activity) {
-//                        @Override protected int getVerticalSnapPreference() {
-//                            Log.d("Asdfasdf","asdfasdf?");
-//                            return LinearSmoothScroller.SNAP_TO_START;
-//                        }
-//                    };
+
                     linearLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false);
                     recyclerView.setLayoutManager(linearLayoutManager);
-//                    smoothScroller.setTargetPosition(0);
-//                    linearLayoutManager.startSmoothScroll(smoothScroller);
-//                    recyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(activity));
-//                    recyclerView.smoothScrollToPosition(position);
+
                     listSubViewAdapter = new ListSubViewAdapter(activity, scheduleOfDate, thatDates.get(position));
 
                     recyclerView.setAdapter(listSubViewAdapter);
-//                    recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView,new RecyclerView.State(),getItemCount());
                     listSubViewAdapter.notifyItemChanged(position);
 
                     recyclerView.getLayoutParams().height = value;
-//                    AnimationSet downSet = new AnimationSet(true);
-//                    downSet.setInterpolator(new CycleInterpolator(1));
-//                    Animation down = new TranslateAnimation(0,0,50.f,0);
-//                    down.setDuration(100);
-//                    downSet.addAnimation(down);
-
-//                    downSet.setFillAfter(true);
-//                    recyclerView.setAnimation(downSet);
                     recyclerView.requestLayout();
-//                    recyclerView.startAnimation(downSet);
                     recyclerView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
                 }

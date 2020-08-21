@@ -1,96 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/dialog"
+    android:background="@drawable/popup_form"
     android:orientation="vertical"
-    android:background="@drawable/complete_list_sc_style"
-    tools:context=".FRAGMENT.PopupFragment"
-    >
-    <LinearLayout
+    tools:context=".FRAGMENT.PopupFragment">
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="5"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/dateView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/baemin"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="날짜"
+                android:textColor="#000000"
+                android:textSize="18dp"></TextView>
+
+            <ImageButton
+                android:id="@+id/closeBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@color/transparent"
+                android:src="@drawable/baseline_cancel_white_18"
+                ></ImageButton>
+        </RelativeLayout>
+
+    </FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="@color/white"></View>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
         >
-        <Button
-            android:id="@+id/previousButton"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/popup_button_shape"
-            android:text="이전"
-            android:fontFamily="@font/baemin"
-            android:layout_weight="1"
-            ></Button>
-        <TextView
-            android:id="@+id/dateView"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:text="날짜"
-            android:fontFamily="@font/baemin"
-            android:textColor="#000000"
-            android:gravity="center_horizontal"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="3"
-            ></TextView>
-
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/popup_button_shape"
-            android:fontFamily="@font/baemin"
-            android:text="다음"></Button>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:orientation="vertical">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#000000"></View>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/scheduleList"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            ></androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+            android:background="@color/one"
+            >
+            <EditText
+                android:id="@+id/textEd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/storeBt"
+                android:textColor="@color/white"
+                android:textColorHighlight="@color/white"
+                android:backgroundTint="@color/transparent"
+                android:textSize="12dp"></EditText>
+            <ImageButton
+                android:id="@+id/storeBt"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_alignParentRight="true"
+                android:background="@color/transparent"
+                android:src="@drawable/baseline_edit_white_18"
+                ></ImageButton>
 
-    <LinearLayout
+        </RelativeLayout>
+
+    </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/scheduleList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:orientation="horizontal">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:outlineProvider="none"
+        android:background="@color/transparent"></androidx.recyclerview.widget.RecyclerView>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="right"-->
+<!--        android:orientation="horizontal">-->
 
-        <Button
-            android:id="@+id/storeBt"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/transparent"
-            android:fontFamily="@font/baemin"
-            android:text="저장"></Button>
+<!--        <ImageButton-->
+<!--            android:id="@+id/storeBt"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="16dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:background="@color/transparent"-->
+<!--            android:src="@drawable/baseline_edit_white_18"-->
+<!--            ></ImageButton>-->
 
-        <Button
-            android:id="@+id/additionalScheduleBt"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/transparent"
-            android:fontFamily="@font/baemin"
-            android:text="추가"></Button>
-    </LinearLayout>
+        <!--        <Button-->
+        <!--            android:id="@+id/additionalScheduleBt"-->
+        <!--            android:layout_width="30dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:layout_marginRight="16dp"-->
+        <!--            android:layout_marginBottom="16dp"-->
+        <!--            android:background="@color/transparent"-->
+        <!--            android:fontFamily="@font/baemin"-->
+        <!--            android:text="추가"></Button>-->
+<!--    </LinearLayout>-->
 </LinearLayout>

@@ -24,7 +24,6 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    public final String PREFERENCE = "com.example.yourschedule.FRAGMENT";
     private Activity activity;
     private List<ScheduleDTO> scheduleDTOS;
     private String today;
@@ -78,9 +77,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int posotion){
-
-
-
                 //ItemInex로 오늘 날짜인지를 구분.
                 holder.item.setText(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
                 holder.scheduleChk.setChecked(scheduleDTOS.get(itemIndex).getIsComplete().get(posotion));
@@ -141,7 +137,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         auth = FirebaseAuth.getInstance();
         ScheduleDTO scheduleDTO = scheduleDTOS.get(itemIndex);
-
         mDatabase.child(auth.getCurrentUser().getDisplayName())
                 .child(today.replace(".","-"))
                 .setValue(scheduleDTO);

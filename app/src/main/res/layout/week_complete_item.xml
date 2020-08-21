@@ -23,12 +23,5 @@
         android:textSize="9pt"
         android:background="@drawable/complete_list_date_style"
         ></TextView>
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/subRecycleView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="150dp"-->
-<!--        android:layout_marginLeft="16dp"-->
-<!--        android:layout_marginRight="16dp"-->
-<!--        >-->
-<!--    </androidx.recyclerview.widget.RecyclerView>-->
+
 </LinearLayout>

@@ -1,12 +1,15 @@
 package com.example.yourschedule.OBJECT;
 
-public class Schdule {
+import java.io.Serializable;
+
+public class Schdule implements Serializable {
     private String item;
     private boolean isChk;
 
 
-    public Schdule(String item) {
+    public Schdule(String item,boolean isChk) {
         this.item = item;
+        this.isChk = isChk;
 
     }
 

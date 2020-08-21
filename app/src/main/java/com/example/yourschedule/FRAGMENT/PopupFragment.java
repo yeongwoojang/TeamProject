@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,9 +46,10 @@ public class PopupFragment extends DialogFragment {
     public static final String TAG_EVENT_DIALOG = "dialog_event";
     SchduleRecyclerViewAdapter adapter;
     ForDrawerListener forDrawerListener;
-    Button previousBt, nextBt, storeBt, additionalBt;
+    ImageButton storeBt,closeBt, additionalBt;
     TextView dateView;
     RecyclerView schduleRecyclerView;
+    EditText inputSchedule;
     OnMyPopupDialogResult mDialogResult;
     LinearLayoutManager linearLayoutManager;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
@@ -83,14 +86,11 @@ public class PopupFragment extends DialogFragment {
 
         View view = inflater.inflate(R.layout.fragment_popup, container, false);
         dateView = view.findViewById(R.id.dateView);
-        previousBt = view.findViewById(R.id.previousButton);
-        nextBt = view.findViewById(R.id.nextButton);
         storeBt = view.findViewById(R.id.storeBt);
-        additionalBt = view.findViewById(R.id.additionalScheduleBt);
-
+        closeBt = view.findViewById(R.id.closeBt);
+        inputSchedule = view.findViewById(R.id.textEd);
 
         schduleRecyclerView = view.findViewById(R.id.scheduleList);
-
         return view;
     }
 
@@ -98,9 +98,7 @@ public class PopupFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        schduleRecyclerView.addItemDecoration(
-                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         schduleRecyclerView.setLayoutManager(linearLayoutManager);
         ReadDBData(new ReadDataCallback() {
             @Override
@@ -117,71 +115,38 @@ public class PopupFragment extends DialogFragment {
             }
         });
 
-        previousBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-                    Date transDate = transFormat.parse(date);
-                    calendar.setTime(transDate);
-                    calendar.add(Calendar.DATE, -1);
-                    String format = transFormat.format(calendar.getTime());
-                    date = format;
-                    dateView.setText(format + "");
-                    //asd
-                } catch (Exception e) {
-                }
-            }
-        });
         dateView.setText(date);
-        nextBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-                    Date transDate = transFormat.parse(date);
-                    calendar.setTime(transDate);
-                    calendar.add(Calendar.DATE, 1);
-                    String format = transFormat.format(calendar.getTime());
-                    date = format;
-                    dateView.setText(format + "");
-                } catch (Exception e) {
-                }
-            }
-        });
+
 
 
         storeBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.addSchedule();
+                String newData = inputSchedule.getText().toString();
+                adapter.addSchedule(newData);
+                inputSchedule.setText("");
 
-                signal = true;
-                mDialogResult.finish();
+//                signal = true;
+//                mDialogResult.finish();
 
             }
         });
-
-        additionalBt.setOnClickListener(new View.OnClickListener() {
+        closeBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter.addEditText();
+                adapter.close();
+                signal = true;
+                mDialogResult.finish();
             }
         });
+
 
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         }
 
-
-
-
     }
-
-
 
     public interface OnMyPopupDialogResult {
         void finish();
@@ -197,9 +162,8 @@ public class PopupFragment extends DialogFragment {
     }
 
     public void ReadDBData(ReadDataCallback readDataCallback){
-        Log.d("Seqeunce",1+"");
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
-
+        Log.d("popup",date);
         mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

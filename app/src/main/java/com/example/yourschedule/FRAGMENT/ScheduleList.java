@@ -41,7 +41,6 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
             view.setGravity(top_tabs.GRAVITY_CENTER);
             view.setText(topTab[i]);
             view.setTextColor(getActivity().getResources().getColor(R.color.white));
-//            view.setBackground(ContextCompat.getDrawable(getActivity(), R.color.deepPurple900));
             view.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
             top_tabs.getTabAt(i).setCustomView(view);
 

@@ -10,13 +10,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.SystemClock;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,7 +41,6 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
-    public final String PREFERENCE = "com.example.yourschdule.FRAGMENT";
     private Activity activity;
     private String date;
     private List<ScheduleDTO> scheduleDTOS;
@@ -68,22 +66,36 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
                 }
             }
+            scheduleSet.addAll(scheduleListSet);
         } else {
 
-            for (int i = 0; i < 3; i++) {
-                scheduleListSet.add(i, "");
-            }
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        EditText editText;
+        TextView textview;
+        ImageButton deleteBt;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            editText = (EditText) itemView.findViewById(R.id.scheduleEditText);
+            textview = (TextView) itemView.findViewById(R.id.scItem);
+            deleteBt = (ImageButton) itemView.findViewById(R.id.deleteBt);
+            deleteBt.setOnClickListener(this);
 
+        }
+
+        @Override
+        public void onClick(View view) {
+            delete(getAdapterPosition());
+        }
+
+        public void delete(int position) {
+            try {
+                scheduleListSet.remove(position);
+                notifyItemRemoved(position);
+            } catch (IndexOutOfBoundsException e) {
+            }
         }
     }
 
@@ -96,43 +108,11 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         scheduleListSize = scheduleListSet.size();
+        holder.deleteBt.setTag(holder.getAdapterPosition());
         if (!isUpdate) {
-            holder.editText.setHint("일정을 입력하세요.");
-            holder.editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                //리사이클러뷰에 있는 EditText의 텍스트가 입력이 되면 DataSet에 추가한다.
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    scheduleListSet.set(position, editable.toString());
-                }
-            });
+            holder.textview.setText(scheduleListSet.get(position));
         } else {
-            holder.editText.setText(scheduleListSet.get(position));
-            holder.editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                //리사이클러뷰에 있는 EditText의 텍스트가 입력이 되면 DataSet에 추가한다.
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    scheduleListSet.set(position, editable.toString());
-                }
-            });
-
+            holder.textview.setText(scheduleListSet.get(position));
 
         }
 
@@ -144,53 +124,93 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         return scheduleListSet.size();
     }
 
-    //일정 입력 EditText를 추가하는 메소드
-    public void addEditText() {
-        if (scheduleListSize < 5) {
-            scheduleListSet.add(scheduleListSize, "");
-            notifyItemChanged(scheduleListSize);
-        } else {
-            Toast.makeText(activity, "최대 5개의 일정만 입력가능", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     //일정을 저장하는 메소드
-    public void addSchedule() {
+
+    public void close() {
         auth = FirebaseAuth.getInstance();
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         List<Boolean> isComplete = new ArrayList<>();
-            scheduleListSet.removeAll(Collections.singleton(""));
-            for(int i = 0; i < scheduleListSet.size(); i++){
-                isComplete.add(false);
-            }
+        scheduleListSet.removeAll(Collections.singleton(""));
+        for (int i = 0; i < scheduleListSet.size(); i++) {
+            isComplete.add(false);
+        }
 
-
-            for (int i = 0; i < scheduleListSet.size(); i++) {
-                for (int k = 0; k < scheduleSet.size(); k++) {
-                    if (scheduleListSet.get(i).equals(scheduleSet.get(k))) {
-                        Log.d("DB_Data", "DB에 " + scheduleSet.get(k) + "가 저장되어 있습니다.");
-                        if (completeSet.get(k) == true) {
-                            isComplete.set(i, true);
-                            break;
-                        }
+        for (int i = 0; i < scheduleListSet.size(); i++) {
+            for (int k = 0; k < scheduleSet.size(); k++) {
+                if (scheduleListSet.get(i).equals(scheduleSet.get(k))) {
+                    if (completeSet.get(k) == true) {
+                        isComplete.set(i, true);
+                        break;
                     }
                 }
             }
+        }
 
-        if (scheduleListSet.size() >= 1) {
+        if (scheduleListSet.size() > 0) {
             Arrays.asList(scheduleListSet);
             Arrays.asList(isComplete);
             scheduleDTO.setDate(date);
             scheduleDTO.setSchedule(scheduleListSet);
             scheduleDTO.setIsComplete(isComplete);
-            Log.d("calendar",calendar.getTime()+"");
 
+
+            mDatabase.child(auth.getCurrentUser().
+                    getDisplayName())
+                    .child(date.replace(".", "-"))
+                    .setValue(scheduleDTO);
+            notifyItemChanged(scheduleListSize);
+
+
+        } else {
+            for (int i = 0; i < scheduleDTOS.size(); i++) {
+                if (scheduleDTOS.get(i).getDate().equals(date)) {
+                    mDatabase.child(auth.getCurrentUser().
+                            getDisplayName()).
+                            child(date.replace(".", "-"))
+                            .removeValue();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void addSchedule(String newData) {
+
+        auth = FirebaseAuth.getInstance();
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        List<Boolean> isComplete = new ArrayList<>();
+        scheduleListSet.removeAll(Collections.singleton(""));
+        if (!newData.equals("")) {
+            scheduleListSet.add(newData);
+        }
+        for (int i = 0; i < scheduleListSet.size(); i++) {
+            isComplete.add(false);
+        }
+
+
+        for (int i = 0; i < scheduleListSet.size(); i++) {
+            for (int k = 0; k < scheduleSet.size(); k++) {
+                if (scheduleListSet.get(i).equals(scheduleSet.get(k))) {
+                    Log.d("DB_Data", "DB에 " + scheduleSet.get(k) + "가 저장되어 있습니다.");
+                    if (completeSet.get(k) == true) {
+                        isComplete.set(i, true);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (scheduleListSet.size() > 0) {
+            Arrays.asList(scheduleListSet);
+            Arrays.asList(isComplete);
+            scheduleDTO.setDate(date);
+            scheduleDTO.setSchedule(scheduleListSet);
+            scheduleDTO.setIsComplete(isComplete);
+            Log.d("calendar", calendar.getTime() + "");
             SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date+" 18:07" +
-                    "" +
-                    "" +
-                    ":00";
-            Log.d("alarmTime",alarmTime);
+            String alarmTime = date + " 12:00:00";
+            Log.d("alarmTime", alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
             } catch (ParseException e) {
@@ -201,30 +221,39 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(currentDateTime);
             calendar.setTimeInMillis(calendar.getTimeInMillis());
-            Toast.makeText(activity,alarmTime.substring(0,10)+" 12시에 알람이 설정되었습니다!", Toast.LENGTH_LONG).show();
 
             //Preference에 설정한 값 저장
             SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-            editor.putLong(alarmTime.substring(0,10)+"", (long)calendar.getTimeInMillis());
+            editor.putLong(alarmTime.substring(0, 10) + "", (long) calendar.getTimeInMillis());
             editor.apply();
 
-            diaryNotification(calendar,alarmTime.substring(0,10));
-        } else {
-            Toast.makeText(activity, "하나 이상의 일정을 입력하세요", Toast.LENGTH_SHORT).show();
-        }
-        mDatabase.child(auth.getCurrentUser().
-                getDisplayName())
-                .child(date.replace(".", "-"))
-                .setValue(scheduleDTO);
+            diaryNotification(calendar, alarmTime.substring(0, 10));
+            mDatabase.child(auth.getCurrentUser().
+                    getDisplayName())
+                    .child(date.replace(".", "-"))
+                    .setValue(scheduleDTO);
+            notifyItemChanged(scheduleListSize);
 
+
+        } else {
+            for (int i = 0; i < scheduleDTOS.size(); i++) {
+                if (scheduleDTOS.get(i).getDate().equals(date)) {
+                    mDatabase.child(auth.getCurrentUser().
+                            getDisplayName()).
+                            child(date.replace(".", "-"))
+                            .removeValue();
+                    break;
+                }
+            }
+
+        }
     }
 
 
-    void diaryNotification(Calendar calendar,String aTime)
-    {
-        String year = aTime.substring(0,10).substring(0,4);
-        String month = aTime.substring(0,10).substring(5,7);
-        String day = aTime.substring(8,10);
+    void diaryNotification(Calendar calendar, String aTime) {
+        String year = aTime.substring(0, 10).substring(0, 4);
+        String month = aTime.substring(0, 10).substring(5, 7);
+        String day = aTime.substring(8, 10);
         Boolean dailyNotify = true; // 무조건 알람을 사용
 
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
@@ -232,21 +261,21 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
         Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
         alarmIntent.setAction("test");
-        alarmIntent.putExtra("requestCode",year+month+day);
+        alarmIntent.putExtra("requestCode", year + month + day);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                activity, Integer.parseInt(year+month+day),
-                alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                activity, Integer.parseInt(year + month + day),
+                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
-        SharedPreferences sharedPreferences= activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
-        long time = sharedPreferences.getLong(aTime+"", calendar.getTimeInMillis());
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
+        long time = sharedPreferences.getLong(aTime + "", calendar.getTimeInMillis());
 
 //         사용자가 알람을 허용했다면
         if (dailyNotify) {
             if (alarmManager != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-                }else{
+                } else {
                     alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
                 }
             }

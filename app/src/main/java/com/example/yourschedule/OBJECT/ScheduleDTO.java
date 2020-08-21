@@ -1,10 +1,11 @@
 package com.example.yourschedule.OBJECT;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ScheduleDTO {
+public class ScheduleDTO implements Serializable {
     private String date;
     private List<String> schedule;
     private List<Boolean> isComplete;
