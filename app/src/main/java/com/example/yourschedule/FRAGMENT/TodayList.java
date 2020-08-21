@@ -72,7 +72,7 @@ public class TodayList extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-        t1 = rootView.findViewById(R.id.test);
+        t1 = rootView.findViewById(R.id.detailDate);
         weatherIcon = rootView.findViewById(R.id.weatherIcon);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         dayOfWeek = rootView.findViewById(R.id.dayOfWeek);

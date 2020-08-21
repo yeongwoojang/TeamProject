@@ -39,43 +39,45 @@
     </LinearLayout>
 
 </LinearLayout>
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/dragView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="426px"
         android:background="@drawable/drawer_shape"
         android:layout_gravity="end"
         android:gravity="start"
+        android:orientation="vertical"
         >
         <FrameLayout
-            android:id="@+id/aboveLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <TextView
-                android:id="@+id/test"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/aboveLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/baemin"
-                android:textColor="@color/black"
-                android:textSize="24dp"
-                android:padding="10dp"
-                />
-            <TextView
-                android:id="@+id/modifyBt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:background="@color/transparent"
-                android:text="일정추가"
-                android:fontFamily="@font/baemin"
-                android:textColor="@color/black"
-                android:padding="10dp"
-                android:textSize="7pt"
-
-                ></TextView>
+                >
+                <TextView
+                    android:id="@+id/detailDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/baemin"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:padding="10dp"
+                    />
+                <ImageButton
+                    android:id="@+id/modifyBt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/transparent"
+                    android:src="@drawable/baseline_settings_black_18"
+                    android:fontFamily="@font/baemin"
+                    android:textColor="@color/black"
+                    android:padding="10dp"
+                    ></ImageButton>
+            </RelativeLayout>
         </FrameLayout>
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,15 +90,17 @@
                 android:padding="2dp"
                 android:gravity="start"
                 android:layout_marginTop="10dp"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="24dp" />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/drawerListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 ></androidx.recyclerview.widget.RecyclerView>
         </FrameLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

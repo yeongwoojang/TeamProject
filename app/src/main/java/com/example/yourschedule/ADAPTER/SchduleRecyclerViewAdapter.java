@@ -218,16 +218,27 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             }
 
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(currentDateTime);
-            calendar.setTimeInMillis(calendar.getTimeInMillis());
+            Calendar insertCalendar = Calendar.getInstance();
+            insertCalendar.setTime(currentDateTime);
+            insertCalendar.setTimeInMillis(insertCalendar.getTimeInMillis());
+
+            Calendar currentCalendar = Calendar.getInstance();
+//            long currentTime = currentCalendar.getTimeInMillis();
+
+            SharedPreferences sharedPreferences= activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
+//            long time = sharedPreferences.getLong(alarmTime.substring(0, 10) + "", calendar.getTimeInMillis());
+
 
             //Preference에 설정한 값 저장
-            SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-            editor.putLong(alarmTime.substring(0, 10) + "", (long) calendar.getTimeInMillis());
-            editor.apply();
 
-            diaryNotification(calendar, alarmTime.substring(0, 10));
+            if(!sharedPreferences.contains(alarmTime.substring(0, 10))||
+                    (insertCalendar.compareTo(currentCalendar)==1||
+                    insertCalendar.compareTo(currentCalendar)==0)){
+                SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+                editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
+                editor.apply();
+                diaryNotification(insertCalendar, alarmTime.substring(0, 10));
+            }
             mDatabase.child(auth.getCurrentUser().
                     getDisplayName())
                     .child(date.replace(".", "-"))
