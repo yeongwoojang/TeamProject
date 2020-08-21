@@ -31,6 +31,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -61,11 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mContext = this;
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-//        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//        Intent mIntent = new Intent(mContext,AlarmReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,0,mIntent,0);
-//        alarmManager.cancel(pendingIntent);
         t1 = (TextView) findViewById(R.id.test);
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
         loginBt = (SignInButton) findViewById(R.id.login_button);

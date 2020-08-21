@@ -15,15 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".testWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/test_widget_info" />
-        </receiver>
 
         <activity android:name=".ACTIVITY.LoadingActivity" />
         <activity android:name=".ACTIVITY.MainActivity">
@@ -34,6 +26,7 @@
             </intent-filter>
         </activity>
 
+<!--ALARM-->
         <receiver
             android:name=".ALARM.DeviceBootReceiver"
             android:enabled="false">
@@ -49,11 +42,27 @@
                 <action android:name="com.test.alarmtestous.ALARM_START" />
             </intent-filter>
         </receiver>
-
         <service
             android:name=".ALARM.AlarmService"
             android:enabled="true"
             android:stopWithTask="false" />
+
+<!--Widget-->
+        <receiver android:name=".ListWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.action.MY_ACTION"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/test_widget_info" />
+        </receiver>
+
+        <service android:name=".WidgetRemoteViewsService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>

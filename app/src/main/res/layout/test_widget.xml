@@ -2,21 +2,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
+    android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
     <TextView
-        android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
+        android:id="@+id/widgetTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="@color/transparent"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:padding="3dp"
+        android:background="#36D2C2FD"
+        android:text="YourSchedule"
         android:textColor="@color/black"
-        android:textSize="24dp"
+        android:textSize="11dp"
         android:fontFamily="@font/baemin"
          />
+    <ListView
+        android:id="@+id/widget_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#36D2C2FD"
+        />
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.example.yourschedule.FRAGMENT;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,8 +59,6 @@ public class TodayList extends Fragment {
     String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
-    logoutListener logoutListener;
-    TodayList child;
     TextView t1;
     ImageView weatherIcon;
 
@@ -105,9 +104,10 @@ public class TodayList extends Fragment {
         dateText.setText(today);
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+        Log.d("today",today);
         try{
             mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
-                    .addValueEventListener(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for(DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -116,7 +116,6 @@ public class TodayList extends Fragment {
                             }
                             recyclerViewAdapter.notifyDataSetChanged();
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 

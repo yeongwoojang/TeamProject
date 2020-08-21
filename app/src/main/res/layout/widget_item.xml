@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="일정1"
+    android:fontFamily="@font/baemin"
+    android:textColor="@color/black"
+    android:padding="10dp"
+    android:layout_gravity="top"
+    android:textSize="9dp"
+    android:maxLines="8"
+    android:inputType="textMultiLine"
+    >
+<!--    <ImageButton-->
+<!--        android:id="@+id/chkBt"-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:background="@color/transparent"-->
+<!--        android:src="@drawable/baseline_panorama_fish_eye_white_18"-->
+<!--        ></ImageButton>-->
+<!--    <TextView-->
+<!--        android:id="@+id/item"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="일정1"-->
+<!--        android:fontFamily="@font/baemin"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:padding="10dp"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:textSize="9dp"-->
+<!--        android:maxLines="8"-->
+<!--        android:inputType="textMultiLine"-->
+<!--        ></TextView>-->
+</TextView>
