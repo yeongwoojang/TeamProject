@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,7 +48,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -70,9 +70,9 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
     private Fragment fragment;
     private Fragment fffff;
-    private TextView test;
+    private TextView detailDate;
     private TextView defaultText;
-    private TextView modifyBt;
+    private ImageButton modifyBt;
 
 
 
@@ -97,7 +97,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView = rootView.findViewById(R.id.calendar);
         recyclerView = rootView.findViewById(R.id.drawerListView);
         modifyBt = rootView.findViewById(R.id.modifyBt);
-        test = rootView.findViewById(R.id.test);
+        detailDate = rootView.findViewById(R.id.detailDate);
         defaultText = rootView.findViewById(R.id.test1);
         fffff = this;
 
@@ -229,7 +229,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         defaultText.setText("일정이 없습니다.");
 
         slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        test.setText(selectedDate);
+        detailDate.setText(selectedDate);
 
         //동적으로 바꾸기
         //1.전체불러와서 해당날짜만 보여주기-o 2.선택할때마다 불러오기-x

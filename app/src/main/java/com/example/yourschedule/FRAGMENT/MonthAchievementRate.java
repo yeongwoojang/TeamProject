@@ -55,9 +55,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MonthAchievementRate extends Fragment {
-    RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
-    RateAdapter rateAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     List<String> scheduleDTO = new ArrayList<>();
     List<String> thatDates = new ArrayList<>();
@@ -89,9 +86,6 @@ public class MonthAchievementRate extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_month_achievement_rate, container, false);
 
-        recyclerView = rootView.findViewById(R.id.recyclerView);
-        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
         TopText = rootView.findViewById(R.id.topMonthText);
         completeListBt = rootView.findViewById(R.id.completeListBt);
         rightBt = rootView.findViewById(R.id.rightBt);
@@ -106,7 +100,7 @@ public class MonthAchievementRate extends Fragment {
         barChart.setPinchZoom(false);
         barChart.setDrawGridBackground(false);
         barChart.setTouchEnabled(false);
-        barChart.setDrawValueAboveBar(false);
+        barChart.setDrawValueAboveBar(true);
 
         XAxis xl = barChart.getXAxis();
         xl.setDrawGridLines(false);
@@ -209,20 +203,12 @@ public class MonthAchievementRate extends Fragment {
                 barData.setDrawValues(true);
                 barData.setValueFormatter(new YValueFormatter());
                 barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
-
                 barChart.setData(barData);
-
                 barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
-
-                rateAdapter = new RateAdapter(getActivity(), thatDates, scheduleDTOS, month);
-                recyclerView.setAdapter(rateAdapter);
-                rateAdapter.notifyDataSetChanged();
-//                recyclerView.getRecycledViewPool().setMaxRecycledViews(rateAdapter.getOldPosition(), 0);
 
             }
         });
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM월 ");
         leftBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -263,7 +249,6 @@ public class MonthAchievementRate extends Fragment {
         });
 
 
-        Fragment beforeFragment = fragment;
 
         menuBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,31 +296,6 @@ public class MonthAchievementRate extends Fragment {
         });
 
 
-        AnimationSet downSet = new AnimationSet(true);
-        downSet.setInterpolator(new CycleInterpolator(1));
-        Animation down = new TranslateAnimation(0,0,0,20.0f);
-        down.setDuration(700);
-        downSet.addAnimation(down);
-        downSet.setFillAfter(false);
-        recyclerView.setAnimation(downSet);
-
-        List<ExpandableListAdapter> data = new ArrayList<>();
-
-
-        completeListBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(recyclerView.getVisibility()==View.VISIBLE){
-                    rateAdapter.closeSubView();
-                    recyclerView.scrollToPosition(0);
-                    recyclerView.setVisibility(View.GONE);
-                }else{
-                    recyclerView.clearAnimation();
-                    recyclerView.setVisibility(View.VISIBLE);
-                    recyclerView.startAnimation(downSet);
-                }
-            }
-        });
     }
 
 
@@ -344,15 +304,6 @@ public class MonthAchievementRate extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         getActivity().getMenuInflater().inflate(R.menu.rate_menu,menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-
-    public interface CalendarCallback {
-        void onCallback(List<ScheduleDTO> value);
-    }
-
-    public interface OnReturn {
-        void onReturnData(List<ScheduleDTO> value);
     }
 
     public void ReadDBData(Calandar.CalendarCallback calendarCallback) {
@@ -366,9 +317,6 @@ public class MonthAchievementRate extends Fragment {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
                             scheduleDTOSTemp.add(scheduleDTO);
-//                            if (scheduleDTO.getDate() != null) {
-//                            calendarCallback.onCallback(scheduleDTO.getDate());
-//                            }
                         }
                         calendarCallback.onCallback(scheduleDTOSTemp);
                     }

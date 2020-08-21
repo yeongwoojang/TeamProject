@@ -47,9 +47,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public class WeekAchievementRate extends Fragment {
-    RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
-    WeekRateAdapter weekRateAdapter;
+//    RecyclerView recyclerView;
+//    LinearLayoutManager linearLayoutManager;
+//    WeekRateAdapter weekRateAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     List<String> scheduleDTO = new ArrayList<>();
     List<String> thatDates = new ArrayList<>();
@@ -83,11 +83,11 @@ public class WeekAchievementRate extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_week_achievement_rate, container, false);
 
-        recyclerView = rootView.findViewById(R.id.recyclerView);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.addItemDecoration(
-                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
-        recyclerView.setLayoutManager(linearLayoutManager);
+//        recyclerView = rootView.findViewById(R.id.recyclerView);
+//        linearLayoutManager = new LinearLayoutManager(getActivity());
+//        recyclerView.addItemDecoration(
+//                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
+//        recyclerView.setLayoutManager(linearLayoutManager);
 
         TopText = rootView.findViewById(R.id.topMonthText);
         completeListBt = rootView.findViewById(R.id.completeListBt);
@@ -105,7 +105,7 @@ public class WeekAchievementRate extends Fragment {
         barChart.setClickable(true);
         barChart.setDragEnabled(false);
         barChart.setDoubleTapToZoomEnabled(false);
-        barChart.setDrawValueAboveBar(false);
+        barChart.setDrawValueAboveBar(true);
 
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getAxisLeft().setDrawGridLines(false);
@@ -325,9 +325,9 @@ public class WeekAchievementRate extends Fragment {
                 mlabels = new ArrayList<String>(reSetDates);
                 Collections.sort(mlabels);
 
-                weekRateAdapter = new WeekRateAdapter(getActivity(), mlabels, scheduleDTOS, month);
-                recyclerView.setAdapter(weekRateAdapter);
-                weekRateAdapter.notifyDataSetChanged();
+//                weekRateAdapter = new WeekRateAdapter(getActivity(), mlabels, scheduleDTOS, month);
+//                recyclerView.setAdapter(weekRateAdapter);
+//                weekRateAdapter.notifyDataSetChanged();
 
             }
         });
@@ -371,12 +371,12 @@ public class WeekAchievementRate extends Fragment {
             }
         });
 
-        completeListBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               recyclerView.setVisibility(View.VISIBLE);
-            }
-        });
+//        completeListBt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               recyclerView.setVisibility(View.VISIBLE);
+//            }
+//        });
 
     }
 

@@ -74,37 +74,37 @@
                 android:layout_height="70dp"
                 android:layout_marginTop="10dp" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
 
-                    <TextView
-                        android:id="@+id/completeListBt"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@drawable/recyclerview_border"
-                        android:fontFamily="@font/baemin"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="완료목록"
-                        android:textColor="@color/white"
-                        android:textSize="9pt"></TextView>
+<!--                    <TextView-->
+<!--                        android:id="@+id/completeListBt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        android:layout_marginLeft="16dp"-->
+<!--                        android:layout_marginRight="16dp"-->
+<!--                        android:background="@drawable/recyclerview_border"-->
+<!--                        android:fontFamily="@font/baemin"-->
+<!--                        android:gravity="center"-->
+<!--                        android:padding="8dp"-->
+<!--                        android:text="완료목록"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textSize="9pt"></TextView>-->
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/completeListBt"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:fadeScrollbars="false"
-                        android:scrollbarStyle="outsideInset"
-                        android:scrollbars="vertical"
-                        android:visibility="gone"
-                        ></androidx.recyclerview.widget.RecyclerView>
-                </RelativeLayout>
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/recyclerView"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_below="@+id/completeListBt"-->
+<!--                        android:layout_marginLeft="16dp"-->
+<!--                        android:layout_marginRight="16dp"-->
+<!--                        android:fadeScrollbars="false"-->
+<!--                        android:scrollbarStyle="outsideInset"-->
+<!--                        android:scrollbars="vertical"-->
+<!--                        android:visibility="gone"-->
+<!--                        ></androidx.recyclerview.widget.RecyclerView>-->
+<!--                </RelativeLayout>-->
         </LinearLayout>
     </FrameLayout>
     <ImageButton

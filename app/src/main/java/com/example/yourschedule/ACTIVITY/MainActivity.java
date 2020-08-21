@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-        t1 = (TextView) findViewById(R.id.test);
+        t1 = (TextView) findViewById(R.id.detailDate);
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
         loginBt = (SignInButton) findViewById(R.id.login_button);
         for (int i = 0; i < bottomTab.length; i++) {
