@@ -2,20 +2,21 @@ package com.example.yourschedule.ADAPTER;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.ListWidgetProvider;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
+import com.example.yourschedule.SharePref;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -106,6 +107,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         changeScheduleChkValue(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
+                                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
+                                        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
+                                                new ComponentName(activity, ListWidgetProvider.class));
+                                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listView);
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -140,6 +145,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         mDatabase.child(auth.getCurrentUser().getDisplayName())
                 .child(today.replace(".","-"))
                 .setValue(scheduleDTO);
+        SharePref sharePref = new SharePref();
+        sharePref.addToShardPref(activity,scheduleDTO);
     }
 
     public Boolean chkValue(String value) {

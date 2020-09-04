@@ -44,6 +44,13 @@ public class ScheduleDecorator  implements DayViewDecorator {
 //        view.addSpan(new ForegroundColorSpan(Color.parseColor("#6495ED")));
 //        view.addSpan(new DotSpan(3, Color.parseColor("#C71585")));
         view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.calendar_divide));
+        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.white)));
+        if(date.getCalendar().get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY){
+            view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.blue500)));
+        }else if(date.getCalendar().get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
+            view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.red300)));
+        }
+
 
     }
 

@@ -54,57 +54,37 @@
         android:layout_below="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         >
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/horizontalBar"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right"
+            >
+            <LinearLayout
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@color/white"
+                android:layout_marginRight="10dp"
+                >
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="각 주의 일~월"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:layout_marginRight="16dp"
+                android:fontFamily="@font/baemin"
+                ></TextView>
+        </LinearLayout>
+
     </LinearLayout>
-<!--    <LinearLayout-->
-<!--        android:layout_below="@+id/countTextLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        android:orientation="vertical"-->
-<!--        >-->
-<!--        <TextView-->
-<!--            android:id="@+id/completeListBt"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:padding="8dp"-->
-<!--            android:text="완료목록"-->
-<!--            android:gravity="center"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="9pt"-->
-<!--            android:fontFamily="@font/baemin"-->
-<!--            android:background="@drawable/recyclerview_border"-->
-<!--            ></TextView>-->
-<!--        <TextView-->
-<!--            android:id="@+id/notCompleteListText"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_marginLeft="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:padding="8dp"-->
-<!--            android:text="미완료목록"-->
-<!--            android:gravity="center"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="9pt"-->
-<!--            android:fontFamily="@font/baemin"-->
-<!--            android:background="@drawable/recyclerview_border"-->
-<!--            ></TextView>-->
-<!--    </LinearLayout>-->
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:layout_below="@id/countTextLayout"-->
-<!--        android:id="@+id/recyclerView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        android:visibility="gone"-->
-<!--        ></androidx.recyclerview.widget.RecyclerView>-->
+
 </LinearLayout>

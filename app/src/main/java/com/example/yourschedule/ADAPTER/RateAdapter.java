@@ -2,8 +2,10 @@ package com.example.yourschedule.ADAPTER;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -44,7 +46,7 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
 
     }
 
-    public void closeSubView(){
+    public void closeSubView() {
         selectedItems.delete(colsePosition);
 
         if (prePosition != -1) {
@@ -92,6 +94,7 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             recyclerView = (RecyclerView) itemView.findViewById(R.id.subRecycleView);
             thatDate = (TextView) itemView.findViewById(R.id.date);
         }
@@ -107,10 +110,9 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
         }
 
 
-
         @Override
         public void onClick(View view) {
-            colsePosition =0;
+            colsePosition = 0;
             scheduleOfDate.clear();
             for (int i = 0; i < scheduleDTOS.size(); i++) {
                 if (scheduleDTOS.get(i).getDate().substring(5).equals(thatDates.get(position))) {
@@ -144,12 +146,38 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
 
         private void changeVisibility(final boolean isExpanded) {
 
-            int dpValue =120;
+
+            int dpValue = 150;
             float d = activity.getResources().getDisplayMetrics().density;
             int height = (int) (dpValue * d);
 
             ValueAnimator va = isExpanded ? ValueAnimator.ofInt(0, height) : ValueAnimator.ofInt(height, 0);
             va.setDuration(600);
+            recyclerView.addOnItemTouchListener(
+                    new RecyclerView.OnItemTouchListener() {
+                        @Override
+                        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                            int action = e.getAction();
+                            switch (action) {
+                                case MotionEvent.ACTION_MOVE:
+                                    rv.getParent().requestDisallowInterceptTouchEvent(true);
+                                    break;
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+
+                        }
+
+                        @Override
+                        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+                        }
+                    }
+            );
             va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -165,6 +193,7 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
                     listSubViewAdapter.notifyItemChanged(position);
 
                     recyclerView.getLayoutParams().height = value;
+                    recyclerView.setNestedScrollingEnabled(false);
                     recyclerView.requestLayout();
                     recyclerView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 

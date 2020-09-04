@@ -2,19 +2,23 @@ package com.example.yourschedule.FRAGMENT;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.yourschedule.R;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class ScheduleList extends Fragment implements TodayList.logoutListener{
+public class ScheduleList extends Fragment implements TodayList.LogoutListener{
 
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
@@ -102,9 +106,32 @@ public class ScheduleList extends Fragment implements TodayList.logoutListener{
         }
     }
 
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            TodayList child = (TodayList) bundle.getSerializable("child");
+            FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+            fragmentTransaction.remove(child).commit();
+
+
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().remove(ScheduleList.this).commit();
+        }
+
+    }
+
     @Override
     public void finish(Fragment child) {
+        Log.d("asdf","adsfasdfsd");
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.remove(child).commit();
     }
+//        Log.d("asdfasdf","Asdfasdf");
+//        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+//        fragmentTransaction.remove(child).commit();
+//    }
 }

@@ -2,16 +2,18 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle"
     >
-    <cornerxs
-        android:topLeftRadius="1dp"
-        android:topRightRadius="1dp"
-        ></cornerxs>
+
+    <corners
+        android:radius="2dp"
+        ></corners>
 
     <stroke
         android:width="10dp"
-        android:color="@color/deepPurple400"
+        android:color="@color/gray200"
         ></stroke>
     <solid
-        android:color="@color/deepPurple400"
+        android:color="@color/gray200"
         ></solid>
+
+
 </shape>

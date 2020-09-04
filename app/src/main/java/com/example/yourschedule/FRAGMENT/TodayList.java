@@ -1,11 +1,13 @@
 package com.example.yourschedule.FRAGMENT;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,17 +28,16 @@ import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 //import com.example.yourschedule.ForRetrofit.RetrofitClient;
 import com.example.yourschedule.ForRetrofit.RetrofitClient;
+import com.example.yourschedule.SharePref;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,6 +63,13 @@ public class TodayList extends Fragment {
     FirebaseDatabase mDatabase;
     TextView t1;
     ImageView weatherIcon;
+    Button signOutBt;
+    TodayList child;
+    LogoutListener logoutListener;
+
+
+
+    private Fragment fragment;
 
     public TodayList newInstance() {
         return new TodayList();
@@ -77,12 +86,13 @@ public class TodayList extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         dayOfWeek = rootView.findViewById(R.id.dayOfWeek);
         dateText = rootView.findViewById(R.id.date);
-//        settingBt = rootView.findViewById(R.id.settingBt);
+        signOutBt = rootView.findViewById(R.id.signOutBt);
         settingViewLayout = rootView.findViewById(R.id.settingLayout);
         settingView = rootView.findViewById(R.id.settingDetail);
         closeSettingBt = rootView.findViewById(R.id.closeSettingBt);
         logoutBt = rootView.findViewById(R.id.logoutBt);
         shareBt = rootView.findViewById(R.id.shareBt);
+        fragment = this;
         return rootView;
     }
 
@@ -105,25 +115,28 @@ public class TodayList extends Fragment {
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         Log.d("today",today);
-        try{
-            mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-                                scheduleDTOS.add(scheduleDTO);
-                            }
-                            recyclerViewAdapter.notifyDataSetChanged();
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-        }catch (Exception e){
-
-        }
+        SharePref sharePref = new SharePref();
+        scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
+//        Log.d("asdf",scheduleDTOS.get(0).getSchedule()+"");
+//        try{
+//            mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
+//                    .addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+//                                scheduleDTOS.add(scheduleDTO);
+//                            }
+//                            recyclerViewAdapter.notifyDataSetChanged();
+//                        }
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//        }catch (Exception e){
+//
+//        }
 
 //           logoutBt.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -138,6 +151,27 @@ public class TodayList extends Fragment {
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
         recyclerView.setAdapter(recyclerViewAdapter);
 
+
+        signOutBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                fragment = new MonthAchievementRate().newInstance();
+//                fragmentTransaction.replace(R.id.testFragment, fragment);
+                ScheduleList scheduleList = new ScheduleList();
+                Bundle bundle = new Bundle();
+                bundle.putString("logout","ok");
+                bundle.putSerializable("child", (Serializable) child);
+                scheduleList.setArguments(bundle);
+                ft.detach(fragment);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
+//                logoutListener.finish(fragment);
+//                Intent intent = new Intent(getActivity(), MainActivity.class);
+//                startActivity(intent);
+            }
+        });
     }
     public void getCurrentWeather(String latitude, String longitude, String OPEN_WEATHER_MAP_KEY){
         RetrofitClient retrofitClient = new RetrofitClient();
@@ -205,8 +239,15 @@ public class TodayList extends Fragment {
             }
         });
     }
-    public interface logoutListener {
+
+
+    public interface LogoutListener {
         void finish(Fragment child);
     }
+
+    public void LogoutResult(LogoutListener logoutListener) {
+        this.logoutListener = logoutListener;
+    }
+
 
 }

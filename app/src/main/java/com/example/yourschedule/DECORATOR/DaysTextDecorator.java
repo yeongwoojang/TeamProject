@@ -1,34 +1,38 @@
 package com.example.yourschedule.DECORATOR;
-
 import android.content.Context;
-import android.graphics.Color;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 
-import com.example.yourschedule.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
 import java.util.Calendar;
+import java.util.Date;
 
-public class SaturDayDecorator implements DayViewDecorator {
+public class DaysTextDecorator implements DayViewDecorator {
+
+    String dayText;
+    Context context;
     private final Calendar calendar = Calendar.getInstance();
     private CalendarDay date;
-    Context context;
-    public SaturDayDecorator(Context context) {
+    public DaysTextDecorator(Context context,Date value,String dayText) {
+        date = CalendarDay.from(value);
+        this.dayText = dayText;
         this.context = context;
     }
+
+
+
     @Override
     public boolean shouldDecorate(CalendarDay day) {
+        Log.d("day",day+"");
         day.copyTo(calendar);
-        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
-        return weekDay == Calendar.SATURDAY;
+        return day.equals(date);
     }
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.blue500)));
-        view.addSpan(new RelativeSizeSpan(1.1f));
+        view.addSpan(new AddTextToDates(context,dayText));
+//        view.setDaysDisabled(true);
     }
 }

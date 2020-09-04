@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/complete_list_sc_style"
+    android:background="@drawable/update_popup_style"
     >
     <TextView
         android:id="@+id/questionText"

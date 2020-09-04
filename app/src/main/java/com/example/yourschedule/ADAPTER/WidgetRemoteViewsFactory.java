@@ -1,77 +1,56 @@
 package com.example.yourschedule.ADAPTER;
 
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import androidx.annotation.NonNull;
-
-import com.example.yourschedule.FRAGMENT.Calandar;
-import com.example.yourschedule.ListWidget;
-import com.example.yourschedule.OBJECT.Schdule;
+import com.example.yourschedule.ListWidgetProvider;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.yourschedule.SharePref;
 
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 
-    FirebaseAuth auth;
-    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     public Context context = null;
+    private List<String> scheduleList = new ArrayList<>();
+    private List<Boolean> chkList = new ArrayList<>();
     private int appWidgetId;
     String today;
     private int itemIndex;
+    private List<String> testList = new ArrayList<>();
 
-
-    public WidgetRemoteViewsFactory(Context context, Intent intent,ArrayList<ScheduleDTO> dataSet) {
-        Log.d("execute", "inFactory");
+    public WidgetRemoteViewsFactory(Context context, Intent intent) {
 
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        scheduleDTOS.addAll((ArrayList<ScheduleDTO>)intent.getSerializableExtra("dataSet"));
-        Log.d("dateSet",scheduleDTOS.size()+", "+dataSet.size()+"");
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-        today = transFormat.format(calendar.getTime());
-
     }
 
     @Override
     public void onCreate() {
-        Log.d("execute", "onCreateFactory");
-//            initializeData();
-        Log.d("execute", "AfterDataLoad");
+        Log.d("plaeseUpdate","onCreate!");
+
+        initializeData();
 
     }
 
     @Override
     public void onDataSetChanged() {
-        Log.d("execute", "onDataSetChanged()");
-//        initializeData();
+        Log.d("plaeseUpdate","onDataSetChanged!");
+
+        initializeData();
 
     }
 
@@ -82,52 +61,31 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
 
     @Override
     public int getCount() {
-//        Log.d("factory","getCount()");
-        return 5;
+        return scheduleList.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Log.d("execute", "getViewAt" + position);
+        Log.d("plaeseUpdate","getViewAt!");
+
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
-        Log.d("asd", getCount() + "");
-//        try {
-//            scheduleDTOS.clear();
-//            auth = FirebaseAuth.getInstance();
-//            mDatabase.child(auth.getCurrentUser().getDisplayName())
-//                    .addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-//                                if (scheduleDTO.getDate().equals(today)) {
-//                                    if (position > scheduleDTO.getSchedule().size() - 1) {
-//                                        remoteViews.setTextViewText(R.id.item, "");
-//                                    } else {
-//                                        remoteViews.setTextViewText(R.id.item, scheduleDTO.getSchedule().get(position));
-//                                    }
-//                                }
-////                                scheduleDTOS.add(scheduleDTO);
-//                            }
-//                            Log.d("execute", "dataLoadOK");
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                        }
-//                    });
-//        } catch (NullPointerException e) {
-//        }
-//        if (getCount() > 0) {
-//            remoteViews.setTextViewText(R.id.item, scheduleDTOS.get(itemIndex).getSchedule().get(position));
-//        } else {
-//            remoteViews.setTextViewText(R.id.item, "오늘은 계획이 없습니다.");
-//        }
-//        if(position>scheduleDTOS.get(0).getSchedule().size()-1){
-//            remoteViews.setTextViewText(R.id.item,  "");
-//        }else{
-//            remoteViews.setTextViewText(R.id.item,scheduleDTOS.get(0).getSchedule().get(position));
-//        }
+        remoteViews.setTextViewText(R.id.item, scheduleList.get(position));
+
+
+        if(chkList.get(position)!=false){
+            remoteViews.setImageViewResource(R.id.chkBt,R.drawable.baseline_check_circle_white_18);
+        }else{
+            remoteViews.setImageViewResource(R.id.chkBt,R.drawable.baseline_panorama_fish_eye_white_18);
+        }
+
+        Bundle extras = new Bundle();
+        extras.putInt(ListWidgetProvider.EXTRA_ITEM,position);
+        extras.putSerializable("chkList", (Serializable) chkList);
+        extras.putSerializable("scheduleList", (Serializable) scheduleList);
+        Intent fillIntent = new Intent();
+        fillIntent.putExtras(extras);
+        remoteViews.setOnClickFillInIntent(R.id.chkBt,fillIntent);
+
         return remoteViews;
     }
 
@@ -138,7 +96,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
 
     @Override
     public int getViewTypeCount() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -152,26 +110,23 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     }
 
 
-    private void initializeData() throws NullPointerException {
-
-//        try {
-//            scheduleDTOS.clear();
-//            auth = FirebaseAuth.getInstance();
-//            mDatabase.child(auth.getCurrentUser().getDisplayName())
-//                    .addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-//                                scheduleDTOS.add(scheduleDTO);
-//                            }
-//                            Log.d("execute", "dataLoadOK");
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                        }
-//                    });
-//        }catch (NullPointerException e){}
+    private void initializeData(){
+        scheduleList.clear();
+        testList.clear();
+        chkList.clear();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+        Calendar calendar = Calendar.getInstance();
+        String today = sdf.format(calendar.getTime());
+        SharePref sharePref = new SharePref();
+        scheduleDTOS = sharePref.getEntire(context);
+        for(int i=0;i<scheduleDTOS.size();i++){
+            if(scheduleDTOS.get(i).getDate().equals(today)){
+                scheduleList.addAll(scheduleDTOS.get(i).getSchedule());
+                chkList.addAll(scheduleDTOS.get(i).getIsComplete());
+                break;
+            }
+        }
+        Log.d("list",scheduleList+"");
+        Log.d("chk",chkList+"");
     }
 }

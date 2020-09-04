@@ -3,6 +3,7 @@ package com.example.yourschedule.ADAPTER;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -16,15 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yourschedule.ALARM.AlarmReceiver;
 import com.example.yourschedule.ALARM.DeviceBootReceiver;
+import com.example.yourschedule.ListWidgetProvider;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
+import com.example.yourschedule.SharePref;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -125,9 +127,12 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     }
 
 
-    //일정을 저장하는 메소드
-
     public void close() {
+        Log.d("calendar", calendar.getTime() + "");
+        SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        String alarmTime = date + " 12:00:00";
+        Log.d("alarmTime", alarmTime);
+
         auth = FirebaseAuth.getInstance();
         ScheduleDTO scheduleDTO = new ScheduleDTO();
         List<Boolean> isComplete = new ArrayList<>();
@@ -135,6 +140,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         for (int i = 0; i < scheduleListSet.size(); i++) {
             isComplete.add(false);
         }
+
 
         for (int i = 0; i < scheduleListSet.size(); i++) {
             for (int k = 0; k < scheduleSet.size(); k++) {
@@ -154,6 +160,15 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             scheduleDTO.setSchedule(scheduleListSet);
             scheduleDTO.setIsComplete(isComplete);
 
+//            Log.d("calendar", calendar.getTime() + "");
+//            SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+//            String alarmTime = date + " 12:00:00";
+//            Log.d("alarmTime", alarmTime);
+            try {
+                currentDateTime = fm.parse(alarmTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             mDatabase.child(auth.getCurrentUser().
                     getDisplayName())
@@ -161,6 +176,31 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     .setValue(scheduleDTO);
             notifyItemChanged(scheduleListSize);
 
+            Calendar insertCalendar = Calendar.getInstance();
+            insertCalendar.setTime(currentDateTime);
+            insertCalendar.setTimeInMillis(insertCalendar.getTimeInMillis());
+
+            Calendar currentCalendar = Calendar.getInstance();
+            SharedPreferences sharedPreferences = activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
+
+
+            if (sharedPreferences.contains(alarmTime.substring(0, 10)) == false &&
+                    (insertCalendar.compareTo(currentCalendar) == 1 ||
+                            insertCalendar.compareTo(currentCalendar) == 0)) {
+                Log.d("condition", "true");
+                SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+                editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
+                editor.apply();
+                diaryNotification(insertCalendar, alarmTime.substring(0, 10));
+            }
+
+
+            SharePref sharePref = new SharePref();
+            sharePref.addToShardPref(activity, scheduleDTO);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
+            int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
+                    new ComponentName(activity, ListWidgetProvider.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listView);
 
         } else {
             for (int i = 0; i < scheduleDTOS.size(); i++) {
@@ -169,9 +209,161 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                             getDisplayName()).
                             child(date.replace(".", "-"))
                             .removeValue();
+                    SharePref sharePref = new SharePref();
+                    sharePref.deleteShardPref(activity, date + "Key");
+//                    sharePref.deletaAll(activity);
+                    SharedPreferences sharedPreferences = activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    try {
+//                        editor.clear();
+                        editor.remove(alarmTime.substring(0, 10) + "");
+                        editor.apply();
+                        Log.d("remove!", "execute!");
+                        Log.d("remover", sharedPreferences.getAll() + "");
+                    } catch (Exception e) {
+                    }
+
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
+                    int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
+                            new ComponentName(activity, ListWidgetProvider.class));
+                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listView);
                     break;
                 }
+
             }
+
+        }
+    }
+
+    public void test1() {
+
+        String year = date.substring(0, 10).substring(0, 4);
+        String month = date.substring(0, 10).substring(5, 7);
+        String day = date.substring(8, 10);
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(Calendar.MINUTE , 34);
+
+
+        Boolean dailyNotify = true; // 무조건 알람을 사용
+
+        ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
+        PackageManager pm = activity.getPackageManager();
+
+        Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
+        alarmIntent.setAction("test");
+        alarmIntent.putExtra("requestCode", calendar1.getTimeInMillis());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                activity, (int) calendar1.getTimeInMillis(),
+                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+
+//         사용자가 알람을 허용했다면
+        if (dailyNotify) {
+            if (alarmManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar1.getTimeInMillis(), pendingIntent);
+                } else {
+                    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
+                }
+            }
+//             부팅 후 실행되는 리시버 사용가능하게 설정
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
+    }
+
+
+
+
+
+    public void test2() {
+
+        String year = date.substring(0, 10).substring(0, 4);
+        String month = date.substring(0, 10).substring(5, 7);
+        String day = date.substring(8, 10);
+
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(Calendar.MINUTE , 35);
+
+
+        Boolean dailyNotify = true; // 무조건 알람을 사용
+
+        ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
+        PackageManager pm = activity.getPackageManager();
+
+        Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
+        alarmIntent.setAction("test");
+        alarmIntent.putExtra("requestCode", calendar2.getTimeInMillis());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                activity, (int)calendar2.getTimeInMillis(),
+                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+
+//         사용자가 알람을 허용했다면
+        if (dailyNotify) {
+            if (alarmManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), pendingIntent);
+                } else {
+                    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
+                }
+            }
+//             부팅 후 실행되는 리시버 사용가능하게 설정
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
+    }
+
+
+
+
+
+
+    public void test3() {
+
+        String year = date.substring(0, 10).substring(0, 4);
+        String month = date.substring(0, 10).substring(5, 7);
+        String day = date.substring(8, 10);
+
+
+        Calendar calendar3 = Calendar.getInstance();
+        calendar3.set(Calendar.MINUTE , 36);
+
+
+        Boolean dailyNotify = true; // 무조건 알람을 사용
+
+        ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
+        PackageManager pm = activity.getPackageManager();
+
+        Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
+        alarmIntent.setAction("test");
+        alarmIntent.putExtra("requestCode", calendar3.getTimeInMillis());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                activity, (int)calendar3.getTimeInMillis(),
+                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+
+//         사용자가 알람을 허용했다면
+        if (dailyNotify) {
+            if (alarmManager != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar3.getTimeInMillis(), pendingIntent);
+                } else {
+                    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
+                }
+            }
+//             부팅 후 실행되는 리시버 사용가능하게 설정
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
         }
     }
 
@@ -184,80 +376,82 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         if (!newData.equals("")) {
             scheduleListSet.add(newData);
         }
-        for (int i = 0; i < scheduleListSet.size(); i++) {
-            isComplete.add(false);
-        }
+//            SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+////            editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
+//            editor.clear();
+//            editor.apply();
+//        for (int i = 0; i < scheduleListSet.size(); i++) {
+//            isComplete.add(false);
+//        }
+//
+//
+//        for (int i = 0; i < scheduleListSet.size(); i++) {
+//            for (int k = 0; k < scheduleSet.size(); k++) {
+//                if (scheduleListSet.get(i).equals(scheduleSet.get(k))) {
+//                    if (completeSet.get(k) == true) {
+//                        isComplete.set(i, true);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+
+//        if (scheduleListSet.size() > 0) {
+//            Arrays.asList(scheduleListSet);
+//            Arrays.asList(isComplete);
+//            scheduleDTO.setDate(date);
+//            scheduleDTO.setSchedule(scheduleListSet);
+//            scheduleDTO.setIsComplete(isComplete);
+//            Log.d("calendar", calendar.getTime() + "");
+//            SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+//            String alarmTime = date + " 12:00:00";
+//            Log.d("alarmTime", alarmTime);
+//            try {
+//                currentDateTime = fm.parse(alarmTime);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
 
 
-        for (int i = 0; i < scheduleListSet.size(); i++) {
-            for (int k = 0; k < scheduleSet.size(); k++) {
-                if (scheduleListSet.get(i).equals(scheduleSet.get(k))) {
-                    Log.d("DB_Data", "DB에 " + scheduleSet.get(k) + "가 저장되어 있습니다.");
-                    if (completeSet.get(k) == true) {
-                        isComplete.set(i, true);
-                        break;
-                    }
-                }
-            }
-        }
+//            Calendar insertCalendar = Calendar.getInstance();
+//            insertCalendar.setTime(currentDateTime);
+//            insertCalendar.setTimeInMillis(insertCalendar.getTimeInMillis());
+//
+//            Calendar currentCalendar = Calendar.getInstance();
+//            SharedPreferences sharedPreferences= activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
+//
+//
 
-        if (scheduleListSet.size() > 0) {
-            Arrays.asList(scheduleListSet);
-            Arrays.asList(isComplete);
-            scheduleDTO.setDate(date);
-            scheduleDTO.setSchedule(scheduleListSet);
-            scheduleDTO.setIsComplete(isComplete);
-            Log.d("calendar", calendar.getTime() + "");
-            SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String alarmTime = date + " 12:00:00";
-            Log.d("alarmTime", alarmTime);
-            try {
-                currentDateTime = fm.parse(alarmTime);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+//            if(sharedPreferences.contains(alarmTime.substring(0, 10))==false&&
+//                    (insertCalendar.compareTo(currentCalendar)==1||
+//                    insertCalendar.compareTo(currentCalendar)==0)){
+//                Log.d("condition","true");
+//                SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+//                editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
+//                editor.apply();
+//                diaryNotification(insertCalendar, alarmTime.substring(0, 10));
+//            }
+//            mDatabase.child(auth.getCurrentUser().
+//                    getDisplayName())
+//                    .child(date.replace(".", "-"))
+//                    .setValue(scheduleDTO);
+        notifyItemChanged(scheduleListSize);
+
+//            sharePref.addToShardPref(activity,scheduleDTO);
 
 
-            Calendar insertCalendar = Calendar.getInstance();
-            insertCalendar.setTime(currentDateTime);
-            insertCalendar.setTimeInMillis(insertCalendar.getTimeInMillis());
-
-            Calendar currentCalendar = Calendar.getInstance();
-//            long currentTime = currentCalendar.getTimeInMillis();
-
-            SharedPreferences sharedPreferences= activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
-//            long time = sharedPreferences.getLong(alarmTime.substring(0, 10) + "", calendar.getTimeInMillis());
-
-
-            //Preference에 설정한 값 저장
-
-            if(!sharedPreferences.contains(alarmTime.substring(0, 10))||
-                    (insertCalendar.compareTo(currentCalendar)==1||
-                    insertCalendar.compareTo(currentCalendar)==0)){
-                SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
-                editor.apply();
-                diaryNotification(insertCalendar, alarmTime.substring(0, 10));
-            }
-            mDatabase.child(auth.getCurrentUser().
-                    getDisplayName())
-                    .child(date.replace(".", "-"))
-                    .setValue(scheduleDTO);
-            notifyItemChanged(scheduleListSize);
-
-
-        } else {
-            for (int i = 0; i < scheduleDTOS.size(); i++) {
-                if (scheduleDTOS.get(i).getDate().equals(date)) {
-                    mDatabase.child(auth.getCurrentUser().
-                            getDisplayName()).
-                            child(date.replace(".", "-"))
-                            .removeValue();
-                    break;
-                }
-            }
-
-        }
+//        } else {
+//            for (int i = 0; i < scheduleDTOS.size(); i++) {
+//                if (scheduleDTOS.get(i).getDate().equals(date)) {
+//                    mDatabase.child(auth.getCurrentUser().
+//                            getDisplayName()).
+//                            child(date.replace(".", "-"))
+//                            .removeValue();
+//                    break;
+//                }
+//            }
+//
+//        }
     }
 
 
@@ -280,6 +474,8 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         SharedPreferences sharedPreferences = activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
         long time = sharedPreferences.getLong(aTime + "", calendar.getTimeInMillis());
+        Log.d("asfadfdasf", sharedPreferences.getAll() + "");
+        Log.d("asfadfdasf", time + "");
 
 //         사용자가 알람을 허용했다면
         if (dailyNotify) {

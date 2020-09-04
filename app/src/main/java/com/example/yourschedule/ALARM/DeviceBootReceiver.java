@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.SystemClock;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,35 +21,33 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd");
-        if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")) {
-            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-                context.startForegroundService(alarmIntent);
-            }else{
-                context.startService(alarmIntent);
-            }
+//        if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")) {
             Calendar calendar = Calendar.getInstance();
             String CompareDate = fm.format(calendar.getTime());
             String year = CompareDate.substring(0,10).substring(0,4);
             String month = CompareDate.substring(0,10).substring(5,7);
             String day = CompareDate.substring(8,10);
+            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+            alarmIntent.setAction("test");
+            alarmIntent.putExtra("requestCode", year + month + day);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(year+month+day),
+                    alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
             SharedPreferences sharedPreferences = context.getSharedPreferences("daily alarm", MODE_PRIVATE);
-                long millis = sharedPreferences.getLong(CompareDate, Calendar.getInstance().getTimeInMillis());
+            long millis = sharedPreferences.getLong(CompareDate, Calendar.getInstance().getTimeInMillis());
+            Toast.makeText(context, millis+"",Toast.LENGTH_LONG).show();
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(year+month+day), alarmIntent, 0);
-
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
             if (alarmManager != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(time,pendingIntent),pendingIntent);
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, millis, pendingIntent);
                 }else{
                     alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
                 }
             }
-        }
+//        }
     }
 
 }

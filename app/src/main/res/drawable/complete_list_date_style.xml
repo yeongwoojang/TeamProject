@@ -9,10 +9,10 @@
 
     <stroke
         android:width="10dp"
-        android:color="#AC97EB"
+        android:color="@color/deepPurple500"
         ></stroke>
     <solid
-        android:color="#AC97EB"
+        android:color="@color/deepPurple500"
         ></solid>
 
 

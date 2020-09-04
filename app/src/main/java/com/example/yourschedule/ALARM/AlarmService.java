@@ -1,43 +1,35 @@
 package com.example.yourschedule.ALARM;
 
-import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
-import android.widget.RemoteViews;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.example.yourschedule.ACTIVITY.MainActivity;
+import com.example.yourschedule.ACTIVITY.LoginActivity;
 import com.example.yourschedule.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class AlarmService extends Service {
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("execute","onCreate");
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        Log.d("execute","onTaskRemoved");
         String requestCode = rootIntent.getStringExtra("requestCode");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, LoginActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(requestCode),
@@ -72,6 +64,7 @@ public class AlarmService extends Service {
                 .setContentInfo("INFO")
                 .setContentIntent(pendingIntent);
         if (notificationManager != null) {
+
             // 노티피케이션 동작시킴
             notificationManager.notify(1234, builder.build());
         }
@@ -79,10 +72,12 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        Log.d("execute","onStartCommand");
+
         String requestCode = intent.getStringExtra("requestCode");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, LoginActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(requestCode),
@@ -118,9 +113,19 @@ public class AlarmService extends Service {
                 .setContentIntent(pendingIntent);
         if (notificationManager != null) {
             // 노티피케이션 동작시킴
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                startForeground(1234,builder.build());
+            }
             notificationManager.notify(1234, builder.build());
+
         }
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("execute","onDestroy");
     }
 
     @Nullable

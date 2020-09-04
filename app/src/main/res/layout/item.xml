@@ -5,14 +5,6 @@
     android:layout_height="wrap_content"
     >
 
-
-    <CheckBox
-        android:id="@+id/scheduleChk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@null"
-    android:drawableLeft="@drawable/check_box"
-        ></CheckBox>
     <TextView
         android:id="@+id/item"
         android:layout_width="match_parent"
@@ -20,10 +12,17 @@
         android:layout_weight="5"
         android:text="일정1"
         android:fontFamily="@font/baemin"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:padding="10dp"
         android:textSize="9pt"
         android:maxLines="8"
         android:inputType="textMultiLine"
         ></TextView>
+    <CheckBox
+        android:id="@+id/scheduleChk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableLeft="@drawable/check_box"
+        ></CheckBox>
 </LinearLayout>
