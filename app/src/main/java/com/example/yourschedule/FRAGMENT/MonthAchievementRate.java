@@ -108,7 +108,7 @@ public class MonthAchievementRate extends Fragment {
         xl.setDrawLabels(true);
         xl.setEnabled(true);
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.white));
+        xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.black));
         xl.setAxisMinimum(0f);
         xl.setAxisMaximum(10f);
         xl.setLabelCount(5,true);
@@ -204,7 +204,7 @@ public class MonthAchievementRate extends Fragment {
                 barData.setValueFormatter(new YValueFormatter());
                 barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
                 barChart.setData(barData);
-                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
+                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.deepPurple200));
 
             }
         });

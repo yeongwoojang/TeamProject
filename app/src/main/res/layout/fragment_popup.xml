@@ -87,6 +87,20 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:outlineProvider="none"
-        android:background="@color/transparent"></androidx.recyclerview.widget.RecyclerView>
+        android:background="@color/transparent">
+    </androidx.recyclerview.widget.RecyclerView>
+    <Button
+        android:id="@+id/commitBt"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:background="@drawable/button_shape"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="right"
+        android:text="저장"
+        android:textSize="15dp"
+        android:fontFamily="@font/baemin"
+        ></Button>
 
 </LinearLayout>

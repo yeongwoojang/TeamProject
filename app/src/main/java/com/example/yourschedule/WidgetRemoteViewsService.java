@@ -32,11 +32,6 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        Log.d("execute","onGetViewFactory");
-        ArrayList<ScheduleDTO> dataSet = new ArrayList<>();
-        dataSet.addAll(( ArrayList<ScheduleDTO>) intent.getSerializableExtra("dataSet"));
-        Log.d("dateSet","service : "+dataSet.size());
-        return new WidgetRemoteViewsFactory(this.getApplicationContext(),intent,dataSet);
-
+        return new WidgetRemoteViewsFactory(this.getApplicationContext(),intent);
     }
 }

@@ -36,6 +36,6 @@ public class TextSizeDecorator implements DayViewDecorator {
     public void decorate(DayViewFacade view) {
         view.addSpan(new StyleSpan(Typeface.NORMAL));
         view.addSpan(new RelativeSizeSpan(1.1f));
-        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.white)));
+        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.black)));
     }
 }

@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#36D2C2FD"
+    android:orientation="horizontal"
+    >
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:scaleType="fitXY"
+        android:background="@color/transparent"
+        android:src="@drawable/app_logo"
+        ></ImageView>
+    <TextView
+        android:id="@+id/widgetTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:padding="3dp"
+        android:background="@color/transparent"
+        android:text="Today Schedule"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:fontFamily="@font/baemin"
+        />
+</LinearLayout>
+
+    <ListView
+        android:id="@+id/widget_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#16000000"
+        />
+
+</LinearLayout>

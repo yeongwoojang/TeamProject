@@ -47,9 +47,6 @@ import java.util.HashSet;
 import java.util.List;
 
 public class WeekAchievementRate extends Fragment {
-//    RecyclerView recyclerView;
-//    LinearLayoutManager linearLayoutManager;
-//    WeekRateAdapter weekRateAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     List<String> scheduleDTO = new ArrayList<>();
     List<String> thatDates = new ArrayList<>();
@@ -83,15 +80,9 @@ public class WeekAchievementRate extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_week_achievement_rate, container, false);
 
-//        recyclerView = rootView.findViewById(R.id.recyclerView);
-//        linearLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.addItemDecoration(
-//                new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
-//        recyclerView.setLayoutManager(linearLayoutManager);
 
         TopText = rootView.findViewById(R.id.topMonthText);
         completeListBt = rootView.findViewById(R.id.completeListBt);
-//        notCompleteListBt = rootView.findViewById(R.id.notCompleteListText);
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
         fragment = this;
@@ -122,7 +113,7 @@ public class WeekAchievementRate extends Fragment {
         yl.setAxisMinimum(0f);
         yl.setAxisMaximum(100f);
         yl.setEnabled(false);
-        yl.setDrawLabels(false);
+        yl.setDrawLabels(true);
 
 
         YAxis yr = barChart.getAxisRight();
@@ -325,9 +316,6 @@ public class WeekAchievementRate extends Fragment {
                 mlabels = new ArrayList<String>(reSetDates);
                 Collections.sort(mlabels);
 
-//                weekRateAdapter = new WeekRateAdapter(getActivity(), mlabels, scheduleDTOS, month);
-//                recyclerView.setAdapter(weekRateAdapter);
-//                weekRateAdapter.notifyDataSetChanged();
 
             }
         });

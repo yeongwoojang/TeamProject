@@ -36,14 +36,22 @@
         android:layout_alignParentBottom="true"
         >
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/bottom_tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bottom_tab_shape"
-                    app:tabIndicatorColor="@color/oneMinus"
-                    app:tabIndicator="@drawable/custom_indicator"
-                    >
-                </com.google.android.material.tabs.TabLayout>
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            ></com.google.android.gms.common.SignInButton>
+
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/bottom_tabs"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@drawable/bottom_tab_shape"-->
+<!--            app:tabIndicatorColor="@color/oneMinus"-->
+<!--            app:tabIndicator="@drawable/custom_indicator"-->
+<!--            >-->
+<!--        </com.google.android.material.tabs.TabLayout>-->
     </FrameLayout>
 </RelativeLayout>

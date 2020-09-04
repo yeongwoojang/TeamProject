@@ -11,6 +11,7 @@ import com.example.yourschedule.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.Date;
 
@@ -18,20 +19,23 @@ public class TodayDecorator implements DayViewDecorator {
 
     private CalendarDay date;
     Context context;
+
     public TodayDecorator(Context context) {
         date = CalendarDay.today();
         this.context = context;
     }
+
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        return date != null &&day.equals(date);
+        return date != null && day.equals(date);
     }
 
     @Override
     public void decorate(DayViewFacade view) {
         view.addSpan(new StyleSpan(Typeface.NORMAL));
-        view.addSpan(new RelativeSizeSpan(1.2f));
-        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.gray700)));
+        view.addSpan(new DotSpan(5, context.getResources().getColor(R.color.deepPurple700)));
+        view.addSpan(new RelativeSizeSpan(1.4f));
+//        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.black)));
 
     }
 
