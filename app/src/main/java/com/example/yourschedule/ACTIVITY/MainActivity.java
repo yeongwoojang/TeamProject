@@ -2,6 +2,7 @@ package com.example.yourschedule.ACTIVITY;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
@@ -11,29 +12,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yourschedule.FRAGMENT.Calandar;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
+import com.example.yourschedule.FRAGMENT.TodayList;
 import com.example.yourschedule.FRAGMENT.WeatherOfWeek;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.auth.TokenData;
 import com.google.android.material.tabs.TabLayout;
 
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,42 +38,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TodayList.LogoutListener {
 
-
-    public static final int RC_SIGN_IN = 10;
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
     private final int FRAGMENT3 = 2;
-    private final String[] bottomTab = {"일정관리", "주간날씨", "추가예정"};
+    private final String[] bottomTab = {"일정", "날씨", "추가예정"};
     private TabLayout bottom_tabs;
-    private TextView t1;
-    private SignInButton loginBt;
-
 
     private Context mContext = null;
-    private GoogleSignInClient mGoogleSignInClient;
-    private FirebaseAuth mAuth;
-    List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
-    FirebaseAuth auth;
-    DatabaseReference mReference;
+    private List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+    private FirebaseAuth auth;
+    private DatabaseReference mReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+
+    private long backKeyPressed = 0;
+    private Toast backBtClickToast;
+
+    private ImageView titleImage, appLogoImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        startActivity(new Intent(this, LoadingActivity.class));
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
         mContext = this;
 
-        t1 = (TextView) findViewById(R.id.detailDate);
+        titleImage = (ImageView)findViewById(R.id.title_image);
+        appLogoImage = (ImageView)findViewById(R.id.app_logo_image);
+
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
-        loginBt = (SignInButton) findViewById(R.id.login_button);
         for (int i = 0; i < bottomTab.length; i++) {
             bottom_tabs.addTab(bottom_tabs.newTab());
             TextView view = new TextView(this);
@@ -95,47 +87,30 @@ public class MainActivity extends AppCompatActivity {
         bottom_tabs.getTabAt(FRAGMENT2).setTag(FRAGMENT2);
         bottom_tabs.getTabAt(FRAGMENT3).setTag(FRAGMENT3);
 
-        mAuth = FirebaseAuth.getInstance();
-        Log.d("test", mAuth.getCurrentUser() + "");
-        if (mAuth.getCurrentUser() != null) {
-            loginBt.setVisibility(View.INVISIBLE);
-            bottom_tabs.setVisibility(View.VISIBLE);
-            callFragment(FRAGMENT1);
-            ReadDBData(new Calandar.CalendarCallback() {
-                @Override
-                public void onCallback(List<ScheduleDTO> value) {
-                    scheduleDTOS.clear();
-                    if(value.size()!=0){
-                        scheduleDTOS = value;
-                        SharePref sharePref = new SharePref();
-                        sharePref.FireBaseToSharedPref(mContext,scheduleDTOS);
-                    }
-                }
-            });
-        } else {
-            loginBt.setVisibility(View.VISIBLE);
-            bottom_tabs.setVisibility(View.INVISIBLE);
-        }
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        loginBt.setOnClickListener(new View.OnClickListener() {
+        ReadDBData(new Calandar.CalendarCallback() {
             @Override
-            public void onClick(View view) {
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-
+            public void onCallback(List<ScheduleDTO> value) {
+                scheduleDTOS.clear();
+                if (value.size() != 0) {
+                    scheduleDTOS = value;
+                    SharePref sharePref = new SharePref();
+                    sharePref.FireBaseToSharedPref(mContext, scheduleDTOS);
+                }
             }
         });
-
-
+        SharePref sharePref = new SharePref();
+        List<ScheduleDTO> s = new ArrayList<>();
+        s.addAll(sharePref.getEntire(getApplicationContext()));
+        for(int i=0;i<s.size();i++){
+            Log.d("storedData",s.get(i).getSchedule()+"");
+        }
         bottom_tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                titleImage.setVisibility(View.INVISIBLE);
+                appLogoImage.setVisibility(View.INVISIBLE);
                 switch (Integer.parseInt(String.valueOf(tab.getTag()))) {
                     case FRAGMENT1:
                         // '버튼1' 클릭 시 '프래그먼트1' 호출
@@ -160,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                titleImage.setVisibility(View.INVISIBLE);
+                appLogoImage.setVisibility(View.INVISIBLE);
                 switch (Integer.parseInt(String.valueOf(tab.getTag()))) {
                     case FRAGMENT1:
                         // '버튼1' 클릭 시 '프래그먼트1' 호출
@@ -180,41 +157,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account.getIdToken());
-            } catch (ApiException e) {
-
+    public void onBackPressed() {
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            Log.d("logout",auth.getCurrentUser().getDisplayName()+" is On");
+            if (System.currentTimeMillis() > backKeyPressed + 2000) {
+                backKeyPressed = System.currentTimeMillis();
+                backBtClickToast = Toast.makeText(this, "\'뒤로가기\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+                backBtClickToast.show();
+                return;
             }
+            if (System.currentTimeMillis() <= backKeyPressed + 2000) {
+                finishAffinity();
+                backBtClickToast.cancel();
+            }
+        } else {
+            Log.d("logout",auth.getCurrentUser().getDisplayName()+" is Out");
+
+
+            super.onBackPressed();
         }
-    }
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d("Login", user.getDisplayName() + "Login, Success!");
-                            loginBt.setVisibility(View.INVISIBLE);
-                            bottom_tabs.setVisibility(View.VISIBLE);
-//                            callFragment(FRAGMENT1);
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                        }
-                    }
-                });
     }
 
     private void callFragment(int frament_no) {
@@ -266,5 +228,13 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    @Override
+    public void finish(Fragment child) {
+        Log.d("logout","enter finishMethod()");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.remove(child).commit();
+        finish();
     }
 }

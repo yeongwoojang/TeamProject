@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,13 +7,6 @@
     android:orientation="vertical"
     android:background="@color/gray200"
     tools:context=".ACTIVITY.LoginActivity">
-    <FrameLayout
-        android:id="@+id/main_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_above="@+id/bottom_layout"
-        >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,15 +20,6 @@
             android:layout_marginBottom="20dp"
             android:src="@drawable/app_logo"
             ></ImageView>
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bottom_layout"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        >
-
         <com.google.android.gms.common.SignInButton
             android:id="@+id/login_button"
             android:layout_width="match_parent"
@@ -43,15 +27,4 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             ></com.google.android.gms.common.SignInButton>
-
-<!--        <com.google.android.material.tabs.TabLayout-->
-<!--            android:id="@+id/bottom_tabs"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="@drawable/bottom_tab_shape"-->
-<!--            app:tabIndicatorColor="@color/oneMinus"-->
-<!--            app:tabIndicator="@drawable/custom_indicator"-->
-<!--            >-->
-<!--        </com.google.android.material.tabs.TabLayout>-->
-    </FrameLayout>
-</RelativeLayout>
+</LinearLayout>

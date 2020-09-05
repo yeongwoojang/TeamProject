@@ -56,13 +56,27 @@
                 android:background="@color/transparent"
                 ></ImageView>
         </LinearLayout>
-        <Button
-            android:id="@+id/signOutBt"
+        <ImageButton
+            android:id="@+id/settingBt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:background="@color/deepPurple300"
-            ></Button>
+            android:src="@drawable/baseline_menu_white_18"
+            android:background="@color/transparent"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            ></ImageButton>
+<!--        <Button-->
+<!--            android:id="@+id/signOutBt"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="right"-->
+<!--            android:text="로그아웃"-->
+<!--            android:fontFamily="@font/baemin"-->
+<!--            android:background="@drawable/sign_out_bt_form"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginRight="5dp"-->
+<!--            ></Button>-->
     </FrameLayout>
 
     <LinearLayout
@@ -90,7 +104,7 @@
         android:id="@+id/settingDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#EC224160"
+        android:background="@color/gray300"
         android:layout_gravity="end"
         android:gravity="start"
     >
@@ -109,24 +123,34 @@
             android:orientation="vertical"
             android:layout_below="@+id/closeSettingBt"
             >
-
-            <TextView
-                android:id="@+id/shareBt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="공유하기"
-                android:fontFamily="@font/baemin"
-                android:textColor="#ffffff"
-                android:textSize="24dp"
-                android:padding="10dp"
-                />
+<!--            <Button-->
+<!--                android:id="@+id/signOutBt"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:text="로그아웃"-->
+<!--                android:fontFamily="@font/baemin"-->
+<!--                android:background="@drawable/sign_out_bt_form"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:layout_marginRight="5dp"-->
+<!--                ></Button>-->
+<!--            <TextView-->
+<!--                android:id="@+id/shareBt"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="공유하기"-->
+<!--                android:fontFamily="@font/baemin"-->
+<!--                android:textColor="#ffffff"-->
+<!--                android:textSize="24dp"-->
+<!--                android:padding="10dp"-->
+<!--                />-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#ffffff"
                 ></LinearLayout>
         <TextView
-            android:id="@+id/logoutBt"
+            android:id="@+id/signOutBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="로그아웃"

@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="@font/baemin"
+                android:fontFamily="@font/nanumsquare_eb"
                 android:gravity="center_horizontal"
                 android:paddingTop="15dp"
                 android:text="날짜"
@@ -56,14 +56,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/one"
+            android:background="@color/gray300"
             >
             <EditText
                 android:id="@+id/textEd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/storeBt"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textColorHighlight="@color/white"
                 android:backgroundTint="@color/transparent"
                 android:textSize="12dp"></EditText>
@@ -89,18 +89,4 @@
         android:outlineProvider="none"
         android:background="@color/transparent">
     </androidx.recyclerview.widget.RecyclerView>
-    <Button
-        android:id="@+id/commitBt"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:background="@drawable/button_shape"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_gravity="right"
-        android:text="저장"
-        android:textSize="15dp"
-        android:fontFamily="@font/baemin"
-        ></Button>
-
 </LinearLayout>

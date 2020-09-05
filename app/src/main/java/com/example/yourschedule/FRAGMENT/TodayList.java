@@ -54,20 +54,23 @@ public class TodayList extends Fragment {
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
-    ImageButton settingBt,closeSettingBt;
-    TextView dayOfWeek,dateText,logoutBt,shareBt;
+    ImageButton settingBt, closeSettingBt;
+    TextView dayOfWeek, dateText,signOutBt;
     DrawerLayout settingViewLayout;
     View settingView;
-    String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
+    String[] days = new String[]{"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
     FirebaseAuth auth;
     FirebaseDatabase mDatabase;
     TextView t1;
+
     ImageView weatherIcon;
-    Button signOutBt;
-    TodayList child;
     LogoutListener logoutListener;
 
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        logoutListener = (LogoutListener) context;
+    }
 
     private Fragment fragment;
 
@@ -80,18 +83,19 @@ public class TodayList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_today_list, container, false);
         t1 = rootView.findViewById(R.id.detailDate);
         weatherIcon = rootView.findViewById(R.id.weatherIcon);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         dayOfWeek = rootView.findViewById(R.id.dayOfWeek);
         dateText = rootView.findViewById(R.id.date);
+        settingBt = rootView.findViewById(R.id.settingBt);
         signOutBt = rootView.findViewById(R.id.signOutBt);
         settingViewLayout = rootView.findViewById(R.id.settingLayout);
         settingView = rootView.findViewById(R.id.settingDetail);
         closeSettingBt = rootView.findViewById(R.id.closeSettingBt);
-        logoutBt = rootView.findViewById(R.id.logoutBt);
-        shareBt = rootView.findViewById(R.id.shareBt);
+//        logoutBt = rootView.findViewById(R.id.logoutBt);
+//        shareBt = rootView.findViewById(R.id.shareBt);
         fragment = this;
         return rootView;
     }
@@ -104,17 +108,17 @@ public class TodayList extends Fragment {
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
-        getCurrentWeather("37.57","126.98","7d25a27ec2361e69dcbb04d90feb6b23");
+        getCurrentWeather("37.57", "126.98", "7d25a27ec2361e69dcbb04d90feb6b23");
 //        getDailyForecast("37.57","126.98","metric","hourly","7","kr","7d25a27ec2361e69dcbb04d90feb6b23");
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = transFormat.format(calendar.getTime());
-        String day = days[calendar.get(Calendar.DAY_OF_WEEK)-1];
+        String day = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
         dayOfWeek.setText(day);
         dateText.setText(today);
         mDatabase = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
-        Log.d("today",today);
+        Log.d("today", today);
         SharePref sharePref = new SharePref();
         scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
 //        Log.d("asdf",scheduleDTOS.get(0).getSchedule()+"");
@@ -148,37 +152,44 @@ public class TodayList extends Fragment {
 //
 //            }
 //        });
-        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS,today);
+        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS, today);
         recyclerView.setAdapter(recyclerViewAdapter);
 
+        settingBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingViewLayout.openDrawer(settingView);
+            }
+        });
+        closeSettingBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingViewLayout.closeDrawer(settingView);
+            }
+        });
 
         signOutBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                fragment = new MonthAchievementRate().newInstance();
-//                fragmentTransaction.replace(R.id.testFragment, fragment);
-                ScheduleList scheduleList = new ScheduleList();
-                Bundle bundle = new Bundle();
-                bundle.putString("logout","ok");
-                bundle.putSerializable("child", (Serializable) child);
-                scheduleList.setArguments(bundle);
-                ft.detach(fragment);
-                ft.addToBackStack(null);
-                ft.commitAllowingStateLoss();
-//                logoutListener.finish(fragment);
+//                Log.d("logout",auth.getCurrentUser().getDisplayName()+"a");
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                ft.remove(fragment);
+//                ft.addToBackStack(null);
+//                ft.commitAllowingStateLoss();
+                logoutListener.finish(getParentFragment());
 //                Intent intent = new Intent(getActivity(), MainActivity.class);
 //                startActivity(intent);
             }
         });
     }
-    public void getCurrentWeather(String latitude, String longitude, String OPEN_WEATHER_MAP_KEY){
+
+    public void getCurrentWeather(String latitude, String longitude, String OPEN_WEATHER_MAP_KEY) {
         RetrofitClient retrofitClient = new RetrofitClient();
         retrofitClient.buildRetrofit();
         Call<JsonObject> response = retrofitClient.getInstance()
                 .buildRetrofit()
-                .getCurrentWeather(latitude,longitude,OPEN_WEATHER_MAP_KEY);
+                .getCurrentWeather(latitude, longitude, OPEN_WEATHER_MAP_KEY);
         response.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -190,7 +201,7 @@ public class TodayList extends Fragment {
 //                    String weather = jsonObject.getString("description");
 //                    t1.setText(weather);
                     String icon = jsonObject.getString("icon");
-                    String iconUrl = "http://openweathermap.org/img/wn/" + icon+ ".png";
+                    String iconUrl = "http://openweathermap.org/img/wn/" + icon + ".png";
                     Glide.with(getActivity()).load(iconUrl).into(weatherIcon);
 
                 } catch (JSONException e) {
@@ -205,12 +216,12 @@ public class TodayList extends Fragment {
         });
     }
 
-    public void getDailyForecast(String latitude, String longitude,String units,String exclude,String cnt,String lang,String OPEN_WEATHER_MAP_KEY){
+    public void getDailyForecast(String latitude, String longitude, String units, String exclude, String cnt, String lang, String OPEN_WEATHER_MAP_KEY) {
         RetrofitClient retrofitClient = new RetrofitClient();
         retrofitClient.buildRetrofit();
         Call<JsonObject> response = retrofitClient.getInstance()
                 .buildRetrofit()
-                .getDailyForecast(latitude,longitude,units,exclude,cnt,lang,OPEN_WEATHER_MAP_KEY);
+                .getDailyForecast(latitude, longitude, units, exclude, cnt, lang, OPEN_WEATHER_MAP_KEY);
         response.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

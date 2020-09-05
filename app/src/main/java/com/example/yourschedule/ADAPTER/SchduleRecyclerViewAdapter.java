@@ -43,6 +43,11 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
+
+    final private static String ALARM_CANCLE_ACTION = "alarmCancleACTION";
+    final private static String ALARM_CALL_ACTION = "alarmCallAction";
+
+
     private Activity activity;
     private String date;
     private List<ScheduleDTO> scheduleDTOS;
@@ -128,10 +133,10 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
 
     public void close() {
-        Log.d("calendar", calendar.getTime() + "");
         SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         String alarmTime = date + " 12:00:00";
-        Log.d("alarmTime", alarmTime);
+
+        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
 
         auth = FirebaseAuth.getInstance();
         ScheduleDTO scheduleDTO = new ScheduleDTO();
@@ -191,7 +196,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                 SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
                 editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
                 editor.apply();
-                diaryNotification(insertCalendar, alarmTime.substring(0, 10));
+                diaryNotification(insertCalendar, alarmManager,alarmTime.substring(0, 10));
             }
 
 
@@ -224,6 +229,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
                     } catch (Exception e) {
                     }
 
+                    cancleAlarm(alarmManager, alarmTime.substring(0, 10));
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
                     int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
                             new ComponentName(activity, ListWidgetProvider.class));
@@ -376,6 +382,8 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         if (!newData.equals("")) {
             scheduleListSet.add(newData);
         }
+
+
 //            SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
 ////            editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
 //            editor.clear();
@@ -454,8 +462,21 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 //        }
     }
 
+    void cancleAlarm(AlarmManager alarmManager, String aTime){
+        String year = aTime.substring(0, 10).substring(0, 4);
+        String month = aTime.substring(0, 10).substring(5, 7);
+        String day = aTime.substring(8, 10);
 
-    void diaryNotification(Calendar calendar, String aTime) {
+//        AlarmManager alarmManager = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
+        Intent alarmCancleIntent = new Intent(activity,AlarmReceiver.class);
+        alarmCancleIntent.setAction(ALARM_CALL_ACTION);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity,Integer.parseInt(year + month + day),
+                alarmCancleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+
+    }
+
+    void diaryNotification(Calendar calendar,AlarmManager alarmManager, String aTime) {
         String year = aTime.substring(0, 10).substring(0, 4);
         String month = aTime.substring(0, 10).substring(5, 7);
         String day = aTime.substring(8, 10);
@@ -464,18 +485,16 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
         PackageManager pm = activity.getPackageManager();
 
-        Intent alarmIntent = new Intent(activity, AlarmReceiver.class);
-        alarmIntent.setAction("test");
-        alarmIntent.putExtra("requestCode", year + month + day);
+        Intent alarmCallIntent = new Intent(activity, AlarmReceiver.class);
+        alarmCallIntent.setAction(ALARM_CALL_ACTION);
+        alarmCallIntent.putExtra("requestCode", year + month + day);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 activity, Integer.parseInt(year + month + day),
-                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmCallIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+//        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
         SharedPreferences sharedPreferences = activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
         long time = sharedPreferences.getLong(aTime + "", calendar.getTimeInMillis());
-        Log.d("asfadfdasf", sharedPreferences.getAll() + "");
-        Log.d("asfadfdasf", time + "");
 
 //         사용자가 알람을 허용했다면
         if (dailyNotify) {
