@@ -18,7 +18,7 @@ import com.example.yourschedule.R;
 import com.google.android.material.tabs.TabLayout;
 
 
-public class ScheduleList extends Fragment implements TodayList.LogoutListener{
+public class ScheduleList extends Fragment{
 
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
@@ -111,25 +111,22 @@ public class ScheduleList extends Fragment implements TodayList.LogoutListener{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("frag","scOnViewCreated");
         Bundle bundle = getArguments();
         if(bundle!=null){
+            Log.d("Asdfsdf","dasfsadf");
             TodayList child = (TodayList) bundle.getSerializable("child");
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
             fragmentTransaction.remove(child).commit();
 
 
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().remove(ScheduleList.this).commit();
+            fragmentManager.beginTransaction().remove(this).commit();
         }
 
     }
 
-    @Override
-    public void finish(Fragment child) {
-        Log.d("asdf","adsfasdfsd");
-        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.remove(child).commit();
-    }
+
 //        Log.d("asdfasdf","Asdfasdf");
 //        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 //        fragmentTransaction.remove(child).commit();

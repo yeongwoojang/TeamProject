@@ -47,7 +47,6 @@ public class PopupFragment extends DialogFragment {
     SchduleRecyclerViewAdapter adapter;
     ForDrawerListener forDrawerListener;
     ImageButton storeBt,closeBt;
-    Button commitBt;
     TextView dateView;
     RecyclerView schduleRecyclerView;
     EditText inputSchedule;
@@ -89,7 +88,6 @@ public class PopupFragment extends DialogFragment {
         dateView = view.findViewById(R.id.dateView);
         storeBt = view.findViewById(R.id.storeBt);
         closeBt = view.findViewById(R.id.closeBt);
-        commitBt = view.findViewById(R.id.commitBt);
         inputSchedule = view.findViewById(R.id.textEd);
 
         schduleRecyclerView = view.findViewById(R.id.scheduleList);
@@ -119,16 +117,6 @@ public class PopupFragment extends DialogFragment {
 
         dateView.setText(date);
 
-
-        commitBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("Touch","on!");
-                adapter.test1();
-                adapter.test2();
-                adapter.test3();
-            }
-        });
         storeBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
