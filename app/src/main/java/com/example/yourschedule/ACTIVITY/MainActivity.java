@@ -1,6 +1,7 @@
 package com.example.yourschedule.ACTIVITY;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -8,23 +9,22 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.yourschedule.FRAGMENT.Calandar;
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.example.yourschedule.FRAGMENT.TodayList;
 import com.example.yourschedule.FRAGMENT.WeatherOfWeek;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
-import com.google.android.gms.auth.TokenData;
 import com.google.android.material.tabs.TabLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,10 +35,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements TodayList.LogoutListener {
+
 
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
@@ -55,23 +58,27 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
     private long backKeyPressed = 0;
     private Toast backBtClickToast;
 
-    private ImageView titleImage, appLogoImage;
+    private ImageView titleImage, appLogoImage,runningImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        startActivity(new Intent(this, LoadingActivity.class));
+        Log.d("oncreate","onCreate");
         setContentView(R.layout.activity_main);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mContext = this;
-
+        auth = FirebaseAuth.getInstance();
         titleImage = (ImageView)findViewById(R.id.title_image);
         appLogoImage = (ImageView)findViewById(R.id.app_logo_image);
-
+        runningImage = (ImageView)findViewById(R.id.running_image);
         bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
+
+
+
+
         for (int i = 0; i < bottomTab.length; i++) {
             bottom_tabs.addTab(bottom_tabs.newTab());
             TextView view = new TextView(this);
@@ -87,23 +94,22 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
         bottom_tabs.getTabAt(FRAGMENT2).setTag(FRAGMENT2);
         bottom_tabs.getTabAt(FRAGMENT3).setTag(FRAGMENT3);
 
-        ReadDBData(new Calandar.CalendarCallback() {
-            @Override
-            public void onCallback(List<ScheduleDTO> value) {
-                scheduleDTOS.clear();
-                if (value.size() != 0) {
-                    scheduleDTOS = value;
-                    SharePref sharePref = new SharePref();
-                    sharePref.FireBaseToSharedPref(mContext, scheduleDTOS);
-                }
-            }
-        });
-        SharePref sharePref = new SharePref();
-        List<ScheduleDTO> s = new ArrayList<>();
-        s.addAll(sharePref.getEntire(getApplicationContext()));
-        for(int i=0;i<s.size();i++){
-            Log.d("storedData",s.get(i).getSchedule()+"");
-        }
+
+//        SharePref sharePref = new SharePref();
+//        sharePref.deletaAll(getApplicationContext());
+
+
+//        readDatabase(new DataLoadCallBack() {
+//            @Override
+//            public void onCallback(List<ScheduleDTO> value) {
+//                scheduleDTOS.clear();
+//                if (value.size() != 0) {
+//                    scheduleDTOS = value;
+//                    sharePref.FireBaseToSharedPref(mContext, scheduleDTOS);
+//                }
+//            }
+//        });
+
         bottom_tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
 
@@ -158,9 +164,7 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
 
     @Override
     public void onBackPressed() {
-        auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            Log.d("logout",auth.getCurrentUser().getDisplayName()+" is On");
             if (System.currentTimeMillis() > backKeyPressed + 2000) {
                 backKeyPressed = System.currentTimeMillis();
                 backBtClickToast = Toast.makeText(this, "\'뒤로가기\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
@@ -205,36 +209,48 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
         }
     }
 
-    public void ReadDBData(Calandar.CalendarCallback calendarCallback) {
-        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
-        mReference = mDatabase.getReference("일정");
-        mReference.keepSynced(true);
-        auth = FirebaseAuth.getInstance();
-        mReference.child(auth.getCurrentUser().getDisplayName())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        scheduleDTOSTemp.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-                            scheduleDTOSTemp.add(scheduleDTO);
-//                            Log.d("snapShot",snapshot.getKey());
-                        }
-                        calendarCallback.onCallback(scheduleDTOSTemp);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-    }
+//    public void readDatabase(DataLoadCallBack dataLoadCallBack) {
+//        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
+//        mReference = mDatabase.getReference("일정");
+//        auth = FirebaseAuth.getInstance();
+//        Log.d("readUserName",auth.getCurrentUser().getDisplayName());
+//        mReference.child(auth.getCurrentUser().getDisplayName())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        scheduleDTOSTemp.clear();
+//
+//
+//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+//                                scheduleDTOSTemp.add(scheduleDTO);
+//                        }
+//
+//                        dataLoadCallBack.onCallback(scheduleDTOSTemp);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
 
     @Override
     public void finish(Fragment child) {
-        Log.d("logout","enter finishMethod()");
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.remove(child).commit();
+        Intent goToLogInActivity = new Intent(getApplicationContext(),LoginActivity.class);
+
+        startActivity(goToLogInActivity);
+        Intent intent = getIntent();
+        setResult(RESULT_OK,intent);
         finish();
     }
+
+
+    //    public interface DataLoadCallBack {
+//        void onCallback(List<ScheduleDTO> value);
+//    }
+
 }

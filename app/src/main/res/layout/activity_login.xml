@@ -4,27 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/gray200"
+    android:orientation="vertical"
     tools:context=".ACTIVITY.LoginActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/app_title"></ImageView>
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/app_logo"></ImageView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp">
+
+            <Button
+                android:id="@+id/facebook_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/blue600"
+                android:text=" 로그인"
+                android:textColor="@color/white" />
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/app_title"
-            ></ImageView>
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginLeft="16dp"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/app_logo"
-            ></ImageView>
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            ></com.google.android.gms.common.SignInButton>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/flogo"></ImageView>
+
+
+
+    </FrameLayout>
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"></com.google.android.gms.common.SignInButton>
 </LinearLayout>

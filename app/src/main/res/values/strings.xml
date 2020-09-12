@@ -52,4 +52,10 @@
     <string name="scrollViewEnd">END OF SCROLLVIEW</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+
+    <string name="facebook_app_id">250727806076218</string>
+    <string name="fb_login_protocol_scheme">fb250727806076218</string>
+
+
 </resources>

@@ -2,7 +2,9 @@ package com.example.yourschedule.FRAGMENT;
 
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Gravity;
@@ -18,6 +20,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ExpandableListAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -29,6 +32,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.ACTIVITY.DataLoadingActivity;
+import com.example.yourschedule.ACTIVITY.MainActivity;
 import com.example.yourschedule.ADAPTER.RateAdapter;
 import com.example.yourschedule.DECORATOR.CustomTypeFaceSpan;
 import com.example.yourschedule.Formatter.YValueFormatter;
@@ -50,6 +55,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -66,6 +72,7 @@ public class MonthAchievementRate extends Fragment {
     private int completeCount;
     private int entireCount;
     private Fragment fragment;
+    private ImageView runningImage;
 
     String month;
 
@@ -91,6 +98,7 @@ public class MonthAchievementRate extends Fragment {
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
         menuBt = rootView.findViewById(R.id.menuBt);
+        runningImage = rootView.findViewById(R.id.running_image);
         fragment = this;
 
 
@@ -154,7 +162,18 @@ public class MonthAchievementRate extends Fragment {
 
         TopText.setText(month);
 
-        ReadDBData(new Calandar.CalendarCallback() {
+//        runningImage.setImageResource(R.drawable.frame_animation);
+        final AnimationDrawable drawable =
+                (AnimationDrawable) runningImage.getBackground();
+        drawable.start();
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable()  {
+            public void run() {
+                drawable.stop();
+            }
+        }, 1000); // 0.5초후
+
+        ReadDBData(new DataLoadingActivity.DataLoadCallBack() {
             @SuppressLint("ResourceType")
             @Override
             public void onCallback(List<ScheduleDTO> value) {
@@ -306,7 +325,7 @@ public class MonthAchievementRate extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void ReadDBData(Calandar.CalendarCallback calendarCallback) {
+    public void ReadDBData(DataLoadingActivity.DataLoadCallBack dataLoadCallBack) {
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
         mDatabase.child(auth.getCurrentUser().getDisplayName())
@@ -318,7 +337,7 @@ public class MonthAchievementRate extends Fragment {
                             ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
                             scheduleDTOSTemp.add(scheduleDTO);
                         }
-                        calendarCallback.onCallback(scheduleDTOSTemp);
+                        dataLoadCallBack.onCallback(scheduleDTOSTemp);
                     }
 
                     @Override

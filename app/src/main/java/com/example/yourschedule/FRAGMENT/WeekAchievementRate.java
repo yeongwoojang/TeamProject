@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.yourschedule.ACTIVITY.DataLoadingActivity;
+import com.example.yourschedule.ACTIVITY.MainActivity;
 import com.example.yourschedule.ADAPTER.RateAdapter;
 import com.example.yourschedule.ADAPTER.WeekRateAdapter;
 import com.example.yourschedule.Formatter.WeekValueFormatter;
@@ -134,7 +136,7 @@ public class WeekAchievementRate extends Fragment {
         //이번달
         TopText.setText(month);
 
-        ReadDBData(new Calandar.CalendarCallback() {
+        ReadDBData(new DataLoadingActivity.DataLoadCallBack() {
             @SuppressLint("ResourceType")
             @Override
             public void onCallback(List<ScheduleDTO> value) {
@@ -370,7 +372,7 @@ public class WeekAchievementRate extends Fragment {
 
 
 
-    public void ReadDBData(Calandar.CalendarCallback calendarCallback) {
+    public void ReadDBData(DataLoadingActivity.DataLoadCallBack dataLoadCallBack) {
         List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
         mDatabase.child(auth.getCurrentUser().getDisplayName())
@@ -385,7 +387,7 @@ public class WeekAchievementRate extends Fragment {
 //                            calendarCallback.onCallback(scheduleDTO.getDate());
 //                            }
                         }
-                        calendarCallback.onCallback(scheduleDTOSTemp);
+                        dataLoadCallBack.onCallback(scheduleDTOSTemp);
                     }
 
                     @Override

@@ -32,6 +32,7 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        Log.d("MYSERVICE","ON");
         return new WidgetRemoteViewsFactory(this.getApplicationContext(),intent);
     }
 }

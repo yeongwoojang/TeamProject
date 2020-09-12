@@ -3,7 +3,11 @@ package com.example.yourschedule.FRAGMENT;
 
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -14,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -81,7 +86,8 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     private Fragment fffff;
     private TextView detailDate;
     private Button modifyBt, deleteScheduleBt;
-
+    private ImageView monthImage;
+    AnimationDrawable animationDrawable;
 
     public Calandar newInstance() {
         return new Calandar();
@@ -103,6 +109,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView = rootView.findViewById(R.id.calendar);
         recyclerView = rootView.findViewById(R.id.drawerListView);
         modifyBt = rootView.findViewById(R.id.modifyBt);
+        monthImage = rootView.findViewById(R.id.month_image);
         detailDate = rootView.findViewById(R.id.detailDate);
         fffff = this;
 
@@ -115,12 +122,18 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
 
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);;
+        recyclerView.setLayoutManager(linearLayoutManager);
         materialCalendarView.setOnDateChangedListener(this);
         materialCalendarView.setOnMonthChangedListener(this);
         materialCalendarView.setTopbarVisible(true);
 
         slidingUpPanelLayout.setPanelHeight(0);
+        GradientDrawable drawable =
+
+                (GradientDrawable) getActivity().getDrawable(R.drawable.round_image_form);
+
+        monthImage.setBackground(drawable);
+        monthImage.setClipToOutline(true);
 
 
         TodayDecorator todayDecorator = new TodayDecorator(getActivity());
@@ -180,7 +193,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         SharePref sharePref = new SharePref();
         scheduleDTOS = sharePref.getEntire(getActivity());
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-        for(int i=0;i<scheduleDTOS.size();i++){
+        for (int i = 0; i < scheduleDTOS.size(); i++) {
             if (scheduleDTOS.get(i).getDate() != null) {
                 try {
                     scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()), getActivity());
@@ -190,7 +203,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 materialCalendarView.addDecorators(scheduleDecorator);
             }
         }
-
 
 
     }
@@ -218,7 +230,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 recyclerView.setAdapter(drawerListAdapter);
                 recyclerView.setVisibility(View.VISIBLE);
                 break;
-            }else{
+            } else {
                 modifyBt.setText("INSERT");
             }
         }
@@ -305,15 +317,64 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
     }
 
+
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        Log.d("month", date.getMonth() + "");
+        switch (date.getMonth() + 1) {
+            case 1:
+                monthImage.setImageResource(R.drawable.bkg_01_january);
+                break;
+            case 2:
+                monthImage.setImageResource(R.drawable.bkg_02_february);
+                break;
+            case 3:
+                monthImage.setImageResource(R.drawable.bkg_03_march);
+                break;
+            case 4:
+                monthImage.setImageResource(R.drawable.bkg_04_april);
+                break;
+            case 5:
+                monthImage.setImageResource(R.drawable.bkg_05_may);
+                break;
+            case 6:
+                monthImage.setImageResource(R.drawable.bkg_06_june);
+                break;
+            case 7:
+                monthImage.setImageResource(R.drawable.bkg_07_july);
+                break;
+            case 8:
+                monthImage.setImageResource(R.drawable.bkg_08_august);
+                break;
+            case 9:
+                monthImage.setImageResource(R.drawable.bkg_09_september);
+                break;
+            case 10:
+                monthImage.setImageResource(R.drawable.bkg_10_october);
+                break;
+            case 11:
+                monthImage.setImageResource(R.drawable.bkg_11_november);
+                break;
+            case 12:
+                monthImage.setImageResource(R.drawable.bkg_12_december);
+                break;
+        }
+
     }
 
-    public interface CalendarCallback {
-        void onCallback(List<ScheduleDTO> value);
+
+
+    void animate() {
+//        animationDrawable.start();
+
+//        if(animationDrawable.isRunning()) {
+//            animationDrawable.stop();
+//        }
+//        monthImage.setVisibility(View.VISIBLE);
+//        animationDrawable.start();
+//        animationDrawable.setOneShot(true);
+
     }
-
-
 }
 
 

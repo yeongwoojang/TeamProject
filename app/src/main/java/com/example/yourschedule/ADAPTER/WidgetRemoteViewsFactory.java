@@ -1,22 +1,29 @@
 package com.example.yourschedule.ADAPTER;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.yourschedule.AlarmManagerBroadcastReceiver;
+import com.example.yourschedule.FRAGMENT.Calandar;
 import com.example.yourschedule.ListWidgetProvider;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -30,6 +37,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     String today;
     private int itemIndex;
     private List<String> testList = new ArrayList<>();
+    private List<Boolean> testChk = new ArrayList<>();
 
     public WidgetRemoteViewsFactory(Context context, Intent intent) {
 
@@ -40,7 +48,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
 
     @Override
     public void onCreate() {
-        Log.d("plaeseUpdate","onCreate!");
+        Log.d("execute", "onCreate!");
 
         initializeData();
 
@@ -48,8 +56,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
 
     @Override
     public void onDataSetChanged() {
-        Log.d("plaeseUpdate","onDataSetChanged!");
-
+        Log.d("execute", "onDataSetChanged!");
         initializeData();
 
     }
@@ -66,25 +73,25 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Log.d("plaeseUpdate","getViewAt!");
+        Log.d("execute", "getViewAt()");
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
         remoteViews.setTextViewText(R.id.item, scheduleList.get(position));
 
 
-        if(chkList.get(position)!=false){
-            remoteViews.setImageViewResource(R.id.chkBt,R.drawable.baseline_check_circle_white_18);
-        }else{
-            remoteViews.setImageViewResource(R.id.chkBt,R.drawable.baseline_panorama_fish_eye_white_18);
+        if (chkList.get(position) != false) {
+            remoteViews.setImageViewResource(R.id.chkBt, R.drawable.baseline_check_circle_white_18);
+        } else {
+            remoteViews.setImageViewResource(R.id.chkBt, R.drawable.baseline_panorama_fish_eye_white_18);
         }
 
         Bundle extras = new Bundle();
-        extras.putInt(ListWidgetProvider.EXTRA_ITEM,position);
+        extras.putInt(ListWidgetProvider.EXTRA_ITEM, position);
         extras.putSerializable("chkList", (Serializable) chkList);
         extras.putSerializable("scheduleList", (Serializable) scheduleList);
         Intent fillIntent = new Intent();
         fillIntent.putExtras(extras);
-        remoteViews.setOnClickFillInIntent(R.id.chkBt,fillIntent);
+        remoteViews.setOnClickFillInIntent(R.id.chkBt, fillIntent);
 
         return remoteViews;
     }
@@ -110,23 +117,69 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     }
 
 
-    private void initializeData(){
+    private void initializeData() {
+        Log.d("initial", "update");
+        SharePref sharePref = new SharePref();
+        scheduleDTOS.clear();
         scheduleList.clear();
         testList.clear();
         chkList.clear();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
         Calendar calendar = Calendar.getInstance();
         String today = sdf.format(calendar.getTime());
-        SharePref sharePref = new SharePref();
+        Log.d("today", today);
         scheduleDTOS = sharePref.getEntire(context);
-        for(int i=0;i<scheduleDTOS.size();i++){
-            if(scheduleDTOS.get(i).getDate().equals(today)){
-                scheduleList.addAll(scheduleDTOS.get(i).getSchedule());
-                chkList.addAll(scheduleDTOS.get(i).getIsComplete());
+
+
+        for (int i = 0; i < scheduleDTOS.size(); i++) {
+                if(scheduleDTOS.get(i).getDate().equals(today)){
+                    scheduleList.addAll(scheduleDTOS.get(i).getSchedule());
+                    chkList.addAll(scheduleDTOS.get(i).getIsComplete());
+                    break;
+                }
+        }
+
+
+        List<String> test = new ArrayList<>();
+        List<Boolean> testchk = new ArrayList<>();
+        test.add(calendar.getTimeInMillis() + "");
+        testchk.add(false);
+        for (int i = 0; i < scheduleDTOS.size(); i++) {
+            if (scheduleDTOS.get(i).getDate().equals(today)) {
+                testList.addAll(test);
+                testChk.addAll(testchk);
                 break;
             }
         }
-        Log.d("list",scheduleList+"");
-        Log.d("chk",chkList+"");
+        Log.d("list", scheduleList + "");
+        Log.d("chk", chkList + "");
+    }
+    void dayUpdate(Context context) {
+        Calendar midnight = Calendar.getInstance();
+//        Date now = new Date();
+//        midnight.setTime(now);
+        midnight.setTimeInMillis(System.currentTimeMillis());
+//        midnight.add(Calendar.DAY_OF_MONTH, 0);
+//        midnight.set(Calendar.HOUR, 16);
+        midnight.set(Calendar.HOUR_OF_DAY, 16);
+        midnight.set(Calendar.MINUTE, 38);
+        midnight.set(Calendar.SECOND, 0);
+//        midnight.set(Calendar.AM_PM, Calendar.PM);
+
+
+        Intent alarmIntent = new Intent(context, AlarmManagerBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context, (int) midnight.getTimeInMillis(),
+                alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, midnight.getTimeInMillis(), pendingIntent);
+            } else {
+                alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, midnight.getTimeInMillis(), pendingIntent);
+            }
+        }
     }
 }
