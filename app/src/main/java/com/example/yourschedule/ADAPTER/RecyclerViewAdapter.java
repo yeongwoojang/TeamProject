@@ -99,28 +99,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                        holder.scheduleChk.
 //                        contact.setChk(checkBox.isChecked());
 //                        schdules.get(posotion).setChk(checkBox.isChecked());
+                        changeScheduleChkValue(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
+                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
+                        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
+                                new ComponentName(activity, ListWidgetProvider.class));
+                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listView);
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                        builder.setTitle("일정완료?")
-                                .setMessage("선택하세요")
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        changeScheduleChkValue(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
-                                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
-                                        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
-                                                new ComponentName(activity, ListWidgetProvider.class));
-                                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listView);
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        checkBox.setChecked(chkValue(checkBox.getTag().toString()));
-                                    }
-                                })
-                                .create()
-                                .show();
+
+
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+//                        builder.setTitle("일정완료?")
+//                                .setMessage("선택하세요")
+//                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        changeScheduleChkValue(scheduleDTOS.get(itemIndex).getSchedule().get(posotion));
+//                                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
+//                                        int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
+//                                                new ComponentName(activity, ListWidgetProvider.class));
+//                                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listView);
+//                                    }
+//                                })
+//                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        checkBox.setChecked(chkValue(checkBox.getTag().toString()));
+//                                    }
+//                                })
+//                                .create()
+//                                .show();
                     }
                 });
 

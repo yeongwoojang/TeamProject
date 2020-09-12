@@ -1,7 +1,11 @@
 package com.example.yourschedule.FRAGMENT;
 
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,12 +28,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
+import com.example.yourschedule.ListWidgetProvider;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.ADAPTER.RecyclerViewAdapter;
 //import com.example.yourschedule.ForRetrofit.RetrofitClient;
 import com.example.yourschedule.ForRetrofit.RetrofitClient;
 import com.example.yourschedule.SharePref;
+import com.example.yourschedule.WidgetRemoteViewsService;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;
@@ -55,7 +63,7 @@ public class TodayList extends Fragment {
     RecyclerViewAdapter recyclerViewAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
     ImageButton settingBt, closeSettingBt;
-    TextView dayOfWeek, dateText,signOutBt;
+    TextView dayOfWeek, dateText,signOutBt,appUnlinkBt;
     DrawerLayout settingViewLayout;
     View settingView;
     String[] days = new String[]{"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
@@ -91,6 +99,7 @@ public class TodayList extends Fragment {
         dateText = rootView.findViewById(R.id.date);
         settingBt = rootView.findViewById(R.id.settingBt);
         signOutBt = rootView.findViewById(R.id.signOutBt);
+        appUnlinkBt = rootView.findViewById(R.id.appUnlinkBt);
         settingViewLayout = rootView.findViewById(R.id.settingLayout);
         settingView = rootView.findViewById(R.id.settingDetail);
         closeSettingBt = rootView.findViewById(R.id.closeSettingBt);
@@ -172,14 +181,18 @@ public class TodayList extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-//                Log.d("logout",auth.getCurrentUser().getDisplayName()+"a");
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                ft.remove(fragment);
-//                ft.addToBackStack(null);
-//                ft.commitAllowingStateLoss();
+                SharePref sharePref = new SharePref();
+                sharePref.deletaAll(getActivity());
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+                int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
+                        new ComponentName(getActivity(), ListWidgetProvider.class));
+                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_listView);
                 logoutListener.finish(getParentFragment());
-//                Intent intent = new Intent(getActivity(), MainActivity.class);
-//                startActivity(intent);
+            }
+        });
+        appUnlinkBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
             }
         });
     }

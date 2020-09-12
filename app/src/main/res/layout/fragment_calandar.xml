@@ -24,17 +24,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/calendar_form"
         android:layout_marginTop="10dp"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"
         >
+        <ImageView
+            android:id="@+id/month_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bkg_11_november"
+            android:layout_marginTop="4dp"
+            android:adjustViewBounds="true"
+            ></ImageView>
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/calendar_form"
             app:mcv_headerTextAppearance="@style/CalendarWidgetHeader"
             app:mcv_selectionColor="@color/mcv_selectionColor"
             android:focusedMonthDateColor="@color/black"
@@ -42,6 +51,7 @@
             app:mcv_arrowColor="@color/black"
             app:mcv_weekDayTextAppearance="@style/CalendarWidgetWeekDay"
             app:mcv_calendarMode="month"
+
             ></com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
     </LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ACTIVITY.DataLoadingActivity"
+    android:orientation="vertical"
+    android:background="@color/gray200"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="계정정보 읽는중"
+        android:textColor="@color/black"
+        android:textSize="40dp"
+        android:gravity="center"
+        android:fontFamily="@font/baemin"
+        android:layout_marginTop="100dp"
+        ></TextView>
+    <ImageView
+        android:id="@+id/running_image"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:background="@drawable/frame_animation"
+        android:layout_centerInParent="true"
+        ></ImageView>
+
+
+</RelativeLayout>

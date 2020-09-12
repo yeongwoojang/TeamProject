@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -165,10 +166,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             scheduleDTO.setSchedule(scheduleListSet);
             scheduleDTO.setIsComplete(isComplete);
 
-//            Log.d("calendar", calendar.getTime() + "");
-//            SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-//            String alarmTime = date + " 12:00:00";
-//            Log.d("alarmTime", alarmTime);
             try {
                 currentDateTime = fm.parse(alarmTime);
             } catch (ParseException e) {
@@ -189,19 +186,19 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
             SharedPreferences sharedPreferences = activity.getSharedPreferences("daily alarm", MODE_PRIVATE);
 
 
-            if (sharedPreferences.contains(alarmTime.substring(0, 10)) == false &&
+            if (sharedPreferences.contains(alarmTime.substring(0,10)) == false &&
                     (insertCalendar.compareTo(currentCalendar) == 1 ||
                             insertCalendar.compareTo(currentCalendar) == 0)) {
                 Log.d("condition", "true");
                 SharedPreferences.Editor editor = activity.getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
                 editor.putLong(alarmTime.substring(0, 10) + "", (long) insertCalendar.getTimeInMillis());
                 editor.apply();
-                diaryNotification(insertCalendar, alarmManager,alarmTime.substring(0, 10));
+                diaryNotification(insertCalendar, alarmManager, alarmTime.substring(0, 10));
             }
-
 
             SharePref sharePref = new SharePref();
             sharePref.addToShardPref(activity, scheduleDTO);
+
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(activity);
             int appWidgetIds[] = appWidgetManager.getAppWidgetIds(
                     new ComponentName(activity, ListWidgetProvider.class));
@@ -249,7 +246,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         String day = date.substring(8, 10);
 
         Calendar calendar1 = Calendar.getInstance();
-        calendar1.set(Calendar.MINUTE , 34);
+        calendar1.set(Calendar.MINUTE, 34);
 
 
         Boolean dailyNotify = true; // 무조건 알람을 사용
@@ -283,9 +280,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     }
 
 
-
-
-
     public void test2() {
 
         String year = date.substring(0, 10).substring(0, 4);
@@ -294,7 +288,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
 
         Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(Calendar.MINUTE , 35);
+        calendar2.set(Calendar.MINUTE, 35);
 
 
         Boolean dailyNotify = true; // 무조건 알람을 사용
@@ -306,7 +300,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         alarmIntent.setAction("test");
         alarmIntent.putExtra("requestCode", calendar2.getTimeInMillis());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                activity, (int)calendar2.getTimeInMillis(),
+                activity, (int) calendar2.getTimeInMillis(),
                 alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
@@ -328,10 +322,6 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     }
 
 
-
-
-
-
     public void test3() {
 
         String year = date.substring(0, 10).substring(0, 4);
@@ -340,7 +330,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
 
         Calendar calendar3 = Calendar.getInstance();
-        calendar3.set(Calendar.MINUTE , 36);
+        calendar3.set(Calendar.MINUTE, 36);
 
 
         Boolean dailyNotify = true; // 무조건 알람을 사용
@@ -352,7 +342,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         alarmIntent.setAction("test");
         alarmIntent.putExtra("requestCode", calendar3.getTimeInMillis());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                activity, (int)calendar3.getTimeInMillis(),
+                activity, (int) calendar3.getTimeInMillis(),
                 alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
@@ -376,11 +366,15 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     public void addSchedule(String newData) {
 
         auth = FirebaseAuth.getInstance();
-        ScheduleDTO scheduleDTO = new ScheduleDTO();
-        List<Boolean> isComplete = new ArrayList<>();
+//        ScheduleDTO scheduleDTO = new ScheduleDTO();
+//        List<Boolean> isComplete = new ArrayList<>();
         scheduleListSet.removeAll(Collections.singleton(""));
         if (!newData.equals("")) {
-            scheduleListSet.add(newData);
+            if (!scheduleListSet.contains(newData)) {
+                scheduleListSet.add(newData);
+            } else {
+                Toast.makeText(activity, "이미 기입한 내용입니다.", Toast.LENGTH_SHORT).show();
+            }
         }
 
 
@@ -462,21 +456,21 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 //        }
     }
 
-    void cancleAlarm(AlarmManager alarmManager, String aTime){
+    void cancleAlarm(AlarmManager alarmManager, String aTime) {
         String year = aTime.substring(0, 10).substring(0, 4);
         String month = aTime.substring(0, 10).substring(5, 7);
         String day = aTime.substring(8, 10);
 
 //        AlarmManager alarmManager = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
-        Intent alarmCancleIntent = new Intent(activity,AlarmReceiver.class);
+        Intent alarmCancleIntent = new Intent(activity, AlarmReceiver.class);
         alarmCancleIntent.setAction(ALARM_CALL_ACTION);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity,Integer.parseInt(year + month + day),
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, Integer.parseInt(year + month + day),
                 alarmCancleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(pendingIntent);
 
     }
 
-    void diaryNotification(Calendar calendar,AlarmManager alarmManager, String aTime) {
+    void diaryNotification(Calendar calendar, AlarmManager alarmManager, String aTime) {
         String year = aTime.substring(0, 10).substring(0, 4);
         String month = aTime.substring(0, 10).substring(5, 7);
         String day = aTime.substring(8, 10);
@@ -484,6 +478,7 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
 
         ComponentName receiver = new ComponentName(activity, DeviceBootReceiver.class);
         PackageManager pm = activity.getPackageManager();
+
 
         Intent alarmCallIntent = new Intent(activity, AlarmReceiver.class);
         alarmCallIntent.setAction(ALARM_CALL_ACTION);
