@@ -210,6 +210,7 @@ public class TodayList extends Fragment {
                     JSONArray jsonArray;
                     JSONObject jsonObject = new JSONObject(response.body().toString());
                     jsonArray = jsonObject.getJSONArray("weather");
+                    Log.d("sfdgsdgsdfg",jsonArray+"");
                     jsonObject = jsonArray.getJSONObject(0);
 //                    String weather = jsonObject.getString("description");
 //                    t1.setText(weather);
@@ -224,7 +225,7 @@ public class TodayList extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                Log.d("Ddfgsdg","실패");
             }
         });
     }

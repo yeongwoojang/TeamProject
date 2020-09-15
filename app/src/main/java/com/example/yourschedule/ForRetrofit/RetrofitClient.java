@@ -1,5 +1,8 @@
 package com.example.yourschedule.ForRetrofit;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+
 import org.json.JSONObject;
 
 import retrofit2.Retrofit;
@@ -9,17 +12,16 @@ public class RetrofitClient{
 
     private RetrofitClient retrofitClient;
     private JSONObject jsonObject;
-    public RetrofitClient getInstance(){
+    public RetrofitClient getInstance( ){
         retrofitClient = new RetrofitClient();
         return retrofitClient;
     }
 
     public RetrofitService buildRetrofit(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.openweathermap.org/data/2.5/")
+                .baseUrl("https://api.openweathermap.org/data/2.5/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         RetrofitService service = retrofit.create(RetrofitService.class);
         return service;
     }
