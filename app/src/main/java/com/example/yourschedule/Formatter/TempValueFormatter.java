@@ -14,7 +14,7 @@ public class TempValueFormatter extends ValueFormatter {
     @Override
     public String getFormattedValue(float value) {
 
-        return value+"℃";
+        return (int)value+"℃";
 
     }
 

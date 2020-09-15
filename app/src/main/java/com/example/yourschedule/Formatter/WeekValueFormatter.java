@@ -10,6 +10,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class WeekValueFormatter extends IndexAxisValueFormatter {
 
