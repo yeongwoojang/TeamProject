@@ -1,8 +1,14 @@
 package com.example.yourschedule.FRAGMENT;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +22,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -58,11 +66,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class WeatherOfWeek extends Fragment {
+import static com.facebook.FacebookSdk.getApplicationContext;
 
-    private Retrofit mRetrofit;
-    private RetrofitService mRetrofitService;
-    private Call<JsonObject> mCallWeekWeather;
+public class WeatherOfWeek extends Fragment {
 
 
     private LineChart lineChart, lineChart2;
@@ -72,8 +78,14 @@ public class WeatherOfWeek extends Fragment {
 
     private RelativeLayout loadingPage;
     private LinearLayout completeLoadDataPage;
-    View rootView;
-    LinearLayout daily;
+
+
+    double longitude;
+    double latitude;
+
+    private static final int GPS_ENABLE_REQUEST_CODE = 2001;
+    private static final int PERMISSIONS_REQUEST_CODE = 100;
+    String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
 
 
@@ -85,8 +97,6 @@ public class WeatherOfWeek extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRetrofitInit();
-//        callWeekWeather();
         Log.d("json", "WeatherOfWeek onCreate");
 
     }
@@ -95,7 +105,7 @@ public class WeatherOfWeek extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d("json", "WeatherOfWeek onCreateView");
-        rootView = inflater.inflate(R.layout.fragment_weather_of_week, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_weather_of_week, container, false);
         runningImage = rootView.findViewById(R.id.running_image);
         loadingPage = rootView.findViewById(R.id.weatherLoading);
         completeLoadDataPage = rootView.findViewById(R.id.completeWeatherPage);
@@ -119,8 +129,34 @@ public class WeatherOfWeek extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final LocationManager lm = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
 
-        getWeekWeather("37.56826", "126.977829", "minutely,current", "metric", "650b8470989fceb2f4a95b3241a76d65");
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( getActivity(), new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    0 );
+        }
+        else{
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            String provider = location.getProvider();
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+            Log.d("sfdgsdfg",longitude+" : "+ latitude);
+
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+        }
+
+
+
+
+        getWeekWeather( String.valueOf(latitude), String.valueOf(longitude), "minutely,current", "metric", "650b8470989fceb2f4a95b3241a76d65");
     }
 
     public void getWeekWeather(String latitude, String longitude, String exclude, String units, String OPEN_WEATHER_MAP_KEY) {
@@ -258,7 +294,9 @@ public class WeatherOfWeek extends Fragment {
                     yLAxis.setDrawLabels(false);
                     yLAxis.setDrawAxisLine(false);
                     yLAxis.setDrawGridLines(false);
-                    yLAxis.setAxisMaximum(100f);
+                    yLAxis.setAxisMaximum(45f);
+                    yLAxis.setAxisMinimum(-30f);
+
 
                     YAxis yRAxis = lineChart.getAxisRight();
                     yRAxis.setDrawLabels(false);
@@ -271,6 +309,7 @@ public class WeatherOfWeek extends Fragment {
                     lineChart.setDoubleTapToZoomEnabled(false);
                     lineChart.setDrawGridBackground(false);
                     lineChart.setDescription(description);
+                    lineChart.getLegend().setFormSize(0);
                     lineChart.invalidate();
                     //여기까지
 
@@ -279,9 +318,6 @@ public class WeatherOfWeek extends Fragment {
                     ArrayList<Entry> entries2 = new ArrayList<>();
                     for (int i = 0; i <hourList.size(); i++) {
                             entries2.add(new Entry(i, Float.parseFloat(hourTemperatureList.get(i))));
-
-                        Log.d("fsdgdfg",hourList.get(i)+" : "+hourTemperatureList.get(i)+"");
-                        Log.d("entry",entries2.get(i).getX()+"");
                     }
 
 
@@ -310,21 +346,19 @@ public class WeatherOfWeek extends Fragment {
                     xAxis2.setValueFormatter(new TimeValueFormatter(hourList));
                     xAxis2.setDrawAxisLine(false);
                     xAxis2.setDrawGridLines(false);
-                    xAxis2.setGranularity(1f);
 
                     YAxis yLAxis2 = lineChart2.getAxisLeft();
                     yLAxis2.setTextColor(Color.BLACK);
                     yLAxis2.setDrawLabels(false);
                     yLAxis2.setDrawAxisLine(false);
                     yLAxis2.setDrawGridLines(false);
-                    yLAxis2.setAxisMaximum(50f);
-                    yLAxis2.setAxisMinimum(50f);
+                    yLAxis2.setAxisMaximum(45f);
+                    yLAxis2.setAxisMinimum(-30f);
 
                     YAxis yRAxis2 = lineChart2.getAxisRight();
                     yRAxis2.setDrawLabels(false);
                     yRAxis2.setDrawAxisLine(false);
                     yRAxis2.setDrawGridLines(false);
-
                     Description description2 = new Description();
                     description2.setText("");
 
@@ -378,6 +412,25 @@ public class WeatherOfWeek extends Fragment {
         }
         return "none";
     }
+    final LocationListener gpsLocationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+
+            String provider = location.getProvider();
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+    };
+
 
 
 }

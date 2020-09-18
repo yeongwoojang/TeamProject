@@ -50,9 +50,10 @@ public class ScheduleList extends Fragment{
 
         }
         top_tabs.setTabGravity(TabLayout.GRAVITY_FILL);
-        top_tabs.getTabAt(0).setTag(0);
-        top_tabs.getTabAt(1).setTag(1);
-        top_tabs.getTabAt(2).setTag(2);
+        top_tabs.getTabAt(FRAGMENT1).setTag(0);
+        top_tabs.getTabAt(FRAGMENT2).setTag(1);
+        top_tabs.getTabAt(FRAGMENT3).setTag(2);
+        top_tabs.getTabAt(FRAGMENT1).setIcon(R.drawable.baseline_cloud_queue_white_18);
         Fragment fragment;
         fragment = new TodayList().newInstance();
         setChildFragment(fragment);

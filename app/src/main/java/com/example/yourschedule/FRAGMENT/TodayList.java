@@ -67,12 +67,13 @@ public class TodayList extends Fragment {
     DrawerLayout settingViewLayout;
     View settingView;
     String[] days = new String[]{"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
-    FirebaseAuth auth;
-    FirebaseDatabase mDatabase;
     TextView t1;
 
     ImageView weatherIcon;
     LogoutListener logoutListener;
+
+
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -86,10 +87,31 @@ public class TodayList extends Fragment {
         return new TodayList();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("onWhat","onResume");
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+        String today = transFormat.format(calendar.getTime());
+        SharePref sharePref = new SharePref();
+        scheduleDTOS.clear();
+        scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
+        recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS, today);
+        recyclerView.setAdapter(recyclerViewAdapter);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("onWhat","onCreateView");
 
         View rootView = inflater.inflate(R.layout.fragment_today_list, container, false);
         t1 = rootView.findViewById(R.id.detailDate);
@@ -112,55 +134,21 @@ public class TodayList extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.d("onWhat","onViewCreated");
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
         getCurrentWeather("37.57", "126.98", "7d25a27ec2361e69dcbb04d90feb6b23");
-//        getDailyForecast("37.57","126.98","metric","hourly","7","kr","7d25a27ec2361e69dcbb04d90feb6b23");
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = transFormat.format(calendar.getTime());
         String day = days[calendar.get(Calendar.DAY_OF_WEEK) - 1];
         dayOfWeek.setText(day);
         dateText.setText(today);
-        mDatabase = FirebaseDatabase.getInstance();
-        auth = FirebaseAuth.getInstance();
-        Log.d("today", today);
-        SharePref sharePref = new SharePref();
-        scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
-//        Log.d("asdf",scheduleDTOS.get(0).getSchedule()+"");
-//        try{
-//            mDatabase.getReference("일정").child(auth.getCurrentUser().getDisplayName())
-//                    .addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-//                                scheduleDTOS.add(scheduleDTO);
-//                            }
-//                            recyclerViewAdapter.notifyDataSetChanged();
-//                        }
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//        }catch (Exception e){
-//
-//        }
 
-//           logoutBt.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FirebaseAuth.getInstance().signOut();
-//
-//                Toast.makeText(getActivity(),"로그아웃되었습니다.",Toast.LENGTH_SHORT).show();
-//                logoutListener.finish(child);
-//
-//            }
-//        });
+//        SharePref sharePref = new SharePref();
+//        scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), scheduleDTOS, today);
         recyclerView.setAdapter(recyclerViewAdapter);
 

@@ -144,25 +144,23 @@
                     ></TextView>
             </LinearLayout>
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="시간대별 날씨"
         android:textSize="20dp"
-        android:fontFamily="@font/baemin"
+        android:fontFamily="@font/nanumsquare_eb"
         android:gravity="center"
         android:textColor="@color/black"
-
         ></TextView>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/chart_form"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="15dp"
         android:padding="10dp"
         android:orientation="vertical"
         >
@@ -231,8 +229,7 @@
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/linechart2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
+            android:layout_height="150dp"
             />
     </LinearLayout>
 </LinearLayout>
