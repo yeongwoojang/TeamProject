@@ -45,8 +45,13 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
 
     private final int FRAGMENT1 = 0;
     private final int FRAGMENT2 = 1;
-    private final int FRAGMENT3 = 2;
-    private final String[] bottomTab = {"일정", "날씨", "추가예정"};
+    private final String[] bottomTab = {"일정", "날씨"};
+
+
+    private int[] tabIcons = {
+            R.drawable.baseline_date_range_white_18,
+            R.drawable.baseline_cloud_queue_white_18
+    };
     private TabLayout bottom_tabs;
 
     private Context mContext = null;
@@ -81,18 +86,20 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
 
         for (int i = 0; i < bottomTab.length; i++) {
             bottom_tabs.addTab(bottom_tabs.newTab());
-            TextView view = new TextView(this);
-            view.setGravity(bottom_tabs.GRAVITY_CENTER);
-            view.setTextColor(getResources().getColor(R.color.white));
-            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/baemin.ttf"));
-            view.setText(bottomTab[i]);
-            bottom_tabs.getTabAt(i).setCustomView(view);
+//            TextView view = new TextView(this);
+//            view.setGravity(bottom_tabs.INDICATOR_GRAVITY_BOTTOM);
+//            view.setTextColor(getResources().getColor(R.color.white));
+//            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/baemin.ttf"));
+//            view.setText(bottomTab[i]);
+//            view.setTextSize(10);
+//            view.setAllCaps(false);
+//            bottom_tabs.getTabAt(i).setCustomView(view);
         }
 
-        bottom_tabs.setTabGravity(TabLayout.GRAVITY_FILL);
         bottom_tabs.getTabAt(FRAGMENT1).setTag(FRAGMENT1);
+        bottom_tabs.getTabAt(FRAGMENT1).setIcon(tabIcons[0]);
         bottom_tabs.getTabAt(FRAGMENT2).setTag(FRAGMENT2);
-        bottom_tabs.getTabAt(FRAGMENT3).setTag(FRAGMENT3);
+        bottom_tabs.getTabAt(FRAGMENT2).setIcon(tabIcons[1]);
 
 
 //        SharePref sharePref = new SharePref();
@@ -128,9 +135,6 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
                         callFragment(FRAGMENT2);
                         break;
 
-                    case FRAGMENT3:
-                        callFragment(FRAGMENT3);
-                        break;
                 }
             }
 
@@ -154,9 +158,7 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
                         callFragment(FRAGMENT2);
                         break;
 
-                    case FRAGMENT3:
-                        callFragment(FRAGMENT3);
-                        break;
+
                 }
             }
         });

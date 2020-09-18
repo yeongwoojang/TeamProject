@@ -75,19 +75,17 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     LinearLayoutManager linearLayoutManager;
     DrawerListAdapter drawerListAdapter;
     ScheduleDecorator scheduleDecorator;
-    DaysTextDecorator daysTextDecorator;
     SlidingUpPanelLayout slidingUpPanelLayout;
     boolean areYouUpdate = false;
     String selectedDate = "";
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
-    FirebaseAuth auth;
+    private List<ScheduleDecorator> scheduleDecorators = new ArrayList<>();
 
     private Fragment fragment;
     private Fragment fffff;
     private TextView detailDate;
-    private Button modifyBt, deleteScheduleBt;
+    private Button modifyBt;
     private ImageView monthImage;
-    AnimationDrawable animationDrawable;
 
     public Calandar newInstance() {
         return new Calandar();
@@ -96,8 +94,26 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        scheduleDTOS.clear();
+        SharePref sharePref = new SharePref();
+        scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+        for (int i = 0; i < scheduleDTOS.size(); i++) {
+            if (scheduleDTOS.get(i).getDate() != null) {
+                try {
+                    scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()), getActivity());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                materialCalendarView.addDecorators(scheduleDecorator);
+            }
+        }
+        Log.d("fdsgsdfgfdsg",scheduleDecorators.size()+"");
     }
 
     @Override
@@ -192,19 +208,18 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
         materialCalendarView.addDecorators(
                 new SaturDayDecorator(getActivity()), new SunDayDecorator(getActivity()), todayDecorator, textSizeDecorator);
 
-        SharePref sharePref = new SharePref();
-        scheduleDTOS = sharePref.getEntire(getActivity());
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
-        for (int i = 0; i < scheduleDTOS.size(); i++) {
-            if (scheduleDTOS.get(i).getDate() != null) {
-                try {
-                    scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()), getActivity());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                materialCalendarView.addDecorators(scheduleDecorator);
-            }
-        }
+
+//        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+//        for (int i = 0; i < scheduleDTOS.size(); i++) {
+//            if (scheduleDTOS.get(i).getDate() != null) {
+//                try {
+//                    scheduleDecorator = new ScheduleDecorator(transFormat.parse(scheduleDTOS.get(i).getDate()), getActivity());
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//                materialCalendarView.addDecorators(scheduleDecorator);
+//            }
+//        }
 
 
     }
@@ -236,7 +251,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 modifyBt.setText("INSERT");
             }
         }
-
     }
 
     private void getUpdateScheduleFragment() {
@@ -361,20 +375,6 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 monthImage.setImageResource(R.drawable.bkg_12_december);
                 break;
         }
-
-    }
-
-
-
-    void animate() {
-//        animationDrawable.start();
-
-//        if(animationDrawable.isRunning()) {
-//            animationDrawable.stop();
-//        }
-//        monthImage.setVisibility(View.VISIBLE);
-//        animationDrawable.start();
-//        animationDrawable.setOneShot(true);
 
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +40,7 @@ import com.example.yourschedule.DECORATOR.CustomTypeFaceSpan;
 import com.example.yourschedule.Formatter.YValueFormatter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
+import com.example.yourschedule.SharePref;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -72,7 +74,6 @@ public class MonthAchievementRate extends Fragment {
     private int completeCount;
     private int entireCount;
     private Fragment fragment;
-    private ImageView runningImage;
 
     String month;
 
@@ -89,16 +90,25 @@ public class MonthAchievementRate extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        Log.d("sdfgfd","onResume");
+
+        super.onResume();
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("sdfgfd","onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_month_achievement_rate, container, false);
 
         TopText = rootView.findViewById(R.id.topMonthText);
         completeListBt = rootView.findViewById(R.id.completeListBt);
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
+
         menuBt = rootView.findViewById(R.id.menuBt);
-        runningImage = rootView.findViewById(R.id.running_image);
         fragment = this;
 
 
@@ -157,76 +167,116 @@ public class MonthAchievementRate extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("sdfgfd","onViewCreated");
+
         completeCount = 0;
         entireCount = 0;
 
         TopText.setText(month);
+        scheduleDTOS.clear();
+        scheduleDTO.clear();
+        thatDates.clear();
+        SharePref sharePref = new SharePref();
+        scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
+        Log.d("DTOS",scheduleDTOS.size()+"");
 
-//        runningImage.setImageResource(R.drawable.frame_animation);
-        final AnimationDrawable drawable =
-                (AnimationDrawable) runningImage.getBackground();
-        drawable.start();
-        Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable()  {
-            public void run() {
-                drawable.stop();
-            }
-        }, 1000); // 0.5초후
-
-        ReadDBData(new DataLoadingActivity.DataLoadCallBack() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onCallback(List<ScheduleDTO> value) {
-                scheduleDTOS.clear();
-                scheduleDTOS = value;
-                scheduleDTO.clear();
-                thatDates.clear();
-
-                for (int i = 0; i < scheduleDTOS.size(); i++) {
-                    if (scheduleDTOS.get(i).getDate().substring(0, 4).equals(month.substring(4))
-                            && scheduleDTOS.get(i).getDate().substring(5, 7).equals(month.substring(0, 2))) {
-                        for (int j = 0; j < scheduleDTOS.get(i).getIsComplete().size(); j++) {
-                            if (scheduleDTOS.get(i).getIsComplete().get(j)) {
-                                thatDates.add(scheduleDTOS.get(i).getDate().substring(5));
-                            }
-                            if (scheduleDTOS.get(i).getIsComplete().get(j)) {
-                                completeCount++;
-                                entireCount++;
-                                scheduleDTO.add(scheduleDTOS.get(i).getSchedule().get(j));
-                            } else {
-                                entireCount++;
-                            }
-                        }
+        for (int i = 0; i < scheduleDTOS.size(); i++) {
+            if (scheduleDTOS.get(i).getDate().substring(0, 4).equals(month.substring(4))
+                    && scheduleDTOS.get(i).getDate().substring(5, 7).equals(month.substring(0, 2))) {
+                for (int j = 0; j < scheduleDTOS.get(i).getIsComplete().size(); j++) {
+                    if (scheduleDTOS.get(i).getIsComplete().get(j)) {
+                        thatDates.add(scheduleDTOS.get(i).getDate().substring(5));
+                    }
+                    if (scheduleDTOS.get(i).getIsComplete().get(j)) {
+                        completeCount++;
+                        entireCount++;
+                        scheduleDTO.add(scheduleDTOS.get(i).getSchedule().get(j));
+                    } else {
+                        entireCount++;
                     }
                 }
-
-                float barWidth = 9f;
-                float spaceForBar = 10f;
-                ArrayList<BarEntry> entries = new ArrayList<>();
-                if(completeCount!=0){
-                    entries.add(new BarEntry(5f, (float) ((double) completeCount / (double) entireCount * 100)));
-                }else{
-                    entries.add(new BarEntry(5f,0f));
-                }
-
-
-
-                BarDataSet barDataSet;
-                barDataSet = new BarDataSet(entries, "");
-                barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
-                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-                dataSets.add(barDataSet);
-                BarData barData = new BarData(dataSets);
-                barData.setValueTextSize(20f);
-                barData.setBarWidth(barWidth);
-                barData.setDrawValues(true);
-                barData.setValueFormatter(new YValueFormatter());
-                barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
-                barChart.setData(barData);
-                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.deepPurple200));
-
             }
-        });
+        }
+
+        float barWidth = 9f;
+        float spaceForBar = 10f;
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        if(completeCount!=0){
+            entries.add(new BarEntry(5f, (float) ((double) completeCount / (double) entireCount * 100)));
+        }else{
+            entries.add(new BarEntry(5f,0f));
+        }
+
+
+
+        BarDataSet barDataSet;
+        barDataSet = new BarDataSet(entries, "");
+        barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(barDataSet);
+        BarData barData = new BarData(dataSets);
+        barData.setValueTextSize(20f);
+        barData.setBarWidth(barWidth);
+        barData.setDrawValues(true);
+        barData.setValueFormatter(new YValueFormatter());
+        barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
+        barChart.setData(barData);
+        barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.deepPurple200));
+
+//        ReadDBData(new DataLoadingActivity.DataLoadCallBack() {
+//            @SuppressLint("ResourceType")
+//            @Override
+//            public void onCallback(List<ScheduleDTO> value) {
+//                scheduleDTOS.clear();
+//                scheduleDTOS = value;
+//                scheduleDTO.clear();
+//                thatDates.clear();
+
+//                for (int i = 0; i < scheduleDTOS.size(); i++) {
+//                    if (scheduleDTOS.get(i).getDate().substring(0, 4).equals(month.substring(4))
+//                            && scheduleDTOS.get(i).getDate().substring(5, 7).equals(month.substring(0, 2))) {
+//                        for (int j = 0; j < scheduleDTOS.get(i).getIsComplete().size(); j++) {
+//                            if (scheduleDTOS.get(i).getIsComplete().get(j)) {
+//                                thatDates.add(scheduleDTOS.get(i).getDate().substring(5));
+//                            }
+//                            if (scheduleDTOS.get(i).getIsComplete().get(j)) {
+//                                completeCount++;
+//                                entireCount++;
+//                                scheduleDTO.add(scheduleDTOS.get(i).getSchedule().get(j));
+//                            } else {
+//                                entireCount++;
+//                            }
+//                        }
+//                    }
+//                }
+
+//                float barWidth = 9f;
+//                float spaceForBar = 10f;
+//                ArrayList<BarEntry> entries = new ArrayList<>();
+//                if(completeCount!=0){
+//                    entries.add(new BarEntry(5f, (float) ((double) completeCount / (double) entireCount * 100)));
+//                }else{
+//                    entries.add(new BarEntry(5f,0f));
+//                }
+//
+//
+//
+//                BarDataSet barDataSet;
+//                barDataSet = new BarDataSet(entries, "");
+//                barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+//                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+//                dataSets.add(barDataSet);
+//                BarData barData = new BarData(dataSets);
+//                barData.setValueTextSize(20f);
+//                barData.setBarWidth(barWidth);
+//                barData.setDrawValues(true);
+//                barData.setValueFormatter(new YValueFormatter());
+//                barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
+//                barChart.setData(barData);
+//                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.deepPurple200));
+
+//            }
+//        });
 
         leftBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,24 +375,24 @@ public class MonthAchievementRate extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void ReadDBData(DataLoadingActivity.DataLoadCallBack dataLoadCallBack) {
-        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
-        auth = FirebaseAuth.getInstance();
-        mDatabase.child(auth.getCurrentUser().getDisplayName())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        scheduleDTOSTemp.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-                            scheduleDTOSTemp.add(scheduleDTO);
-                        }
-                        dataLoadCallBack.onCallback(scheduleDTOSTemp);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-    }
+//    public void ReadDBData(DataLoadingActivity.DataLoadCallBack dataLoadCallBack) {
+//        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
+//        auth = FirebaseAuth.getInstance();
+//        mDatabase.child(auth.getCurrentUser().getDisplayName())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        scheduleDTOSTemp.clear();
+//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
+//                            scheduleDTOSTemp.add(scheduleDTO);
+//                        }
+//                        dataLoadCallBack.onCallback(scheduleDTOSTemp);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    }
+//                });
+//    }
 }
