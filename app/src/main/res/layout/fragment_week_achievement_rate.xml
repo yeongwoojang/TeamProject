@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/mainColor"
+    android:background="@color/gray200"
     >
     <LinearLayout
         android:id="@+id/topLayout"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/transparent"
-            android:src="@drawable/baseline_arrow_left_white_18dp"
+            android:src="@drawable/baseline_arrow_left_24"
             android:layout_weight="1"
             android:layout_marginLeft="16dp"
             ></ImageButton>
@@ -31,10 +31,11 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="상단텍스트"
+            android:fontFamily="@font/bm_dohyeon_ttf"
             android:gravity="center_horizontal"
             android:textSize="9pt"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_weight="3"
             ></TextView>
         <ImageButton
@@ -43,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/transparent"
-            android:src="@drawable/baseline_arrow_right_white_18dp"
+            android:src="@drawable/baseline_arrow_right_24"
             android:layout_weight="1"
             android:layout_marginRight="16dp"
             ></ImageButton>

@@ -55,6 +55,41 @@
     <color name="deepPurple800">#4527A0</color>
     <color name="deepPurple900">#311B92</color>
 
+    <!--orange-->
+    <color name="orage50">#FFF3E0</color>
+    <color name="orage100">#FFE0B2</color>
+    <color name="orage200">#FFCC80</color>
+    <color name="orage300">#FFB74D</color>
+    <color name="orage400">#FFA726</color>
+    <color name="orage500">#FF9800</color>
+    <color name="orage600">#FB8C00</color>
+    <color name="orage700">#F57C00</color>
+    <color name="orage800">#EF6C00</color>
+    <color name="orage900">#E65100</color>
+
+    <!--yellow-->
+    <color name="yellow50">#FFFDE7</color>
+    <color name="yellow100">#FFF9C4</color>
+    <color name="yellow200">#FFF59D</color>
+    <color name="yellow300">#FFF176</color>
+    <color name="yellow400">#FFEE58</color>
+    <color name="yellow500">#FFEB3B</color>
+    <color name="yellow600">#FDD835</color>
+    <color name="yellow700">#FBC02D</color>
+    <color name="yellow800">#F9A825</color>
+    <color name="yellow900">#F57F17</color>
+
+    <!--    amber-->
+    <color name="amber50">#FFF8E1</color>
+    <color name="amber100">#FFECB3</color>
+    <color name="amber200">#FFE082</color>
+    <color name="amber300">#FFD54F</color>
+    <color name="amber400">#FFCA28</color>
+    <color name="amber500">#FFC107</color>
+    <color name="amber600">#FFB300</color>
+    <color name="amber700">#FFA000</color>
+    <color name="amber800">#FF8F00</color>
+    <color name="amber900">#FF6F00</color>
 
     <color name="recyclerViewColor">#E4DDF8</color>
     <color name="completeDateColor">#AC97EB</color>

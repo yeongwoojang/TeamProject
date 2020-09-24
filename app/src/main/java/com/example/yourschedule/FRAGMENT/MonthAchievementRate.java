@@ -349,11 +349,6 @@ public class MonthAchievementRate extends Fragment {
                                     fragmentTransaction.addToBackStack(null);
                                     fragmentTransaction.commitAllowingStateLoss();
                                 break;
-                            case R.id.completeList :
-                                fragment = new CompleteListFragment().newInstance();
-                                fragmentTransaction.replace(R.id.testFragment, fragment);
-                                fragmentTransaction.addToBackStack(null);
-                                fragmentTransaction.commitAllowingStateLoss();
                         }
 
                         return false;

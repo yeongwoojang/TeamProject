@@ -109,7 +109,7 @@ public class WeekAchievementRate extends Fragment {
         xl.setDrawAxisLine(false);
         xl.setDrawLabels(true);
         xl.setEnabled(true);
-        xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.white));
+        xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.black));
 
 
         YAxis yl = barChart.getAxisLeft();
@@ -309,7 +309,7 @@ public class WeekAchievementRate extends Fragment {
         barData.setValueFormatter(new YValueFormatter());
         barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
         barChart.setData(barData);
-        barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.white));
+        barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.amber100));
 
         HashSet<String> reSetDates = new HashSet<String>(mlabels);
         mlabels = new ArrayList<String>(reSetDates);
