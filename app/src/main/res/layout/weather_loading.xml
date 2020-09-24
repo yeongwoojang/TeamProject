@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/form_container"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray200">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:fontFamily="@font/baemin"
+            android:gravity="center"
+            android:text="날씨 불러오는중"
+            android:textColor="@color/black"
+            android:textSize="40dp"></TextView>
+
+        <ImageView
+            android:id="@+id/running_image"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/frame_animation"></ImageView>
+    </RelativeLayout>
+</FrameLayout>

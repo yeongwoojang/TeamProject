@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/today"
+        android:title="오늘"
+        ></item>
+    <item
+        android:id="@+id/tomorrow"
+        android:title="내일"
+        ></item>
+</menu>
