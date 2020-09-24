@@ -218,41 +218,6 @@ public class TodayList extends Fragment {
         });
     }
 
-    public void getDailyForecast(String latitude, String longitude, String units, String exclude, String cnt, String lang, String OPEN_WEATHER_MAP_KEY) {
-        RetrofitClient retrofitClient = new RetrofitClient();
-        retrofitClient.buildRetrofit();
-        Call<JsonObject> response = retrofitClient.getInstance()
-                .buildRetrofit()
-                .getDailyForecast(latitude, longitude, units, exclude, cnt, lang, OPEN_WEATHER_MAP_KEY);
-        response.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                try {
-                    JSONArray jsonArray;
-                    JSONObject jsonObject = new JSONObject(response.body().toString());
-                    jsonArray = jsonObject.getJSONArray("daily");
-//                    calendar.setTimeInMillis(Integer.parseInt(jsonObject.getString("dt"))*1000L);
-//                    Calendar calendar = Calendar.getInstance();
-//                    TimeZone tz = TimeZone.getDefault();
-//                    calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-//                    java.util.Date currenTimeZone=new java.util.Date((long)Integer.parseInt(jsonObject.getString("dt"))*1000);
-//                    Log.d("fdghdgfhdfgh",jsonObject.getString("dt"));
-//                    Log.d("dsafsafsadf",sdf.format(currenTimeZone));
-//                    Log.d("JSON",jsonObject+"");
-//                    jsonArray = jsonObject.getJSONArray("weather");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
-    }
-
 
     public interface LogoutListener {
         void finish(Fragment child);
