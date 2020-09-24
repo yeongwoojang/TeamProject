@@ -71,18 +71,18 @@
             <LinearLayout
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@color/white"
+                android:background="@color/amber100"
                 android:layout_marginRight="10dp"
                 >
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="각 주의 일~월"
+                android:text="각 주의 일요일~월요일"
                 android:padding="3dp"
-                android:textColor="@color/white"
+                android:textColor="@color/amber300"
                 android:layout_marginRight="16dp"
-                android:fontFamily="@font/baemin"
+                android:fontFamily="@font/bm_jua_ttf"
                 ></TextView>
         </LinearLayout>
 

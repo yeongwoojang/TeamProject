@@ -36,7 +36,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_alignParentRight="true"
                 android:background="@color/transparent"
-                android:src="@drawable/baseline_cancel_white_18"
+                android:src="@drawable/baseline_cancel_24"
                 ></ImageButton>
         </RelativeLayout>
 
@@ -74,7 +74,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_alignParentRight="true"
                 android:background="@color/transparent"
-                android:src="@drawable/baseline_edit_white_18"
+                android:src="@drawable/baseline_edit_24"
                 ></ImageButton>
 
         </RelativeLayout>

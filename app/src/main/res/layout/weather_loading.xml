@@ -8,13 +8,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray200">
+        android:background="@color/amber300">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
-            android:fontFamily="@font/baemin"
+            android:fontFamily="@font/bm_jua_ttf"
             android:gravity="center"
             android:text="날씨 불러오는중"
             android:textColor="@color/black"

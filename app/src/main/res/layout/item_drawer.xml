@@ -10,10 +10,11 @@
         android:id="@+id/drawerSchedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:textColor="@color/deepPurple300"
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/bm_jua_ttf"
         android:padding="5dp"
-        android:text="A"
+        android:text="일정"
         android:layout_weight="2"
         ></TextView>
     <TextView
@@ -21,10 +22,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:textSize="12dp"
-        android:textColor="@color/gray600"
+        android:fontFamily="@font/bm_dohyeon_ttf"
+        android:textSize="15dp"
+        android:textColor="@color/black"
         android:padding="5dp"
-        android:text="B"
+        android:text="완료"
         android:layout_weight="3"
         ></TextView>
 </LinearLayout>

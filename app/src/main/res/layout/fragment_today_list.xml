@@ -10,7 +10,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="@color/amber300"
     >
     <FrameLayout
         android:id="@+id/head"
@@ -33,7 +33,7 @@
             android:gravity="left"
             android:textSize="9pt"
             android:textStyle="bold"
-            android:fontFamily="@font/baemin"
+            android:fontFamily="@font/bm_jua_ttf"
             android:textColor="@color/black"
             />
         <TextView
@@ -46,37 +46,21 @@
             android:text="날짜"
             android:gravity="bottom"
             android:textSize="7pt"
-            android:fontFamily="@font/baemin"
+            android:fontFamily="@font/bm_dohyeon_ttf"
             android:textColor="@color/black"
             />
-            <ImageView
-                android:id="@+id/weatherIcon"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/transparent"
-                ></ImageView>
         </LinearLayout>
         <ImageButton
             android:id="@+id/settingBt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:src="@drawable/baseline_menu_white_18"
+            android:src="@drawable/baseline_menu_24"
             android:background="@color/transparent"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             ></ImageButton>
-<!--        <Button-->
-<!--            android:id="@+id/signOutBt"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_gravity="right"-->
-<!--            android:text="로그아웃"-->
-<!--            android:fontFamily="@font/baemin"-->
-<!--            android:background="@drawable/sign_out_bt_form"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_marginRight="5dp"-->
-<!--            ></Button>-->
+
     </FrameLayout>
 
     <LinearLayout
@@ -87,14 +71,23 @@
         android:layout_marginTop="10dp"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="2dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
-            ></androidx.recyclerview.widget.RecyclerView>
+            android:background="@drawable/form_today_list"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="15dp"
+                ></androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
 
 
     </LinearLayout>
@@ -104,83 +97,25 @@
         android:id="@+id/settingDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray300"
+        android:background="@color/amber300"
         android:layout_gravity="end"
         android:gravity="start"
     >
-        <ImageButton
-            android:id="@+id/closeSettingBt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_back_ios_white_18dp"
-            android:background="@color/transparent"
 
-           />
-        <LinearLayout
-            android:id="@+id/settingContents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/closeSettingBt"
-            >
-<!--            <Button-->
-<!--                android:id="@+id/signOutBt"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_gravity="right"-->
-<!--                android:text="로그아웃"-->
-<!--                android:fontFamily="@font/baemin"-->
-<!--                android:background="@drawable/sign_out_bt_form"-->
-<!--                android:layout_marginTop="5dp"-->
-<!--                android:layout_marginRight="5dp"-->
-<!--                ></Button>-->
-<!--            <TextView-->
-<!--                android:id="@+id/shareBt"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="공유하기"-->
-<!--                android:fontFamily="@font/baemin"-->
-<!--                android:textColor="#ffffff"-->
-<!--                android:textSize="24dp"-->
-<!--                android:padding="10dp"-->
-<!--                />-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#ffffff"
+                android:background="@color/white"
                 ></LinearLayout>
         <TextView
             android:id="@+id/signOutBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="로그아웃"
-            android:fontFamily="@font/baemin"
-            android:textColor="#ffffff"
+            android:fontFamily="@font/bm_dohyeon_ttf"
+            android:textColor="@color/black"
             android:textSize="24dp"
             android:padding="10dp"
             />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ffffff"
-                ></LinearLayout>
-            <TextView
-                android:id="@+id/appUnlinkBt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="앱 연결 해제"
-                android:fontFamily="@font/baemin"
-                android:textColor="#ffffff"
-                android:textSize="24dp"
-                android:padding="10dp"
-                />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#ffffff"
-                ></LinearLayout>
-        </LinearLayout>
-
-
     </RelativeLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

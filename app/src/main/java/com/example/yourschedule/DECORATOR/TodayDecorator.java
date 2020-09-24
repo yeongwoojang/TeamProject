@@ -33,7 +33,7 @@ public class TodayDecorator implements DayViewDecorator {
     @Override
     public void decorate(DayViewFacade view) {
         view.addSpan(new StyleSpan(Typeface.NORMAL));
-        view.addSpan(new DotSpan(5, context.getResources().getColor(R.color.deepPurple700)));
+        view.addSpan(new DotSpan(5, context.getResources().getColor(R.color.amber700)));
         view.addSpan(new RelativeSizeSpan(1.4f));
 //        view.addSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.black)));
 

@@ -2,7 +2,6 @@ package com.example.yourschedule.ADAPTER;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -72,7 +71,7 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.complete_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_complete, parent, false);
         ViewHolder viewHolder = new RateAdapter.ViewHolder(view);
 
         return viewHolder;

@@ -41,6 +41,7 @@
                     android:padding="10dp"
                     android:text="상단텍스트"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/bm_dohyeon_ttf"
                     android:textSize="9pt"
                     android:textStyle="bold"></TextView>
 
@@ -75,14 +76,5 @@
                 android:layout_marginTop="10dp" />
         </LinearLayout>
     </FrameLayout>
-    <ImageButton
-        android:id="@+id/menuBt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/menu_button"
-        android:elevation="7dp"
-        android:src="@drawable/baseline_menu_white_18"></ImageButton>
+
 </FrameLayout>

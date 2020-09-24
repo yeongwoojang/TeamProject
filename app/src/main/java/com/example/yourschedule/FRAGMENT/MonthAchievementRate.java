@@ -68,8 +68,8 @@ public class MonthAchievementRate extends Fragment {
     List<String> thatDates = new ArrayList<>();
     FirebaseAuth auth;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
-    TextView TopText,completeListBt;
-    ImageButton rightBt, leftBt,menuBt;
+    TextView TopText, completeListBt;
+    ImageButton rightBt, leftBt;
     private HorizontalBarChart barChart;
     private int completeCount;
     private int entireCount;
@@ -91,7 +91,7 @@ public class MonthAchievementRate extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d("sdfgfd","onResume");
+        Log.d("sdfgfd", "onResume");
 
         super.onResume();
 
@@ -100,7 +100,7 @@ public class MonthAchievementRate extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("sdfgfd","onCreateView");
+        Log.d("sdfgfd", "onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_month_achievement_rate, container, false);
 
         TopText = rootView.findViewById(R.id.topMonthText);
@@ -108,7 +108,6 @@ public class MonthAchievementRate extends Fragment {
         rightBt = rootView.findViewById(R.id.rightBt);
         leftBt = rootView.findViewById(R.id.leftBt);
 
-        menuBt = rootView.findViewById(R.id.menuBt);
         fragment = this;
 
 
@@ -129,17 +128,17 @@ public class MonthAchievementRate extends Fragment {
         xl.setTextColor(ContextCompat.getColor(barChart.getContext(), R.color.black));
         xl.setAxisMinimum(0f);
         xl.setAxisMaximum(10f);
-        xl.setLabelCount(5,true);
+        xl.setLabelCount(5, true);
         xl.setCenterAxisLabels(false);
 
         xl.setTextSize(20);
-        xl.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
-        xl.setValueFormatter(new IndexAxisValueFormatter(){
+        xl.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/bm_dohyeon_ttf.ttf"));
+        xl.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                if(value==5f){
+                if (value == 5f) {
                     return "달성률";
-                }else{
+                } else {
                     return "";
                 }
             }
@@ -167,7 +166,6 @@ public class MonthAchievementRate extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("sdfgfd","onViewCreated");
 
         completeCount = 0;
         entireCount = 0;
@@ -178,7 +176,6 @@ public class MonthAchievementRate extends Fragment {
         thatDates.clear();
         SharePref sharePref = new SharePref();
         scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
-        Log.d("DTOS",scheduleDTOS.size()+"");
 
         for (int i = 0; i < scheduleDTOS.size(); i++) {
             if (scheduleDTOS.get(i).getDate().substring(0, 4).equals(month.substring(4))
@@ -201,17 +198,16 @@ public class MonthAchievementRate extends Fragment {
         float barWidth = 9f;
         float spaceForBar = 10f;
         ArrayList<BarEntry> entries = new ArrayList<>();
-        if(completeCount!=0){
+        if (completeCount != 0) {
             entries.add(new BarEntry(5f, (float) ((double) completeCount / (double) entireCount * 100)));
-        }else{
-            entries.add(new BarEntry(5f,0f));
+        } else {
+            entries.add(new BarEntry(5f, 0f));
         }
-
 
 
         BarDataSet barDataSet;
         barDataSet = new BarDataSet(entries, "");
-        barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+        barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/bm_dohyeon_ttf.ttf"));
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(barDataSet);
         BarData barData = new BarData(dataSets);
@@ -219,64 +215,10 @@ public class MonthAchievementRate extends Fragment {
         barData.setBarWidth(barWidth);
         barData.setDrawValues(true);
         barData.setValueFormatter(new YValueFormatter());
-        barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
+        barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.amber300));
         barChart.setData(barData);
-        barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.deepPurple200));
+        barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.amber100));
 
-//        ReadDBData(new DataLoadingActivity.DataLoadCallBack() {
-//            @SuppressLint("ResourceType")
-//            @Override
-//            public void onCallback(List<ScheduleDTO> value) {
-//                scheduleDTOS.clear();
-//                scheduleDTOS = value;
-//                scheduleDTO.clear();
-//                thatDates.clear();
-
-//                for (int i = 0; i < scheduleDTOS.size(); i++) {
-//                    if (scheduleDTOS.get(i).getDate().substring(0, 4).equals(month.substring(4))
-//                            && scheduleDTOS.get(i).getDate().substring(5, 7).equals(month.substring(0, 2))) {
-//                        for (int j = 0; j < scheduleDTOS.get(i).getIsComplete().size(); j++) {
-//                            if (scheduleDTOS.get(i).getIsComplete().get(j)) {
-//                                thatDates.add(scheduleDTOS.get(i).getDate().substring(5));
-//                            }
-//                            if (scheduleDTOS.get(i).getIsComplete().get(j)) {
-//                                completeCount++;
-//                                entireCount++;
-//                                scheduleDTO.add(scheduleDTOS.get(i).getSchedule().get(j));
-//                            } else {
-//                                entireCount++;
-//                            }
-//                        }
-//                    }
-//                }
-
-//                float barWidth = 9f;
-//                float spaceForBar = 10f;
-//                ArrayList<BarEntry> entries = new ArrayList<>();
-//                if(completeCount!=0){
-//                    entries.add(new BarEntry(5f, (float) ((double) completeCount / (double) entireCount * 100)));
-//                }else{
-//                    entries.add(new BarEntry(5f,0f));
-//                }
-//
-//
-//
-//                BarDataSet barDataSet;
-//                barDataSet = new BarDataSet(entries, "");
-//                barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
-//                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-//                dataSets.add(barDataSet);
-//                BarData barData = new BarData(dataSets);
-//                barData.setValueTextSize(20f);
-//                barData.setBarWidth(barWidth);
-//                barData.setDrawValues(true);
-//                barData.setValueFormatter(new YValueFormatter());
-//                barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
-//                barChart.setData(barData);
-//                barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.deepPurple200));
-
-//            }
-//        });
 
         leftBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,78 +258,11 @@ public class MonthAchievementRate extends Fragment {
                 ft.detach(fragment).attach(fragment).commitAllowingStateLoss();
             }
         });
-
-
-
-        menuBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu menu = new PopupMenu(getActivity(),view, Gravity.TOP);
-                getActivity().getMenuInflater().inflate(R.menu.rate_menu,menu.getMenu());
-
-                for (int i = 0; i < menu.getMenu().size(); i++) {
-                    MenuItem menuItem = menu.getMenu().getItem(i);
-                    Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf");
-                    SpannableString mNewTitle = new SpannableString(menuItem.getTitle());
-                    mNewTitle.setSpan(new CustomTypeFaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                    menuItem.setTitle(mNewTitle);
-                }
-                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                        switch (menuItem.getItemId()){
-                            case R.id.monthRate :
-                                fragment = new MonthAchievementRate().newInstance();
-                                fragmentTransaction.replace(R.id.testFragment, fragment);
-                                fragmentTransaction.addToBackStack(null);
-                                fragmentTransaction.commitAllowingStateLoss();
-                                break;
-                            case R.id.weekRate :
-                                fragment = new WeekAchievementRate().newInstance();
-                                    fragmentTransaction.replace(R.id.testFragment, fragment);
-                                    fragmentTransaction.addToBackStack(null);
-                                    fragmentTransaction.commitAllowingStateLoss();
-                                break;
-                        }
-
-                        return false;
-                    }
-                });
-                menu.show();
-
-            }
-        });
-
-
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.rate_menu,menu);
+        getActivity().getMenuInflater().inflate(R.menu.rate_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-//    public void ReadDBData(DataLoadingActivity.DataLoadCallBack dataLoadCallBack) {
-//        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
-//        auth = FirebaseAuth.getInstance();
-//        mDatabase.child(auth.getCurrentUser().getDisplayName())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        scheduleDTOSTemp.clear();
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                            ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-//                            scheduleDTOSTemp.add(scheduleDTO);
-//                        }
-//                        dataLoadCallBack.onCallback(scheduleDTOSTemp);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//                    }
-//                });
-//    }
 }

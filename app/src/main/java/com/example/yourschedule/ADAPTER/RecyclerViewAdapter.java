@@ -1,10 +1,8 @@
 package com.example.yourschedule.ADAPTER;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.today_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_today,parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }

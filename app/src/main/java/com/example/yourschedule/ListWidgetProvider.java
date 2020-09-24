@@ -18,7 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,7 +67,7 @@ public class ListWidgetProvider extends AppWidgetProvider {
             ScheduleDTO scheduleDTO = sharePref.get(context, today);
             AppWidgetManager mgr = AppWidgetManager.getInstance(context);
             String action = intent.getAction();
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.item_widget);
 
             if (action.equals(BT_CLICK_ACTION)) {
                 int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);

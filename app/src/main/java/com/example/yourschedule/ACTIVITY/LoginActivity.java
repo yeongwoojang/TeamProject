@@ -50,7 +50,7 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
-    private SignInButton googleLoginBt;
+    private Button googleLoginBt;
     private Button facebookLoginBt;
     public static final int RC_SIGN_IN = 10;
 
@@ -69,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
 
         mContext = this;
         //Google Login
-        googleLoginBt = (SignInButton) findViewById(R.id.google_login_button);
-        facebookLoginBt = (Button) findViewById(R.id.facebook_login_button);
+        googleLoginBt = (Button) findViewById(R.id.google_sign_in_button);
+        facebookLoginBt = (Button) findViewById(R.id.facebook_sign_in_button);
 
 
         mAuth = FirebaseAuth.getInstance();

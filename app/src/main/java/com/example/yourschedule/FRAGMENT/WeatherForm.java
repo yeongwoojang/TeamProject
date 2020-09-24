@@ -82,7 +82,7 @@ public class WeatherForm extends Fragment {
                 getActivity().getMenuInflater().inflate(R.menu.weather_menu, menu.getMenu());
                 for (int i = 0; i < menu.getMenu().size(); i++) {
                     MenuItem menuItem = menu.getMenu().getItem(i);
-                    Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf");
+                    Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "font/bm_dohyeon_ttf.ttf");
                     SpannableString mNewTitle = new SpannableString(menuItem.getTitle());
                     mNewTitle.setSpan(new CustomTypeFaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
                     menuItem.setTitle(mNewTitle);

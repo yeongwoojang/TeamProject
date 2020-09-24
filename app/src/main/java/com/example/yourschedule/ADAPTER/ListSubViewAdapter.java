@@ -1,7 +1,6 @@
 package com.example.yourschedule.ADAPTER;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ public class ListSubViewAdapter extends RecyclerView.Adapter<ListSubViewAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_sub_view_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sub_list_view, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }

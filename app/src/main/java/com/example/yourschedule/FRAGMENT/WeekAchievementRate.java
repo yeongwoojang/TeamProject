@@ -182,7 +182,7 @@ public class WeekAchievementRate extends Fragment {
             mlabels.addAll(labels);
             barChart.getXAxis().setValueFormatter(new WeekValueFormatter(labels));
             barChart.getXAxis().setTextSize(20);
-            barChart.getXAxis().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+            barChart.getXAxis().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/bm_dohyeon_ttf.ttf"));
             barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
             barChart.getXAxis().setGranularity(1f);
             barChart.getXAxis().setCenterAxisLabels(false);
@@ -298,7 +298,7 @@ public class WeekAchievementRate extends Fragment {
         BarDataSet barDataSet;
         barDataSet = new BarDataSet(entries, "");
 
-        barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+        barDataSet.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/bm_dohyeon_ttf.ttf"));
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(barDataSet);
 
@@ -307,8 +307,9 @@ public class WeekAchievementRate extends Fragment {
         barData.setBarWidth(barWidth);
         barData.setDrawValues(true);
         barData.setValueFormatter(new YValueFormatter());
-        barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.stringMainColor));
+        barData.setValueTextColor(ContextCompat.getColor(barChart.getContext(), R.color.amber300));
         barChart.setData(barData);
+
         barDataSet.setColors(ContextCompat.getColor(barChart.getContext(), R.color.amber100));
 
         HashSet<String> reSetDates = new HashSet<String>(mlabels);

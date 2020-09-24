@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="stringMainColor">#7E3FF2</color>
-    <color name="mainColor">#FFd2c2fd</color>
+    <color name="mainColor">@color/amber100</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="transparent">#00000000</color>
     <color name="white">#ffffff</color>

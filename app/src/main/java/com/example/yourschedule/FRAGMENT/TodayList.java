@@ -62,8 +62,8 @@ public class TodayList extends Fragment {
     LinearLayoutManager linearLayoutManager;
     RecyclerViewAdapter recyclerViewAdapter;
     List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
-    ImageButton settingBt, closeSettingBt;
-    TextView dayOfWeek, dateText,signOutBt,appUnlinkBt;
+    ImageButton settingBt;
+    TextView dayOfWeek, dateText,signOutBt;
     DrawerLayout settingViewLayout;
     View settingView;
     String[] days = new String[]{"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
@@ -115,18 +115,13 @@ public class TodayList extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_today_list, container, false);
         t1 = rootView.findViewById(R.id.detailDate);
-        weatherIcon = rootView.findViewById(R.id.weatherIcon);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         dayOfWeek = rootView.findViewById(R.id.dayOfWeek);
         dateText = rootView.findViewById(R.id.date);
         settingBt = rootView.findViewById(R.id.settingBt);
         signOutBt = rootView.findViewById(R.id.signOutBt);
-        appUnlinkBt = rootView.findViewById(R.id.appUnlinkBt);
         settingViewLayout = rootView.findViewById(R.id.settingLayout);
         settingView = rootView.findViewById(R.id.settingDetail);
-        closeSettingBt = rootView.findViewById(R.id.closeSettingBt);
-//        logoutBt = rootView.findViewById(R.id.logoutBt);
-//        shareBt = rootView.findViewById(R.id.shareBt);
         fragment = this;
         return rootView;
     }
@@ -139,7 +134,6 @@ public class TodayList extends Fragment {
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         recyclerView.setLayoutManager(linearLayoutManager);
-        getCurrentWeather("37.57", "126.98", "7d25a27ec2361e69dcbb04d90feb6b23");
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String today = transFormat.format(calendar.getTime());
@@ -158,12 +152,7 @@ public class TodayList extends Fragment {
                 settingViewLayout.openDrawer(settingView);
             }
         });
-        closeSettingBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                settingViewLayout.closeDrawer(settingView);
-            }
-        });
+
 
         signOutBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,47 +167,7 @@ public class TodayList extends Fragment {
                 logoutListener.finish(getParentFragment());
             }
         });
-        appUnlinkBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
     }
-
-    public void getCurrentWeather(String latitude, String longitude, String OPEN_WEATHER_MAP_KEY) {
-        RetrofitClient retrofitClient = new RetrofitClient();
-        retrofitClient.buildRetrofit();
-        Call<JsonObject> response = retrofitClient.getInstance()
-                .buildRetrofit()
-                .getCurrentWeather(latitude, longitude, OPEN_WEATHER_MAP_KEY);
-        response.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                try {
-                    JSONArray jsonArray;
-                    JSONObject jsonObject = new JSONObject(response.body().toString());
-                    jsonArray = jsonObject.getJSONArray("weather");
-                    Log.d("sfdgsdgsdfg",jsonArray+"");
-                    jsonObject = jsonArray.getJSONObject(0);
-//                    String weather = jsonObject.getString("description");
-//                    t1.setText(weather);
-                    String icon = jsonObject.getString("icon");
-                    String iconUrl = "http://openweathermap.org/img/wn/" + icon + ".png";
-                    Glide.with(getActivity()).load(iconUrl).into(weatherIcon);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.d("Ddfgsdg","실패");
-            }
-        });
-    }
-
-
     public interface LogoutListener {
         void finish(Fragment child);
     }

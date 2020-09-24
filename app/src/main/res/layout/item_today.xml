@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="5"
         android:text="일정1"
-        android:fontFamily="@font/baemin"
+        android:fontFamily="@font/bm_jua_ttf"
         android:textColor="@color/black"
         android:padding="10dp"
         android:textSize="9pt"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ACTIVITY.DataLoadingActivity"
     android:orientation="vertical"
-    android:background="@color/gray200"
+    android:background="@color/amber300"
     >
     <TextView
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:textColor="@color/black"
         android:textSize="40dp"
         android:gravity="center"
-        android:fontFamily="@font/baemin"
+        android:fontFamily="@font/bm_jua_ttf"
         android:layout_marginTop="100dp"
         ></TextView>
     <ImageView

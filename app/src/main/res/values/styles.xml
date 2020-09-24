@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/mainColor</item>
-        <item name="colorPrimaryDark">@color/deepPurple400</item>
+        <item name="colorPrimaryDark">@color/mainColor</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
         <item name="android:listPreferredItemHeightSmall">50dp</item>
@@ -13,6 +13,11 @@
         <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
 
     </style>
+
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/white</item>
+    </style>
+
 <!--    PopUpMenu-->
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
         <item name="android:popupBackground">@drawable/recyclerview_border</item>

@@ -4,47 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/gray200"
+    android:orientation="vertical"
     tools:context=".ACTIVITY.LoginActivity">
+
     <FrameLayout
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_layout"
         >
-        <ImageView
-            android:id="@+id/title_image"
+
+        <RelativeLayout
+            android:id="@+id/app_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/app_title"
-            ></ImageView>
-        <ImageView
-            android:id="@+id/app_logo_image"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/main_logo_version3"
-            ></ImageView>
+            android:layout_height="350dp"
+            android:background="@drawable/form_login"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/bm_dohyeon_ttf"
+                android:gravity="center"
+                android:text="YourList"
+                android:textColor="@color/white"
+                android:textSize="50dp"></TextView>
+        </RelativeLayout>
     </FrameLayout>
-    <FrameLayout
+<LinearLayout
+    android:id="@+id/bottom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    >
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/bottom_tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bottom_layout"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_height="50dp"
+        android:background="@drawable/bottom_tab_shape"
+        app:tabIndicator="@drawable/custom_indicator"
+        app:tabIndicatorColor="@color/oneMinus"></com.google.android.material.tabs.TabLayout>
+</LinearLayout>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/bottom_tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bottom_tab_shape"
-                    app:tabIndicatorColor="@color/oneMinus"
-                    app:tabIndicator="@drawable/custom_indicator"
-                    >
-                </com.google.android.material.tabs.TabLayout>
-    </FrameLayout>
 </RelativeLayout>

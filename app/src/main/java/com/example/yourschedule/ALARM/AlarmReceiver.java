@@ -56,7 +56,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         notificationManager.createNotificationChannel(channel);
                     }
                 } else
-                    builder.setSmallIcon(R.drawable.logo); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
+                    builder.setSmallIcon(R.drawable.app_icon); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
                 builder.setAutoCancel(true)
                         .setDefaults(NotificationCompat.DEFAULT_ALL)

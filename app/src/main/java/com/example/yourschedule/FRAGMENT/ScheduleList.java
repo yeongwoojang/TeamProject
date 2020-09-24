@@ -39,13 +39,14 @@ public class ScheduleList extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_schedule_list, container, false);
         ViewGroup.LayoutParams params;
         final TabLayout top_tabs = rootView.findViewById(R.id.top_tabs);
+
         for (int i = 0; i < topTab.length; i++) {
             top_tabs.addTab(top_tabs.newTab());
             TextView view = new TextView(getActivity());
             view.setGravity(top_tabs.GRAVITY_CENTER);
             view.setText(topTab[i]);
-            view.setTextColor(getActivity().getResources().getColor(R.color.white));
-            view.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/baemin.ttf"));
+            view.setTextColor(getActivity().getResources().getColor(R.color.black));
+            view.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/bm_dohyeon_ttf.ttf"));
             top_tabs.getTabAt(i).setCustomView(view);
 
         }
@@ -76,7 +77,7 @@ public class ScheduleList extends Fragment{
                         break;
 
                     case 2:
-                        fragment = new MonthAchievementRate().newInstance();
+                        fragment = new RateFormFragment().newInstance();
                         setChildFragment(fragment);
                         break;
                 }

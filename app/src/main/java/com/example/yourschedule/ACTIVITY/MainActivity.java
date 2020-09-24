@@ -11,11 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.yourschedule.FRAGMENT.ScheduleList;
 import com.example.yourschedule.FRAGMENT.TodayList;
-import com.example.yourschedule.FRAGMENT.WeatherForm;
 import com.example.yourschedule.FRAGMENT.WeatherLoading;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
             R.drawable.baseline_date_range_white_18,
             R.drawable.baseline_cloud_queue_white_18
     };
-    private TabLayout bottom_tabs;
+    private TabLayout bottomTabs;
+    private RelativeLayout appTitle;
 
     private Context mContext = null;
     private List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
@@ -65,30 +66,21 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
 
         mContext = this;
         auth = FirebaseAuth.getInstance();
-        titleImage = (ImageView)findViewById(R.id.title_image);
-        appLogoImage = (ImageView)findViewById(R.id.app_logo_image);
         runningImage = (ImageView)findViewById(R.id.running_image);
-        bottom_tabs = (TabLayout) findViewById(R.id.bottom_tabs);
-
+        bottomTabs = (TabLayout) findViewById(R.id.bottom_tabs);
+        appTitle = (RelativeLayout)findViewById(R.id.app_title);
 
 
 
         for (int i = 0; i < bottomTab.length; i++) {
-            bottom_tabs.addTab(bottom_tabs.newTab());
-//            TextView view = new TextView(this);
-//            view.setGravity(bottom_tabs.INDICATOR_GRAVITY_BOTTOM);
-//            view.setTextColor(getResources().getColor(R.color.white));
-//            view.setTypeface(Typeface.createFromAsset(getAssets(), "font/baemin.ttf"));
-//            view.setText(bottomTab[i]);
-//            view.setTextSize(10);
-//            view.setAllCaps(false);
-//            bottom_tabs.getTabAt(i).setCustomView(view);
+            bottomTabs.addTab(bottomTabs.newTab());
+
         }
 
-        bottom_tabs.getTabAt(FRAGMENT1).setTag(FRAGMENT1);
-        bottom_tabs.getTabAt(FRAGMENT1).setIcon(tabIcons[0]);
-        bottom_tabs.getTabAt(FRAGMENT2).setTag(FRAGMENT2);
-        bottom_tabs.getTabAt(FRAGMENT2).setIcon(tabIcons[1]);
+        bottomTabs.getTabAt(FRAGMENT1).setTag(FRAGMENT1);
+        bottomTabs.getTabAt(FRAGMENT1).setIcon(tabIcons[0]);
+        bottomTabs.getTabAt(FRAGMENT2).setTag(FRAGMENT2);
+        bottomTabs.getTabAt(FRAGMENT2).setIcon(tabIcons[1]);
 
 
 //        SharePref sharePref = new SharePref();
@@ -106,13 +98,12 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
 //            }
 //        });
 
-        bottom_tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        bottomTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                titleImage.setVisibility(View.INVISIBLE);
-                appLogoImage.setVisibility(View.INVISIBLE);
+                appTitle.setVisibility(View.INVISIBLE);
                 switch (Integer.parseInt(String.valueOf(tab.getTag()))) {
                     case FRAGMENT1:
                         // '버튼1' 클릭 시 '프래그먼트1' 호출
@@ -134,8 +125,7 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                titleImage.setVisibility(View.INVISIBLE);
-                appLogoImage.setVisibility(View.INVISIBLE);
+                appTitle.setVisibility(View.INVISIBLE);
                 switch (Integer.parseInt(String.valueOf(tab.getTag()))) {
                     case FRAGMENT1:
                         // '버튼1' 클릭 시 '프래그먼트1' 호출
@@ -200,32 +190,7 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
         }
     }
 
-//    public void readDatabase(DataLoadCallBack dataLoadCallBack) {
-//        List<ScheduleDTO> scheduleDTOSTemp = new ArrayList<>();
-//        mReference = mDatabase.getReference("일정");
-//        auth = FirebaseAuth.getInstance();
-//        Log.d("readUserName",auth.getCurrentUser().getDisplayName());
-//        mReference.child(auth.getCurrentUser().getDisplayName())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        scheduleDTOSTemp.clear();
-//
-//
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                ScheduleDTO scheduleDTO = snapshot.getValue(ScheduleDTO.class);
-//                                scheduleDTOSTemp.add(scheduleDTO);
-//                        }
-//
-//                        dataLoadCallBack.onCallback(scheduleDTOSTemp);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
+
 
     @Override
     public void finish(Fragment child) {

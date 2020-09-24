@@ -1,27 +1,15 @@
 package com.example.yourschedule.ADAPTER;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class DrawerListAdapter extends RecyclerView.Adapter<DrawerListAdapter.ViewHolder> {
@@ -58,7 +46,7 @@ public class DrawerListAdapter extends RecyclerView.Adapter<DrawerListAdapter.Vi
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.drawer_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_drawer, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -67,7 +55,7 @@ public class DrawerListAdapter extends RecyclerView.Adapter<DrawerListAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.scheduleText.setText(scheduleDTO.get(position));
-        holder.chkText.setText(chkList.get(position) ? "Complete" : "Incomplete");
+        holder.chkText.setText(chkList.get(position) ? "완료" : "미완료");
         }
 
 }

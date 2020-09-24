@@ -26,4 +26,21 @@
         android:fontWeight = "400"
         android:font = '@font/baemin'
         ></font>
+
+    <font
+        android:fontStyle = "normal"
+        android:fontWeight = "400"
+        android:font = "@font/bm_dohyeon_ttf"/>
+    <font
+        android:fontStyle = "normal"
+        android:fontWeight = "400"
+        android:font = "@font/bm_hanna_pro"/>
+    <font
+        android:fontStyle = "normal"
+        android:fontWeight = "400"
+        android:font = "@font/bm_jua_ttf"/>
+    <font
+        android:fontStyle = "normal"
+        android:fontWeight = "400"
+        android:font = "@font/bm_yeonsung_ttf"/>
 </font-family>

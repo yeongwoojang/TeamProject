@@ -12,18 +12,15 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.yourschedule.AlarmManagerBroadcastReceiver;
-import com.example.yourschedule.FRAGMENT.Calandar;
 import com.example.yourschedule.ListWidgetProvider;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
 import com.example.yourschedule.SharePref;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -75,7 +72,7 @@ public class WidgetRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
     public RemoteViews getViewAt(int position) {
         Log.d("execute", "getViewAt()");
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.item_widget);
         remoteViews.setTextViewText(R.id.item, scheduleList.get(position));
 
 

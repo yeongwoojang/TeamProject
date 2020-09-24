@@ -8,48 +8,67 @@
     android:orientation="vertical"
     tools:context=".ACTIVITY.LoginActivity">
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/app_title"></ImageView>
-
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_gravity="bottom|center"
-        android:layout_marginLeft="16dp"
+        android:layout_height="350dp"
+        android:background="@drawable/form_login"
+        android:orientation="vertical"
+        android:layout_marginBottom="50dp"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YourList"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/bm_dohyeon_ttf"
+            android:textColor="@color/white"
+            android:textSize="50dp"
+            android:layout_centerInParent="true"
+            ></TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:fontFamily="@font/bm_dohyeon_ttf"
+            android:textSize="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="100dp"
+            android:layout_marginRight="100dp"
+            ></TextView>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="bottom"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/app_logo"></ImageView>
+        >
+        <Button
+            android:id="@+id/facebook_sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/btn_signin_facebook"
+            android:text="@string/signin_facebook"
+            android:textColor="@color/white"/>
+        <Button
+            android:id="@+id/google_sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/btn_signin_google"
+            android:text="@string/signin_google"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="5dp">
-
-            <Button
-                android:id="@+id/facebook_login_button"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/blue600"
-                android:text=" 로그인"
-                android:textColor="@color/white" />
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="left"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/flogo"></ImageView>
 
 
-
-    </FrameLayout>
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_login_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"></com.google.android.gms.common.SignInButton>
 </LinearLayout>
