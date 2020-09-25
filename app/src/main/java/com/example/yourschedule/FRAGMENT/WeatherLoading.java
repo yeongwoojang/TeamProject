@@ -65,9 +65,14 @@ public class WeatherLoading extends Fragment {
                     0);
         } else {
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            String provider = location.getProvider();
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
+            if(location!=null){
+                String provider = location.getProvider();
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                Log.d("dfsgfdsgfdg",latitude+" : "+longitude);
+            }
+
+
 
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     1000,
@@ -121,9 +126,12 @@ public class WeatherLoading extends Fragment {
     final LocationListener gpsLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
 
-            String provider = location.getProvider();
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
+            if(location!=null){
+                String provider = location.getProvider();
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                Log.d("dfsgfdsgfdg",latitude+" : "+longitude);
+            }
 
         }
 

@@ -152,6 +152,7 @@ public class WeatherOfTomorrow extends Fragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            Log.d("dsgffsdg",dateFormat.format(timeInDate));
             if (tommorow.compareTo(todayDate) ==1
                     && tommorow.compareTo(tommorowAfter)==-1) {
                 if(Integer.parseInt(dateFormat.format(timeInDate))%3==0 &&
@@ -160,6 +161,7 @@ public class WeatherOfTomorrow extends Fragment {
 
                     hourList.add(Integer.parseInt(dateFormat.format(timeInDate)));
                     hourTemperatureList.add(Math.round(temp)+"");
+                    Log.d("teadasd",temp+"");
                     JsonElement jsonElementWeather = jaWeather.get(0);
                     String icon = jsonElementWeather.getAsJsonObject().get("icon").getAsString();
                     String iconUrl = "https://openweathermap.org/img/wn/" + icon + ".png";
