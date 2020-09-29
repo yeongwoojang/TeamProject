@@ -47,7 +47,6 @@ public class WeatherForm extends Fragment {
 
             jsonObject = new JsonParser().parse(getArguments().getString("jsonObject")).getAsJsonObject();
             Log.d("fsdgsfdg", jsonObject + "");
-            Log.d("SFDgsdfg","sdfgsdfg");
         }
     }
 

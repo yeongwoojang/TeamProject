@@ -45,7 +45,7 @@ public class ScheduleList extends Fragment{
             TextView view = new TextView(getActivity());
             view.setGravity(top_tabs.GRAVITY_CENTER);
             view.setText(topTab[i]);
-            view.setTextColor(getActivity().getResources().getColor(R.color.black));
+            view.setTextColor(getActivity().getResources().getColor(R.color.black,null));
             view.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "font/bm_dohyeon_ttf.ttf"));
             top_tabs.getTabAt(i).setCustomView(view);
 

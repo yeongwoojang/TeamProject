@@ -47,7 +47,8 @@
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
-        </activity> <!-- ALARM -->
+        </activity>
+        <!-- ALARM -->
         <receiver
             android:name=".ALARM.DeviceBootReceiver"
             android:enabled="true">

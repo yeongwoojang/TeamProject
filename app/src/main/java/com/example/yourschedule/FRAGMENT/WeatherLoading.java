@@ -1,7 +1,13 @@
 package com.example.yourschedule.FRAGMENT;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.AnimationDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,26 +28,32 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.yourschedule.ForRetrofit.RetrofitClient;
+import com.example.yourschedule.GpsTracker;
 import com.example.yourschedule.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class WeatherLoading extends Fragment {
 
     public WeatherLoading newInstance() {
         return new WeatherLoading();
     }
-
     private ImageView runningImage;
 
     private JsonObject jsonObject;
     private double longitude;
     private double latitude;
     private Fragment fragment;
+
 
     @Nullable
     @Override
@@ -57,33 +70,13 @@ public class WeatherLoading extends Fragment {
                 (AnimationDrawable) runningImage.getBackground();
         drawable.start();
 
-        final LocationManager lm = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
+            GpsTracker gpsTracker;
+            gpsTracker = new GpsTracker(getActivity());
+            latitude = gpsTracker.getLatitude(); // 위도
+            longitude = gpsTracker.getLongitude(); //경도
+            Log.d("위치", latitude + " : " + longitude + "");
 
-        if (Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    0);
-        } else {
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(location!=null){
-                String provider = location.getProvider();
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-                Log.d("dfsgfdsgfdg",latitude+" : "+longitude);
-            }
-
-
-
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-        }
-        getWeekWeather(String.valueOf(latitude), String.valueOf(longitude), "minutely,current", "metric", "650b8470989fceb2f4a95b3241a76d65");
+            getWeekWeather(String.valueOf(latitude), String.valueOf(longitude), "minutely,current", "metric", "650b8470989fceb2f4a95b3241a76d65");
 
     }
 
@@ -94,6 +87,7 @@ public class WeatherLoading extends Fragment {
         Call<JsonObject> response = retrofitClient.getInstance()
                 .buildRetrofit()
                 .getWeekWeather(mlatitude, mlongitude, exclude, units, OPEN_WEATHER_MAP_KEY);
+
         final AnimationDrawable drawable =
                 (AnimationDrawable) runningImage.getBackground();
         drawable.start();
@@ -111,38 +105,30 @@ public class WeatherLoading extends Fragment {
                 String bundleJson = gson.toJson(jsonObject);
                 bundle.putString("jsonObject", bundleJson);
                 fragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.form_container, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commitAllowingStateLoss();
-                runningImage.setVisibility(View.INVISIBLE);
-            }
+                if(checkGPSPermission()){
+                    fragmentTransaction.replace(R.id.form_container, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    runningImage.setVisibility(View.INVISIBLE);
+                }
 
+            }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
             }
         });
     }
 
-    final LocationListener gpsLocationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-
-            if(location!=null){
-                String provider = location.getProvider();
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-                Log.d("dfsgfdsgfdg",latitude+" : "+longitude);
-            }
-
+    public boolean checkGPSPermission(){
+        boolean permissionCheck = false;
+        int locationPermissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+        int coarsePermissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+        if(locationPermissionCheck == PackageManager.PERMISSION_DENIED && coarsePermissionCheck == PackageManager.PERMISSION_DENIED){
+            permissionCheck = false;
         }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
+        else if(locationPermissionCheck == PackageManager.PERMISSION_GRANTED){
+            permissionCheck = true;
         }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onProviderDisabled(String provider) {
-        }
-    };
-
+        return permissionCheck;
+    }
 }

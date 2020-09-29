@@ -131,10 +131,10 @@ public class TodayWeather extends Fragment {
 
             Log.d("JaDaily", jaDaily + "");
             Log.i("jaHourly", jaHourly + "");
-            SimpleDateFormat sdf = new SimpleDateFormat("ddHH");
+//            SimpleDateFormat sdf = new SimpleDateFormat("ddHH");
             SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
 
-            sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT+9"));
+            dateFormat.setTimeZone(java.util.TimeZone.getTimeZone("GMT+9"));
             for (int i = 0; i < 8; i++) {
                 JsonElement jsonElementHourly = jaHourly.get(i);
                 Log.d("element", jsonElementHourly + "");
@@ -142,10 +142,12 @@ public class TodayWeather extends Fragment {
                 JsonArray jaWeather = jsonElementHourly.getAsJsonObject().get("weather").getAsJsonArray();
                 Date timeInDate = new Date(elementObject.get("dt").getAsInt() * 1000L);
                 float temp = elementObject.get("temp").getAsFloat();
+                Log.d("온도",temp+"");
                 String main = String.valueOf(elementObject.get("main"));
 
 //                      String timeInFormat = sdf.format(timeInDate);
                 String date = dateFormat.format(timeInDate);
+                Log.d("시간",date);
                 hourList.add(Integer.parseInt(date));
                 hourTemperatureList.add(Math.round(temp) + "");
                 JsonElement jsonElementWeather = jaWeather.get(0);

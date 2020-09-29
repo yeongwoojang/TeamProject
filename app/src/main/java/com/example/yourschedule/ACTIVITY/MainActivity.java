@@ -1,11 +1,15 @@
 package com.example.yourschedule.ACTIVITY;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -70,7 +74,11 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
         bottomTabs = (TabLayout) findViewById(R.id.bottom_tabs);
         appTitle = (RelativeLayout)findViewById(R.id.app_title);
 
-
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    0);
+        }
 
         for (int i = 0; i < bottomTab.length; i++) {
             bottomTabs.addTab(bottomTabs.newTab());
@@ -83,20 +91,6 @@ public class MainActivity extends AppCompatActivity implements TodayList.LogoutL
         bottomTabs.getTabAt(FRAGMENT2).setIcon(tabIcons[1]);
 
 
-//        SharePref sharePref = new SharePref();
-//        sharePref.deletaAll(getApplicationContext());
-
-
-//        readDatabase(new DataLoadCallBack() {
-//            @Override
-//            public void onCallback(List<ScheduleDTO> value) {
-//                scheduleDTOS.clear();
-//                if (value.size() != 0) {
-//                    scheduleDTOS = value;
-//                    sharePref.FireBaseToSharedPref(mContext, scheduleDTOS);
-//                }
-//            }
-//        });
 
         bottomTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
