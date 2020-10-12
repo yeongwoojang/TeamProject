@@ -28,7 +28,7 @@ import java.util.List;
 
 public class DataLoadingActivity extends AppCompatActivity {
 
-
+    //new Laptop Commit Test
     private ImageView runningImage;
 
     private final int REQ_EXIT = 111;
