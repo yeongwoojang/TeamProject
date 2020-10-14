@@ -43,7 +43,8 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
+public class
+SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapter.ViewHolder> {
 
     final private static String ALARM_CANCLE_ACTION = "alarmCancleACTION";
     final private static String ALARM_CALL_ACTION = "alarmCallAction";
@@ -67,17 +68,24 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.date = date;
-        if (isUpdate) {
-            for (int i = 0; i < scheduleDTOS.size(); i++) {
-                if (scheduleDTOS.get(i).getDate().equals(date)) {
-                    scheduleListSet = (ArrayList<String>) scheduleDTOS.get(i).getSchedule();
-                    completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
-                }
+//        if (isUpdate) {
+////            for (int i = 0; i < scheduleDTOS.size(); i++) {
+////                if (scheduleDTOS.get(i).getDate().equals(date)) {
+////                    scheduleListSet = (ArrayList<String>) scheduleDTOS.get(i).getSchedule();
+////                    completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
+////                }
+////            }
+////            scheduleSet.addAll(scheduleListSet);
+////        } else {
+////
+////        }
+        for (int i = 0; i < scheduleDTOS.size(); i++) {
+            if (scheduleDTOS.get(i).getDate().equals(date)) {
+                scheduleListSet = (ArrayList<String>) scheduleDTOS.get(i).getSchedule();
+                completeSet = (ArrayList<Boolean>) scheduleDTOS.get(i).getIsComplete();
             }
-            scheduleSet.addAll(scheduleListSet);
-        } else {
-
         }
+        scheduleSet.addAll(scheduleListSet);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -117,12 +125,13 @@ public class SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecy
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         scheduleListSize = scheduleListSet.size();
         holder.deleteBt.setTag(holder.getAdapterPosition());
-        if (!isUpdate) {
-            holder.textview.setText(scheduleListSet.get(position));
-        } else {
-            holder.textview.setText(scheduleListSet.get(position));
-
-        }
+        holder.textview.setText(scheduleListSet.get(position));
+//        if (!isUpdate) {
+//            holder.textview.setText(scheduleListSet.get(position));
+//        } else {
+//            holder.textview.setText(scheduleListSet.get(position));
+//
+//        }
 
     }
 

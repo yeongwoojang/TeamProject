@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.yourschedule.ADAPTER.SchduleRecyclerViewAdapter;
 import com.example.yourschedule.OBJECT.ScheduleDTO;
 import com.example.yourschedule.R;
+import com.example.yourschedule.SharePref;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -100,20 +101,33 @@ public class PopupFragment extends DialogFragment {
 
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         schduleRecyclerView.setLayoutManager(linearLayoutManager);
-        ReadDBData(new ReadDataCallback() {
-            @Override
-            public void onCallback(List<ScheduleDTO> value) {
-                scheduleDTOS.clear();
-                scheduleDTOS = value;
-                if(mDialogResult.update()){
-                    adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,true);
-                }else{
-                    adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,false);
-                }
-                adapter.notifyDataSetChanged();
-                schduleRecyclerView.setAdapter(adapter);
-            }
-        });
+
+        SharePref sharePref = new SharePref();
+        scheduleDTOS.clear();
+        scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
+
+        if(mDialogResult.update()){
+            adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,true);
+        }else{
+            adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,false);
+        }
+        adapter.notifyDataSetChanged();
+        schduleRecyclerView.setAdapter(adapter);
+
+//        ReadDBData(new ReadDataCallback() {
+//            @Override
+//            public void onCallback(List<ScheduleDTO> value) {
+//                scheduleDTOS.clear();
+//                scheduleDTOS = value;
+//                if(mDialogResult.update()){
+//                    adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,true);
+//                }else{
+//                    adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,false);
+//                }
+//                adapter.notifyDataSetChanged();
+//                schduleRecyclerView.setAdapter(adapter);
+//            }
+//        });
 
         dateView.setText(date);
 
