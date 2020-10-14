@@ -30,7 +30,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_weight="1"
                     android:background="@color/transparent"
-                    android:src="@drawable/baseline_arrow_left_white_18dp"></ImageButton>
+                    android:src="@drawable/baseline_arrow_left_24"></ImageButton>
 
                 <TextView
                     android:id="@+id/topMonthText"
@@ -54,20 +54,10 @@
                     android:layout_marginRight="16dp"
                     android:layout_weight="1"
                     android:background="@color/transparent"
-                    android:src="@drawable/baseline_arrow_right_white_18dp"></ImageButton>
+                    android:src="@drawable/baseline_arrow_right_24"></ImageButton>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/divideLineTop"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/topLayout"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="16dp"
-                android:background="@color/gray100"
-                android:orientation="horizontal">
-            </LinearLayout>
+
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/horizontalBar"

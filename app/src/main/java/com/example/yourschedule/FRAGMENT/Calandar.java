@@ -178,7 +178,7 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                 for (int i = 0; i < scheduleDTOS.size(); i++) {
                     if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
                         Log.d("selectedDate", "from modifyBt");
-                        areYouUpdate = true;
+//                        areYouUpdate = true;
                         getUpdateScheduleFragment();
                         isGetUpdateFragment = true;
                         break;
@@ -187,8 +187,9 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
                     }
                 }
                 if (!isGetUpdateFragment) {
-                    areYouUpdate = false;
-                    getPopupFragment(false);
+//                    areYouUpdate = false;
+//                    getPopupFragment(false);
+                    getPopUp();
                 }
                 slidingUpPanelLayout.setPanelHeight(0);
                 slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -267,71 +268,98 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
             @Override
             public void showPopupFragment() {
-                getPopupFragment(true);
+//                getPopupFragment(true);
+                getPopUp();
             }
         });
     }
 
-    private void getPopupFragment(boolean isUpdate) {
-        if (isUpdate) {
-            PopupFragment popupFragment = new PopupFragment().newInstance();
-            Bundle args = new Bundle();
-            args.putString("date", selectedDate);
-            popupFragment.setArguments(args);
-            popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
-            popupFragment.setDialogResult(new PopupFragment.OnMyPopupDialogResult() {
-                @Override
-                public void finish() {
-                    fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
-                    DialogFragment dialogFragment = (DialogFragment) fragment;
-                    dialogFragment.dismissAllowingStateLoss();
-                    dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.detach(fffff).attach(fffff).commit();
-                    dialogFragment.dismiss();
-                }
+    private void getPopUp(){
+        PopupFragment popupFragment = new PopupFragment().newInstance();
+        Bundle args = new Bundle();
+        args.putString("date", selectedDate);
+        popupFragment.setArguments(args);
+        popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
+        popupFragment.setDialogResult(new PopupFragment.OnMyPopupDialogResult() {
+            @Override
+            public void finish() {
+                fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
+                DialogFragment dialogFragment = (DialogFragment) fragment;
+                dialogFragment.dismissAllowingStateLoss();
+                dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.detach(fffff).attach(fffff).commit();
+                dialogFragment.dismiss();
+            }
 
-                @Override
-                public boolean update() {
-                    if (areYouUpdate) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        } else {
-            PopupFragment popupFragment = new PopupFragment().newInstance();
-            Bundle args = new Bundle();
-            args.putString("date", selectedDate);
-            popupFragment.setArguments(args);
-            popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
-            popupFragment.setDialogResult(new PopupFragment.OnMyPopupDialogResult() {
-                @Override
-                public void finish() {
-                    fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
-                    DialogFragment dialogFragment = (DialogFragment) fragment;
-                    dialogFragment.dismissAllowingStateLoss();
-                    dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.detach(fffff).attach(fffff).commit();
-                    dialogFragment.dismiss();
-
-
-                }
-
-                @Override
-                public boolean update() {
-                    if (areYouUpdate) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        }
-
+//            @Override
+//            public boolean update() {
+//                if (areYouUpdate) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+        });
     }
+//    private void getPopupFragment(boolean isUpdate) {
+//        if (isUpdate) {
+//            PopupFragment popupFragment = new PopupFragment().newInstance();
+//            Bundle args = new Bundle();
+//            args.putString("date", selectedDate);
+//            popupFragment.setArguments(args);
+//            popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
+//            popupFragment.setDialogResult(new PopupFragment.OnMyPopupDialogResult() {
+//                @Override
+//                public void finish() {
+//                    fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
+//                    DialogFragment dialogFragment = (DialogFragment) fragment;
+//                    dialogFragment.dismissAllowingStateLoss();
+//                    dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                    ft.detach(fffff).attach(fffff).commit();
+//                    dialogFragment.dismiss();
+//                }
+//
+//                @Override
+//                public boolean update() {
+//                    if (areYouUpdate) {
+//                        return true;
+//                    } else {
+//                        return false;
+//                    }
+//                }
+//            });
+//        } else {
+//            PopupFragment popupFragment = new PopupFragment().newInstance();
+//            Bundle args = new Bundle();
+//            args.putString("date", selectedDate);
+//            popupFragment.setArguments(args);
+//            popupFragment.show(getActivity().getSupportFragmentManager(), popupFragment.TAG_EVENT_DIALOG);
+//            popupFragment.setDialogResult(new PopupFragment.OnMyPopupDialogResult() {
+//                @Override
+//                public void finish() {
+//                    fragment = getActivity().getSupportFragmentManager().findFragmentByTag(PopupFragment.TAG_EVENT_DIALOG);
+//                    DialogFragment dialogFragment = (DialogFragment) fragment;
+//                    dialogFragment.dismissAllowingStateLoss();
+//                    dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                    ft.detach(fffff).attach(fffff).commit();
+//                    dialogFragment.dismiss();
+//                }
+//
+//                @Override
+//                public boolean update() {
+//                    if (areYouUpdate) {
+//                        return true;
+//                    } else {
+//                        return false;
+//                    }
+//                }
+//            });
+//        }
+//
+//    }
 
 
     @Override

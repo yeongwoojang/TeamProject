@@ -56,15 +56,15 @@ SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapt
     private ArrayList<String> scheduleListSet = new ArrayList<String>();
     private ArrayList<Boolean> completeSet = new ArrayList<Boolean>();
     private ArrayList<String> scheduleSet = new ArrayList<String>();
-    boolean isUpdate;
+//    boolean isUpdate;
     int scheduleListSize;
     FirebaseAuth auth;
     Date currentDateTime;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("일정");
     Calendar calendar = Calendar.getInstance();
 
-    public SchduleRecyclerViewAdapter(Activity activity, List<ScheduleDTO> scheduleDTOS, String date, boolean isUpdate) {
-        this.isUpdate = isUpdate;
+    public SchduleRecyclerViewAdapter(Activity activity, List<ScheduleDTO> scheduleDTOS, String date) {
+//        this.isUpdate = isUpdate;
         this.activity = activity;
         this.scheduleDTOS = scheduleDTOS;
         this.date = date;
@@ -94,6 +94,7 @@ SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapt
         ImageButton deleteBt;
 
         public ViewHolder(View itemView) {
+
             super(itemView);
             textview = (TextView) itemView.findViewById(R.id.scItem);
             deleteBt = (ImageButton) itemView.findViewById(R.id.deleteBt);

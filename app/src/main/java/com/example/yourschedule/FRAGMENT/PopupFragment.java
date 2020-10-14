@@ -105,12 +105,14 @@ public class PopupFragment extends DialogFragment {
         SharePref sharePref = new SharePref();
         scheduleDTOS.clear();
         scheduleDTOS.addAll(sharePref.getEntire(getActivity()));
+        adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date);
 
-        if(mDialogResult.update()){
-            adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,true);
-        }else{
-            adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,false);
-        }
+
+//        if(mDialogResult.update()){
+//            adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,true);
+//        }else{
+//            adapter = new SchduleRecyclerViewAdapter(getActivity(),scheduleDTOS,date,false);
+//        }
         adapter.notifyDataSetChanged();
         schduleRecyclerView.setAdapter(adapter);
 
@@ -162,7 +164,7 @@ public class PopupFragment extends DialogFragment {
 
     public interface OnMyPopupDialogResult {
         void finish();
-        boolean update();
+//        boolean update();
     }
     public void setDialogResult(OnMyPopupDialogResult dialogResult) {
         mDialogResult = dialogResult;
