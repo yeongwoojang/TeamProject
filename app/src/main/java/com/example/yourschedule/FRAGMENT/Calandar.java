@@ -243,13 +243,13 @@ public class Calandar extends Fragment implements OnDateSelectedListener, OnMont
 
         for (int i = 0; i < scheduleDTOS.size(); i++) {
             if (scheduleDTOS.get(i).getDate().equals(selectedDate)) {
-                modifyBt.setText("MODIFY");
+                modifyBt.setText("수정");
                 drawerListAdapter = new DrawerListAdapter(getActivity(), scheduleDTOS.get(i).getSchedule(), scheduleDTOS.get(i).getIsComplete());
                 recyclerView.setAdapter(drawerListAdapter);
                 recyclerView.setVisibility(View.VISIBLE);
                 break;
             } else {
-                modifyBt.setText("INSERT");
+                modifyBt.setText("입력");
             }
         }
     }
