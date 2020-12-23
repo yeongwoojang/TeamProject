@@ -1,20 +1,9 @@
-# TeamProject
+# YourSchedule
+## 작품소개
+일정 관리와 목표 달성률 확인 및 날씨를 확인할 수 있는 앱입니다.
+## 사용기술
+Android(java), Firebase, Retrofit
 
 
- '2020-06-18 git test'
 
-깃허브
-브랜치
-커밋-푸쉬
-풀
-
-브랜치 선택===
-Branch-Checkout
-
-Master > Dev >> sub_branch
-
-머지===
-웹사이트가 있고 뭔가 작업을 진행하고 있다.
-새로운 이슈를 처리할 새 Branch를 하나 생성한다.
-새로 만든 Branch에서 작업을 진행한다.
 
