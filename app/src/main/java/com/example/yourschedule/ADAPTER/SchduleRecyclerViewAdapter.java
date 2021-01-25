@@ -145,7 +145,7 @@ SchduleRecyclerViewAdapter extends RecyclerView.Adapter<SchduleRecyclerViewAdapt
 
     public void close() {
         SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        String alarmTime = date + " 12:00:00";
+        String alarmTime = date + " 15:45:00";
 
         AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
 
